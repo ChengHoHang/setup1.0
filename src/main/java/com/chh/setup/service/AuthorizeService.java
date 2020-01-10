@@ -18,7 +18,11 @@ public class AuthorizeService {
     UserRepository userRepository;
 
     public UserEntity loginCheck(Map<String, String> param) {
-        return userRepository.loginCheck(param.get("account"), param.get("passWord"));
+        UserEntity user = userRepository.findByAccount(param.get("account"));
+        if (user != null && user.getPassWord().equals(param.get("passWord"))) {
+            return user;
+        }
+        return null;
     }
 
     public UserEntity updateUser(UserEntity user, HttpServletResponse response) {
@@ -31,7 +35,7 @@ public class AuthorizeService {
     }
 
 
-    public String getCookieValue(HttpServletRequest request, String cookieName) {
+    public static String getCookieValue(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
         if (cookies == null) return null;
         for (Cookie cookie : cookies) {

@@ -8,9 +8,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
-    @Query("select e from UserEntity e where e.account = :account and e.passWord = :passWord")
-    UserEntity loginCheck(@Param("account") String account, @Param("passWord") String passWord);
-
     @Query("select e from UserEntity e where e.account = :account ")
     UserEntity findByAccount(@Param("account") String account);
 
