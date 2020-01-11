@@ -1,3 +1,9 @@
+body {
+    background-color: #efefef;
+}
+
+
+/*登陆注册页面样式*/
 .page-login {
     margin: 100px;
 }
@@ -5,4 +11,22 @@
 .img-box {
     margin-top: 86px;
     margin-left: 90px;
+}
+
+
+/*发布页面样式*/
+.aw-container-wrap {
+    margin: 30px;
+    background-color: white;
+}
+
+.btn-edit-summit {
+    float: right;
+    margin-bottom: 15px;
+}
+
+.type-article {
+    margin-left: -30px;
+    margin-top: 5px;
+    height: 40px;
 }
