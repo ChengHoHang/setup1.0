@@ -3,17 +3,16 @@
 ### Reference Documentation
 For further reference, please consider the following sections:
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.2.2.RELEASE/maven-plugin/)
 * [Spring Configuration Processor](https://docs.spring.io/spring-boot/docs/2.2.2.RELEASE/reference/htmlsingle/#configuration-metadata-annotation-processor)
 * [Spring Web](https://docs.spring.io/spring-boot/docs/2.2.2.RELEASE/reference/htmlsingle/#boot-features-developing-web-applications)
-* [Spring Boot DevTools](https://docs.spring.io/spring-boot/docs/2.2.2.RELEASE/reference/htmlsingle/#using-boot-devtools)
-* [Thymeleaf](https://docs.spring.io/spring-boot/docs/2.2.2.RELEASE/reference/htmlsingle/#boot-features-spring-mvc-template-engines)
+
 ######
+* [java函数式编程](https://blog.csdn.net/icarusliu/article/details/79495534#3-%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B%E6%8E%A5%E5%8F%A3%E7%9A%84%E4%BD%BF%E7%94%A8)
 * [BootStrap样式库](https://v3.bootcss.com/components/)
 * [为什么不使用外键](https://www.cnblogs.com/rjzheng/p/9907304.html)
 * [Springboot + ElasticSearch 构建博客检索系统](https://www.imooc.com/video/19950)
 * [session & cookies](https://blog.csdn.net/east123321/article/details/79157464)
+* [vue.js](https://cn.vuejs.org/v2/guide/syntax.html)
 
 
 

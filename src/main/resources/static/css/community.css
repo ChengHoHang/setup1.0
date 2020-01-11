@@ -30,3 +30,51 @@ body {
     margin-top: 5px;
     height: 40px;
 }
+
+
+/*首页样式*/
+.category {
+    padding: 25px 0px 40px 13px;
+}
+
+.news-list {
+    list-style: none;
+}
+
+.list-content {
+    padding-top: 20px;
+}
+
+.list-title {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 2.0;
+    color: #0f0f0f;
+}
+
+.list-abstract {
+    font-size: 13px;
+    margin: 0 0 8px;
+    line-height: 24px;
+    color: #999;
+    height: 75px;
+}
+
+.list-meta {
+    padding-right: 0 !important;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.content-creator {
+    background-color: #f2f2f2;
+    color: #999;
+    padding: 0 5px;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.meta-content {
+    margin-right: 15px;
+}

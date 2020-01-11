@@ -52,21 +52,71 @@
             </div>
         </div>
     </nav>
-    
-    
+
+    <div class="aw-container-wrap">
+        <!--分类列表-->
+        <div class="container category">
+            <div class="row">
+                <div class="col-md-12 bs-example">
+                    <ul class="nav nav-pills">
+                        <li role="presentation" class="active"><a href="#">全部</a></li>
+                        <li role="presentation"><a href="#">国内</a></li>
+                        <li role="presentation"><a href="#">国外</a></li>
+                        <li role="presentation"><a href="#">科技</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container container-fluid">
+            <div class="row">
+                <!--新闻列表-->
+                <div class="col-md-9">
+                    <h2>
+                        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                        <span>发现</span>
+                    </h2>
+                    <hr>
+                    <div class="list-container">
+                        <ul class="news-list">
+                            <li v-for="(article, index) in articleList">
+                                <div class="list-content">
+                                    <a class="list-title" target="_blank" href="/" v-text="article.title"></a>
+                                    <p class="list-abstract" v-text="article.description"></p>
+                                    <div class="list-meta">
+                                        <span class="content-creator">{{article.user.name}}</span>
+                                        <span class="meta-content">• {{article.likeCount}} 个点赞</span>
+                                        <span class="meta-content">• {{article.commentCount}} 个回复</span>
+                                        <span class="meta-content">• {{article.viewCount}} 次浏览</span>
+                                        <span class="meta-content">• {{article.gmtModified}} </span>
+                                    </div>
+                                </div>
+                                <hr>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!--侧边栏-->
+                <div class="col-md-3">
+                    <h3>热门话题</h3>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
-
 <script>
-    
+
     var app = new Vue({
-        el : "#app",
-        data : {
-            loginCode : '',
-            user : '',
+        el: "#app",
+        data: {
+            loginCode: '',
+            user: '',
+            articleList : []
         },
-        methods:{
+        methods: {
             getLoginInfo: function () {
                 console.log("getLoginInfo");
                 var that = this;
@@ -74,14 +124,23 @@
                     that.loginCode = response.data.code;
                     that.user = response.data.rsData;
                 })
+            },
+            
+            getArticleList: function () {
+                console.log("getArticleList");
+                var that = this;
+                axios.get("http://localhost:8080/articles", {}).then(function (response) {
+                    that.articleList = response.data.rsData;
+                });
             }
         },
-        created:function () {
+        created: function () {
             this.getLoginInfo();
+            this.getArticleList();
         }
     })
-    
-    
+
+
 </script>
 
 </body>
