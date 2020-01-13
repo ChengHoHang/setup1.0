@@ -2,11 +2,10 @@ package com.chh.setup.dto;
 
 import com.chh.setup.entity.UserEntity;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * 将article与user表关联
- * 并用于后端返回至前端展示
+ * 需要封装至PagesDto再由前端渲染
  * @author chh
  * @date 2020/1/11 16:53
  */
@@ -25,8 +24,5 @@ public class ArticleDto {
     private String gmtCreated;
     private String gmtModified;
     private UserEntity user;
-
-    public static void showOnHome(ArticleDto articleDto) {
-        articleDto.description = StringUtils.truncate(articleDto.description, 150) + ".....";
-    }
+    
 }

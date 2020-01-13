@@ -1,13 +1,13 @@
 package com.chh.setup.controller;
 
-import com.chh.setup.dto.ArticleDto;
+import com.chh.setup.dto.PagesDto;
 import com.chh.setup.dto.ResultDto;
 import com.chh.setup.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author chh
@@ -15,14 +15,23 @@ import java.util.List;
  */
 @RestController
 public class ArticleController {
-
+    
     @Autowired
     ArticleService articleService;
 
+    @Value("${page.size}")
+    Integer size;
+    
+    /**
+     * 将分页数据交给前端在首页渲染，提供如下参数
+     * article 新闻内容
+     * page
+     * @return
+     */
     @GetMapping("/articles")
-    public Object allArticles() {
-        List<ArticleDto> articles = articleService.listArticle();
-        articles.forEach(ArticleDto::showOnHome);
-        return ResultDto.okOf(articles);
+    public Object allArticles(@RequestParam(value = "type", required = false) Integer type,
+                              @RequestParam(value = "page", required = false, defaultValue = "1") Integer page) {
+        PagesDto pagesDto = articleService.listByType(page, size, type);
+        return ResultDto.okOf(pagesDto);
     }
 }

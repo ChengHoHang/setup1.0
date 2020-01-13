@@ -1,6 +1,6 @@
 package com.chh.setup.controller;
 
-import com.chh.setup.Repository.UserRepository;
+import com.chh.setup.repository.UserRepository;
 import com.chh.setup.dto.ResultDto;
 import com.chh.setup.entity.UserEntity;
 import com.chh.setup.service.AuthorizeService;

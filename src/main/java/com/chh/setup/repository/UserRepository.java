@@ -1,4 +1,4 @@
-package com.chh.setup.Repository;
+package com.chh.setup.repository;
 
 
 import com.chh.setup.entity.UserEntity;

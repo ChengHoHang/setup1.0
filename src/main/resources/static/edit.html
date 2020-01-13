@@ -39,8 +39,9 @@
                     <li><a href="sign_in.html" v-show="loginCode === 201">登陆</a></li>
                     <li class="dropdown" v-show="loginCode === 200">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false" v-text="user != null ? user.name : ''"><span
-                                class="caret"></span>
+                           aria-haspopup="true" aria-expanded="false">
+                            <span v-text="user != null ? user.name : ''"></span>
+                            <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="#">消息中心</a></li>
@@ -70,6 +71,8 @@
                                         <option>国内</option>
                                         <option>国际</option>
                                         <option>科技</option>
+                                        <option>娱乐</option>
+                                        <option>杂谈</option>
                                     </select>
                                 </div>
                             </div>
@@ -119,7 +122,7 @@
         data: {
             loginCode: '',
             user: '',
-            type: document.getElementById("type-article").value,
+            type: '',
             title : '',
             description : '',
             tag : ''
@@ -154,7 +157,7 @@
                 }
                 var that = this;
                 var param = {
-                    "type" : that.type,
+                    "type" : document.getElementById("type-article").value,
                     "title" : that.title,
                     "description" : that.description,
                     "tag" : that.tag,

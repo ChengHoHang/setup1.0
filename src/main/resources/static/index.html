@@ -38,8 +38,9 @@
                     <li><a href="sign_in.html" v-show="loginCode === 201">登陆</a></li>
                     <li class="dropdown" v-show="loginCode === 200">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false" v-text="user != null ? user.name : ''"><span
-                                class="caret"></span>
+                           aria-haspopup="true" aria-expanded="false">
+                            <span v-text="user != null ? user.name : ''"></span>
+                            <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="#">消息中心</a></li>
@@ -58,12 +59,13 @@
         <div class="container category">
             <div class="row">
                 <div class="col-md-12 bs-example">
-                    <ul class="nav nav-pills">
-                        <li role="presentation" class="active"><a href="#">全部</a></li>
-                        <li role="presentation"><a href="#">国内</a></li>
-                        <li role="presentation"><a href="#">国外</a></li>
-                        <li role="presentation"><a href="#">科技</a></li>
-                    </ul>
+                    <div class="btn-group" role="group" aria-label="...">
+                        <button type="button" v-for="(type, index) in category"
+                                :class="[{'active' : index == homeType}, 'btn', 'category-item']"
+                                @click="toggle(index)">
+                            {{type}}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -114,7 +116,9 @@
         data: {
             loginCode: '',
             user: '',
-            articleList : []
+            category: ['全部', '国内', '国际', '科技', '娱乐', '杂谈'],
+            homeType: 0,
+            articleList: []
         },
         methods: {
             getLoginInfo: function () {
@@ -125,13 +129,22 @@
                     that.user = response.data.rsData;
                 })
             },
-            
+
             getArticleList: function () {
                 console.log("getArticleList");
                 var that = this;
-                axios.get("http://localhost:8080/articles", {}).then(function (response) {
-                    that.articleList = response.data.rsData;
+                axios.get("http://localhost:8080/articles", {
+                    params : {
+                        "type" : that.homeType
+                    }
+                }).then(function (response) {
+                    that.articleList = response.data.rsData.articles;
                 });
+            },
+
+            toggle: function (index) {  /*获取当前页面的新闻类型，并传给后端并接受数据由getArticleList渲染*/
+                this.homeType = index;
+                this.getArticleList();
             }
         },
         created: function () {

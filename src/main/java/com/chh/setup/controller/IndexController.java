@@ -1,9 +1,10 @@
 package com.chh.setup.controller;
 
-import com.chh.setup.Repository.UserRepository;
+import com.chh.setup.repository.UserRepository;
 import com.chh.setup.dto.ResultDto;
 import com.chh.setup.service.AuthorizeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,8 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class IndexController {
-
-    private static final String COOKIE_NAME = "token";
+    
+    @Value("${app.cookie.name}")
+    String COOKIE_NAME;
 
     @Autowired
     UserRepository userRepository;

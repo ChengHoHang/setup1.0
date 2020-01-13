@@ -78,3 +78,15 @@ body {
 .meta-content {
     margin-right: 15px;
 }
+
+.category-item {
+    height: 40px;
+    width: 75px;
+    margin-right: 5px;
+}
+
+.active {
+    background: #554a44;
+    border: 1px solid #000000;
+    color: #fff;
+}

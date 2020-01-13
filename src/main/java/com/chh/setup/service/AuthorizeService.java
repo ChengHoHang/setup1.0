@@ -1,6 +1,6 @@
 package com.chh.setup.service;
 
-import com.chh.setup.Repository.UserRepository;
+import com.chh.setup.repository.UserRepository;
 import com.chh.setup.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

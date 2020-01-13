@@ -8,7 +8,7 @@ import lombok.Data;
  * @date 2020/1/10 20:44
  */
 @Data
-public class ArticleFEDto {
+public class ArticleParam {
     
     private String type;
     private String title;
