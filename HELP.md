@@ -13,6 +13,7 @@ For further reference, please consider the following sections:
 * [Springboot + ElasticSearch 构建博客检索系统](https://www.imooc.com/video/19950)
 * [session & cookies](https://blog.csdn.net/east123321/article/details/79157464)
 * [vue.js](https://cn.vuejs.org/v2/guide/syntax.html)
+* [jqPaginator分页插件](http://jqpaginator.keenwon.com/#a3)
 
 
 

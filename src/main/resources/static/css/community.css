@@ -87,6 +87,9 @@ body {
 
 .active {
     background: #554a44;
-    border: 1px solid #000000;
     color: #fff;
 }
+
+#home-page {
+    margin-left: 200px;
+} 
