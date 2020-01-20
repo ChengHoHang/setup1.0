@@ -11,6 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * 用户认证服务层
+ * @author chh
+ * @date 2020/1/2 16:19
+ */
 @Service
 public class AuthorizeService {
 

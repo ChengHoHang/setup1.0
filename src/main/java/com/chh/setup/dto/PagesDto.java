@@ -10,8 +10,8 @@ import java.util.List;
  * @date 2020/1/13 21:22
  */
 @Data
-public class PagesDto {
+public class PagesDto<T> {
     
-    List<ArticleDto> articles;  
-    Long totalPage;  //各类文章总页数
+    List<T> data;  
+    Long totalPage;  //各类记录总页数
 }

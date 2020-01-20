@@ -45,12 +45,11 @@ public class ArticleService {
         articleEntity.setGmtModified(System.currentTimeMillis());
         articleRepository.save(articleEntity);
     }
-
-
+    
     /**
      * 调用getPageByType方法取出相应类型的文章列表，并作预处理后封装至ArticleDto
      */
-    public PagesDto listByType(Integer page, Integer size, Integer type) {
+    public PagesDto<ArticleDto> listByType(Integer page, Integer size, Integer type) {
         List<ArticleEntity> articles = getPageByType(page - 1, size, type);
         List<ArticleDto> articleDtos = new ArrayList<>();
         for (ArticleEntity article : articles) {
@@ -63,8 +62,8 @@ public class ArticleService {
             articleDto.setUser(user);
             articleDtos.add(articleDto);
         }
-        PagesDto pagesDto = new PagesDto();
-        pagesDto.setArticles(articleDtos);
+        PagesDto<ArticleDto> pagesDto = new PagesDto<>();
+        pagesDto.setData(articleDtos);
         pagesDto.setTotalPage(getCountByType(type, size));
         return pagesDto;
     }
@@ -95,12 +94,13 @@ public class ArticleService {
 
     /**
      * 获取各类文章总页数
+     *
      * @param type
      * @param size
      * @return
      */
     public Long getCountByType(Integer type, Integer size) {
         long count = type == 0 ? articleRepository.count() : articleRepository.countByType(type);
-        return (long) Math.ceil((double)count / size);
+        return (long) Math.ceil((double) count / size);
     }
 }

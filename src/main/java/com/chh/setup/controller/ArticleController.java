@@ -1,5 +1,6 @@
 package com.chh.setup.controller;
 
+import com.chh.setup.dto.ArticleDto;
 import com.chh.setup.dto.PagesDto;
 import com.chh.setup.dto.ResultDto;
 import com.chh.setup.service.ArticleService;
@@ -31,7 +32,7 @@ public class ArticleController {
     @GetMapping("/articles")
     public Object allArticles(@RequestParam(value = "type", required = false) Integer type,
                               @RequestParam(value = "page", required = false, defaultValue = "1") Integer page) {
-        PagesDto pagesDto = articleService.listByType(page, size, type);
+        PagesDto<ArticleDto> pagesDto = articleService.listByType(page, size, type);
         return ResultDto.okOf(pagesDto);
     }
 }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-    <title>chh新闻社区</title>
+    <title>个人中心</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/css/community.css"/>
@@ -55,8 +55,13 @@
     </nav>
 
     <div class="aw-container-wrap">
+        <div class="col-md-12" style="margin: 50px 50px ;">
+            <span>用户：</span>
+            <span v-text="homeUser.name" style="font-size: 25px;"></span>
+        </div>
+
         <!--分类列表-->
-        <div class="container category">
+        <div class="container category" style="margin-left: 40px;">
             <div class="row">
                 <div class="col-md-12 bs-example">
                     <div class="btn-group" role="group" aria-label="...">
@@ -74,17 +79,11 @@
             <div class="row">
                 <!--新闻列表-->
                 <div class="col-md-9">
-                    <h2>
-                        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-                        <span>发现</span>
-                    </h2>
-                    <hr>
                     <div class="list-container">
                         <ul class="news-list">
                             <li v-for="(article, index) in articleList">
                                 <div class="list-content">
                                     <a class="list-title" target="_blank" href="/" v-text="article.title"></a>
-                                    <p class="list-abstract" v-text="article.description"></p>
                                     <div class="list-meta">
                                         <span class="content-creator">{{article.user.name}}</span>
                                         <span class="meta-content">• {{article.likeCount}} 个点赞</span>
@@ -102,10 +101,6 @@
                     </div>
                 </div>
 
-                <!--侧边栏-->
-                <div class="col-md-3">
-                    <h3>热门话题</h3>
-                </div>
             </div>
         </div>
     </div>
@@ -120,8 +115,9 @@
         data: {
             loginCode: '',
             user: '',
-            category: ['全部', '国内', '国际', '科技', '娱乐', '杂谈'],
-            homeType: 0,
+            homeUser: '',
+            category: ['我的发布', '我的评论', '我的点赞'],
+            homeType: 0,    // 默认为0，初次打开页面时访问'我的发布'
             articleList: [],
             currentPage: 1   // 访问首页时默认请求第一页的数据，每页数据量pageSize由application.properties指定
         },
@@ -135,39 +131,53 @@
                 })
             },
 
+            convertToAction: function (index) {
+                if (index === 0) {
+                    return '/article';
+                } else if (index === 1) {
+                    return '/comment';
+                } else if (index === 2) {
+                    return '/favour';
+                } else {
+                    return '';
+                }
+            },
+
+            getUserRecord: function (index) {
+                var url = '/user/' + window.location.pathname.split('/')[2] + this.convertToAction(index);
+                var that = this;
+                console.log(url);
+                axios.get(url, {
+                    params: {
+                        "page": that.currentPage
+                    }
+                }).then(function (response) {
+                    that.homeUser = response.data.rsData.user;
+                    that.articleList = response.data.rsData.data.data;
+                    that.setPage(that.currentPage, response.data.rsData.data.totalPage, that.getUserRecord, index);
+                })
+            },
+
             /**
              * 动态设置分页栏
              * @param pageCurrent 当前所在页
              * @param pageSum 总页数
              * @param callback
+             * @param param
              */
-            setPage: function (pageCurrent, pageSum, callback) {
+            setPage: function (pageCurrent, pageSum, callback, param) {
                 var that = this;
                 $("#home-page").bootstrapPaginator({
                     bootstrapMajorVersion: 3, //设置版本号
                     currentPage: pageCurrent, // 显示第几页
                     totalPages: pageSum,      // 总页数
-                    alignment : "center",
+                    alignment: "center",
                     onPageClicked: function (event, originalEvent, type, page) {
                         // 把当前点击的页码赋值给currentPage, 再次getArticleList
                         that.currentPage = page;
-                        callback && callback();
+                        callback && callback(param);
                     }
                 })
-            },
-            
-            getArticleList: function () {
-                console.log("getArticleList");
-                var that = this;
-                axios.get("http://localhost:8080/articles", {
-                    params: {
-                        "type": that.homeType,
-                        "page": that.currentPage
-                    }
-                }).then(function (response) {
-                    that.articleList = response.data.rsData.data;
-                    that.setPage(that.currentPage, response.data.rsData.totalPage, that.getArticleList);
-                });
             },
 
             /**
@@ -177,12 +187,12 @@
             toggle: function (index) {
                 this.homeType = index;
                 this.currentPage = 1;
-                this.getArticleList();
+                this.getUserRecord(index);
             }
         },
         created: function () {
             this.getLoginInfo();
-            this.getArticleList();
+            this.getUserRecord(this.homeType);
         }
     })
 

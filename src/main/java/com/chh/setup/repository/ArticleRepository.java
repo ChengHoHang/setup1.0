@@ -17,4 +17,9 @@ public interface ArticleRepository extends JpaRepository<ArticleEntity, Integer>
     Page<ArticleEntity> findAllByType(@Param("type") Integer type, Pageable pageable);
     
     Long countByType(Integer type);
+
+    @Query("select e from ArticleEntity e where e.creator = :creator")
+    Page<ArticleEntity> findAllByCreator(@Param("creator") Integer creator, Pageable pageable);
+    
+    Long countByCreator(Integer creator);
 }

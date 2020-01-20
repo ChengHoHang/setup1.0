@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
@@ -26,10 +27,12 @@ public class AuthorizeController {
     @ResponseBody
     @PostMapping("/login")
     public Object login(@RequestBody Map<String, String> param,
+                        HttpServletRequest request,
                         HttpServletResponse response) {
         UserEntity user = authorizeService.loginCheck(param);
         if (user != null) {
             UserEntity updateUser = authorizeService.updateUser(user, response);
+            request.getSession().setAttribute("user", user);
             return ResultDto.okOf(updateUser);
         } else {
             return ResultDto.errorOf(2001, "您输入的账号不存在或者密码错误，请重试！");
