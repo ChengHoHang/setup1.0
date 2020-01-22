@@ -36,7 +36,7 @@
 
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/edit">发布</a></li>
-                    <li><a href="sign_in.html" v-show="loginCode === 201">登陆</a></li>
+                    <li><a href="sign_in.html" v-show="loginCode != 200">登陆</a></li>
                     <li class="dropdown" v-show="loginCode === 200">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="false">
@@ -46,7 +46,7 @@
                         <ul class="dropdown-menu">
                             <li><a :href="loginCode === 200?'/u/' + user.id : ''">个人资料</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#">退出登录</a></li>
+                            <li><a href="/logout">退出登录</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -83,9 +83,9 @@
                         <ul class="news-list">
                             <li v-for="(article, index) in articleList">
                                 <div class="list-content">
-                                    <a class="list-title" target="_blank" href="/" v-text="article.title"></a>
+                                    <a class="list-title" target="_blank" :href="'/a/' + article.id" v-text="article.title"></a>
                                     <div class="list-meta">
-                                        <span class="content-creator">{{article.user.name}}</span>
+                                        <span class="content-creator"><a :href="'/u/' + article.user.id">{{article.user.name}}</a></span>
                                         <span class="meta-content">• {{article.likeCount}} 个点赞</span>
                                         <span class="meta-content">• {{article.commentCount}} 个回复</span>
                                         <span class="meta-content">• {{article.viewCount}} 次浏览</span>
@@ -116,14 +116,13 @@
             loginCode: '',
             user: '',
             homeUser: '',
-            category: ['我的发布', '我的评论', '我的点赞'],
+            category: ['发布', '评论', '点赞'],
             homeType: 0,    // 默认为0，初次打开页面时访问'我的发布'
             articleList: [],
             currentPage: 1   // 访问首页时默认请求第一页的数据，每页数据量pageSize由application.properties指定
         },
         methods: {
             getLoginInfo: function () {
-                console.log("getLoginInfo");
                 var that = this;
                 axios.get("http://localhost:8080/test_login", {}).then(function (response) {
                     that.loginCode = response.data.code;
@@ -144,9 +143,8 @@
             },
 
             getUserRecord: function (index) {
-                var url = '/user/' + window.location.pathname.split('/')[2] + this.convertToAction(index);
+                var url = 'http://localhost:8080/user/' + window.location.pathname.split('/')[2] + this.convertToAction(index);
                 var that = this;
-                console.log(url);
                 axios.get(url, {
                     params: {
                         "page": that.currentPage

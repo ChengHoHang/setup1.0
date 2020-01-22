@@ -45,6 +45,21 @@ public class ArticleService {
         articleEntity.setGmtModified(System.currentTimeMillis());
         articleRepository.save(articleEntity);
     }
+
+    /**
+     * 将ArticleEntity转换成ArticleDto类型
+     * @param article
+     * @return
+     */
+    public ArticleDto convertToDto(ArticleEntity article) {
+        UserEntity user = userRepository.findById(article.getCreator()).get();
+        ArticleDto articleDto = new ArticleDto();
+        BeanUtils.copyProperties(article, articleDto);
+        articleDto.setGmtCreated(DateUtils.timestamp2Date(article.getGmtCreated(), "yyyy-MM-dd HH:mm"));
+        articleDto.setGmtModified(DateUtils.timestamp2Date(article.getGmtModified(), "yyyy-MM-dd HH:mm"));
+        articleDto.setUser(user);
+        return articleDto;
+    }
     
     /**
      * 调用getPageByType方法取出相应类型的文章列表，并作预处理后封装至ArticleDto
@@ -53,13 +68,8 @@ public class ArticleService {
         List<ArticleEntity> articles = getPageByType(page - 1, size, type);
         List<ArticleDto> articleDtos = new ArrayList<>();
         for (ArticleEntity article : articles) {
-            UserEntity user = userRepository.findById(article.getCreator()).get();
-            ArticleDto articleDto = new ArticleDto();
-            BeanUtils.copyProperties(article, articleDto);
-            articleDto.setGmtCreated(DateUtils.timestamp2Date(article.getGmtCreated(), "yyyy-MM-dd HH:mm"));
-            articleDto.setGmtModified(DateUtils.timestamp2Date(article.getGmtModified(), "yyyy-MM-dd HH:mm"));
+            ArticleDto articleDto = convertToDto(article);
             articleDto.setDescription(StringUtils.truncate(articleDto.getDescription(), 150) + ".....");
-            articleDto.setUser(user);
             articleDtos.add(articleDto);
         }
         PagesDto<ArticleDto> pagesDto = new PagesDto<>();
@@ -102,5 +112,13 @@ public class ArticleService {
     public Long getCountByType(Integer type, Integer size) {
         long count = type == 0 ? articleRepository.count() : articleRepository.countByType(type);
         return (long) Math.ceil((double) count / size);
+    }
+    
+    public ArticleDto getArticleById(Integer id) {
+        ArticleEntity article = articleRepository.findById(id).orElse(null);
+        if (article == null) {
+            return null;
+        }
+        return convertToDto(article);
     }
 }

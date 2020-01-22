@@ -14,6 +14,7 @@ For further reference, please consider the following sections:
 * [session & cookies](https://blog.csdn.net/east123321/article/details/79157464)
 * [vue.js](https://cn.vuejs.org/v2/guide/syntax.html)
 * [jqPaginator分页插件](http://jqpaginator.keenwon.com/#a3)
+* [SpringMVC](https://docs.spring.io/spring/docs/5.2.3.RELEASE/spring-framework-reference/web.html#spring-web)
 
 
 
