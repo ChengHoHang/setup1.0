@@ -6,6 +6,8 @@ import com.chh.setup.dto.PagesDto;
 import com.chh.setup.entity.ArticleEntity;
 import com.chh.setup.entity.UserEntity;
 import com.chh.setup.enums.ArticleTypeEnum;
+import com.chh.setup.exception.CustomizeErrorCode;
+import com.chh.setup.exception.CustomizeException;
 import com.chh.setup.myutils.DateUtils;
 import com.chh.setup.repository.ArticleRepository;
 import com.chh.setup.repository.UserRepository;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +60,7 @@ public class ArticleService {
         BeanUtils.copyProperties(article, articleDto);
         articleDto.setGmtCreated(DateUtils.timestamp2Date(article.getGmtCreated(), "yyyy-MM-dd HH:mm"));
         articleDto.setGmtModified(DateUtils.timestamp2Date(article.getGmtModified(), "yyyy-MM-dd HH:mm"));
+        articleDto.setType(ArticleTypeEnum.getName(article.getType()));
         articleDto.setUser(user);
         return articleDto;
     }
@@ -117,8 +121,17 @@ public class ArticleService {
     public ArticleDto getArticleById(Integer id) {
         ArticleEntity article = articleRepository.findById(id).orElse(null);
         if (article == null) {
-            return null;
+            throw new CustomizeException(CustomizeErrorCode.ARTICLE_NOT_FOUND);
         }
         return convertToDto(article);
+    }
+
+    /**
+     * 增加对应id文章的阅读数
+     * @param id
+     */
+    @Transactional
+    public void incViewCount(Integer id) {
+        articleRepository.incViewCount(id, 1);
     }
 }

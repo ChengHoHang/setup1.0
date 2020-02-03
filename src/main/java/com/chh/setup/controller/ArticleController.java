@@ -39,8 +39,9 @@ public class ArticleController {
         return ResultDto.okOf(pagesDto);
     }
 
-    @GetMapping("/a/*")
-    public String article() {
+    @GetMapping("/a/{id}")
+    public String article(@PathVariable("id") Integer id) {
+        articleService.incViewCount(id);
         return "/article.html";
     }
 
@@ -48,9 +49,6 @@ public class ArticleController {
     @ResponseBody
     public Object getArticleById(@PathVariable("id") Integer id) {
         ArticleDto article = articleService.getArticleById(id);
-        if (article == null) {
-            return ResultDto.errorOf(205, "文章不存在");
-        }
         return ResultDto.okOf(article);
     }
     

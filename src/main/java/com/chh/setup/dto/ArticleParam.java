@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 public class ArticleParam {
     
+    private Integer id;
     private String type;
     private String title;
     private String description;

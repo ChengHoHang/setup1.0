@@ -15,7 +15,7 @@ public class ArticleDto {
     private Integer id;
     private String title;
     private String description;
-    private Integer type;
+    private String type;
     private String tag;
     private Integer creator;
     private Integer commentCount;

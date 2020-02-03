@@ -1,6 +1,7 @@
 package com.chh.setup;
 
 import com.chh.setup.entity.ArticleEntity;
+import com.chh.setup.enums.ArticleTypeEnum;
 import com.chh.setup.repository.ArticleRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,5 +61,11 @@ class SetupApplicationTests {
     public void test3() {
         long count = articleRepository.countByType(3);
         System.out.println(count);
+    }
+
+    @Test
+    public void test4() {
+        String name = ArticleTypeEnum.getName(1);
+        System.out.println(name);
     }
 }

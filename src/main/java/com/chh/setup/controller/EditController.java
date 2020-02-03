@@ -1,6 +1,5 @@
 package com.chh.setup.controller;
 
-import com.chh.setup.repository.ArticleRepository;
 import com.chh.setup.dto.ArticleParam;
 import com.chh.setup.dto.ResultDto;
 import com.chh.setup.service.ArticleService;
@@ -22,25 +21,22 @@ import javax.servlet.http.HttpServletRequest;
 public class EditController {
 
     @Autowired
-    ArticleRepository articleRepository;
-    
-    @Autowired
     ArticleService articleService;
-    
+
     @GetMapping("/edit")
-    public String edit() {
+    public String publish() {
         return "edit.html";
     }
 
     @PostMapping("/publish")
     @ResponseBody
-    public Object publish(@RequestBody ArticleParam articleParam,
-                          HttpServletRequest request) {
+    public Object doPublish(@RequestBody ArticleParam articleParam,
+                            HttpServletRequest request) {
         //防止用户输入长型的空字符串"          "
         if (StringUtils.isBlank(articleParam.getTitle()) || "".equals(StringUtils.trim(articleParam.getTitle()))) {
             return ResultDto.errorOf(3001, "标题不能为空");
         }
-        if (StringUtils.isBlank(articleParam.getDescription())  || "".equals(StringUtils.trim(articleParam.getDescription()))) {
+        if (StringUtils.isBlank(articleParam.getDescription()) || "".equals(StringUtils.trim(articleParam.getDescription()))) {
             return ResultDto.errorOf(3002, "新闻内容不能为空");
         }
         if (StringUtils.isBlank(articleParam.getType())) {
@@ -50,9 +46,14 @@ public class EditController {
             return ResultDto.errorOf(3004, "标签不能为空");
         }
         if (request.getSession().getAttribute("user") == null || articleParam.getCreator() == null) {
-            return ResultDto.errorOf(201, "未登录状态");
+            return ResultDto.errorOf(201, "用户未登录");
         }
         articleService.createOrUpdate(articleParam);
         return ResultDto.okOf(articleParam);
+    }
+
+    @GetMapping("/edit/*")
+    public String edit() {
+        return "/edit.html";
     }
 }

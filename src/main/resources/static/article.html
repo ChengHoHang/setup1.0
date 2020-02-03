@@ -36,7 +36,7 @@
 
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/edit">发布</a></li>
-                    <li><a href="sign_in.html" v-show="loginCode != 200">登陆</a></li>
+                    <li><a href="/sign_in.html" v-show="loginCode != 200">登陆</a></li>
                     <li class="dropdown" v-show="loginCode === 200">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="false">
@@ -125,9 +125,13 @@
                 var url = 'http://localhost:8080/article/' + window.location.pathname.split('/')[2];
                 var that = this;
                 axios.get(url, {}).then(function (response) {
-                    that.article = response.data.rsData;
-                    that.creator = response.data.rsData.user;
-                    document.title = that.article.title;
+                    if (response.data.code !== 200) {
+                        window.location.href = "/error.html?" + response.data.code + "&" + response.data.message;
+                    } else {
+                        that.article = response.data.rsData;
+                        that.creator = response.data.rsData.user;
+                        document.title = that.article.title;
+                    }
                 });
             },
         },

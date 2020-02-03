@@ -1,7 +1,8 @@
 package com.chh.setup.controller;
 
-import com.chh.setup.repository.UserRepository;
 import com.chh.setup.dto.ResultDto;
+import com.chh.setup.exception.CustomizeErrorCode;
+import com.chh.setup.repository.UserRepository;
 import com.chh.setup.service.AuthorizeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,10 +34,7 @@ public class IndexController {
                 return ResultDto.okOf(user);
             }
         }
-        ResultDto resultDto = new ResultDto();
-        resultDto.setCode(201);
-        resultDto.setMessage("未登录状态");
-        return resultDto;
+        return ResultDto.errorOf(CustomizeErrorCode.USER_LOG_OUT);
     }
     
 }

@@ -30,7 +30,6 @@ public enum ArticleTypeEnum {
 
     /**
      * 根据前端传入的新闻类型字符串参数转换成整型
-     *
      * @param name
      * @return
      */
@@ -41,5 +40,19 @@ public enum ArticleTypeEnum {
             }
         }
         return -1;
+    }
+
+    /**
+     * 根据后端返回的新闻类型整型参数转换成字符串
+     * @param type
+     * @return
+     */
+    public static String getName(int type) {
+        for (ArticleTypeEnum value : ArticleTypeEnum.values()) {
+            if (value.type == type) {
+                return value.name;
+            }
+        }
+        return "";
     }
 }

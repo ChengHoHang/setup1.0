@@ -4,6 +4,7 @@ import com.chh.setup.entity.ArticleEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -22,4 +23,8 @@ public interface ArticleRepository extends JpaRepository<ArticleEntity, Integer>
     Page<ArticleEntity> findAllByCreator(@Param("creator") Integer creator, Pageable pageable);
     
     Long countByCreator(Integer creator);
+
+    @Modifying
+    @Query("update ArticleEntity e set e.viewCount = e.viewCount + :count where e.id = :id")
+    void incViewCount(@Param("id") Integer id, @Param("count") int count);
 }

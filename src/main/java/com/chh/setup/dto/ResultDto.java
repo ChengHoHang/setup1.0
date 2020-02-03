@@ -1,5 +1,7 @@
 package com.chh.setup.dto;
 
+import com.chh.setup.exception.BaseExceptionInterface;
+import com.chh.setup.exception.CustomizeException;
 import lombok.Data;
 
 /**
@@ -17,6 +19,20 @@ public class ResultDto<T> {
         ResultDto resultDto = new ResultDto();
         resultDto.setCode(code);
         resultDto.setMessage(message);
+        return resultDto;
+    }
+
+    public static ResultDto errorOf(BaseExceptionInterface baseExceptionInterface) {
+        ResultDto resultDto = new ResultDto();
+        resultDto.setCode(baseExceptionInterface.getErrorCode());
+        resultDto.setMessage(baseExceptionInterface.getErrorMsg());
+        return resultDto;
+    }
+    
+    public static ResultDto errorOf(CustomizeException ex) {
+        ResultDto resultDto = new ResultDto();
+        resultDto.setCode(ex.getErrorCode());
+        resultDto.setMessage(ex.getErrorMsg());
         return resultDto;
     }
 
