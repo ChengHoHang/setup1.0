@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * 用户操作记录服务层
+ * 用户主页服务层
  * @author chh
  * @date 2020/1/20 16:19
  */
@@ -55,7 +55,7 @@ public class UserRecordService {
                 .stream().map(article -> {
                     ArticleDto articleDto = new ArticleDto();
                     BeanUtils.copyProperties(article, articleDto, "description", "user");
-                    articleDto.setUser(user);
+                    articleDto.setCreator(user);
                     articleDto.setGmtCreated(DateUtils.timestamp2Date(article.getGmtCreated(), "yyyy-MM-dd HH:mm"));
                     articleDto.setGmtModified(DateUtils.timestamp2Date(article.getGmtModified(), "yyyy-MM-dd HH:mm"));
                     return articleDto;

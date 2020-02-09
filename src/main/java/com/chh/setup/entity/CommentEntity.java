@@ -6,23 +6,19 @@ import javax.persistence.*;
 
 /**
  * @author chh
- * @date 2020/1/10 20:33
+ * @date 2020/2/4 18:58
  */
 @Data
 @Entity
-@Table(name = "article")
-public class ArticleEntity {
-    
+@Table(name = "comment")
+public class CommentEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String title;
-    private String description;
-    private Integer type;
-    private String tag;
-    private Integer creator;
-    private Integer commentCount = 0;
-    private Integer viewCount = 0;
+    private Integer articleId;
+    private Integer commentator;
+    private String content;
     private Integer likeCount = 0;
     private Long gmtCreated;
     private Long gmtModified;

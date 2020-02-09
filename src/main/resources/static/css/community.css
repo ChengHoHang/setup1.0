@@ -20,6 +20,10 @@ body {
     background-color: white;
 }
 
+.control-label {
+    padding-top: 5px;
+}
+
 .btn-edit-summit {
     float: right;
     margin-bottom: 15px;
@@ -28,17 +32,26 @@ body {
 .type-article {
     margin-left: -30px;
     margin-top: 5px;
-    height: 40px;
+    margin-bottom: 15px;
 }
 
 
 /*首页样式*/
 .category {
-    padding: 25px 0px 40px 13px;
+    padding: 25px 0 40px 13px;
+}
+
+.index-favor-icon {
+    color: #ee4a4a;
+}
+
+.index-comment-icon, .index-view-icon {
+    color: #8b6363;
 }
 
 .news-list {
     list-style: none;
+    padding: 0 40px;
 }
 
 .list-content {
@@ -85,19 +98,23 @@ body {
     margin-right: 5px;
 }
 
-.active {
+.category .active {
     background: #554a44;
     color: #fff;
 }
 
 #home-page {
     margin-left: 200px;
-} 
+}
 
 /*文章详情页样式*/
-.article-detail {
+.article-detail, .article-comment, .article-reply-box {
     padding: 10px 20px 0;
     margin-bottom: 30px;
+}
+
+.article-comment {
+    border: 1px solid #eee;
 }
 
 .markitup-box {
@@ -105,7 +122,7 @@ body {
     line-height: 1.6;
 }
 
-.mod-header-title{
+.mod-header-title {
     font-size: 25px;
     line-height: 30px;
 }
@@ -117,7 +134,7 @@ body {
 }
 
 .aw-mod {
-    padding-top: 0px;
+    padding-top: 0;
     border-top: none;
 }
 
@@ -135,4 +152,92 @@ body {
 .article-menu {
     font-size: 12px;
     color: #999;
+}
+
+.comment-count {
+    border-left: 4px solid #ec7259;
+    padding-left: 12px;
+    margin-bottom: 40px;
+}
+
+.comment-area {
+    margin-bottom: 8px;
+}
+
+.comment-commentator {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.comment-otherInfo {
+    margin-top: 2px;
+    font-size: 12px;
+    color: #969696;
+}
+
+.comment-presentation {
+    margin-bottom: 30px;
+}
+
+.comment-content {
+    margin-top: 10px;
+    font-size: 16px;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.commentator-a {
+    color: inherit;
+}
+
+.comment-body {
+    padding-left: 40px;
+}
+
+.comment-actions {
+    margin-top: 10px;
+    color: #b0b0b0;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.comment-actions .comment-action {
+    vertical-align: -0.125em;
+}
+
+.comment-actions :hover, .comment-actions .active {
+    color: #ff0000;
+}
+
+.comment-body hr {
+    margin-top: 13px;
+}
+
+.favor-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    color: #969696;
+    border: 1px solid #eee;
+    border-radius: 50%;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.favor-action {
+    display: flex;
+    align-items: center;
+}
+
+.favor-num {
+    margin-left: 15px;
+}
+
+.favor-icon :hover, .favor-action .active {
+    color: #ec7259;
+    display: flex;
 }

@@ -9,6 +9,7 @@ import com.chh.setup.enums.ArticleTypeEnum;
 import com.chh.setup.exception.CustomizeErrorCode;
 import com.chh.setup.exception.CustomizeException;
 import com.chh.setup.myutils.DateUtils;
+import com.chh.setup.repository.ArticleFavorRepository;
 import com.chh.setup.repository.ArticleRepository;
 import com.chh.setup.repository.UserRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -35,18 +36,36 @@ public class ArticleService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    ArticleFavorRepository articleFavorRepository;
+
     /**
      * 发布新闻，并持久化到数据库
      *
      * @param articleParam
      */
     public void createOrUpdate(ArticleParam articleParam) {
-        ArticleEntity articleEntity = new ArticleEntity();
-        BeanUtils.copyProperties(articleParam, articleEntity);
-        articleEntity.setType(ArticleTypeEnum.getType(articleParam.getType()));
-        articleEntity.setGmtCreated(System.currentTimeMillis());
-        articleEntity.setGmtModified(System.currentTimeMillis());
-        articleRepository.save(articleEntity);
+        if (!ArticleTypeEnum.isExist(articleParam.getType())) {
+            throw new CustomizeException(CustomizeErrorCode.TYPE_NOT_EXIST);
+        }
+        UserEntity user = userRepository.findById(articleParam.getCreator()).orElse(null);
+        if (user == null) {
+            throw new CustomizeException(CustomizeErrorCode.USER_NOT_EXIST);
+        }
+        ArticleEntity article;
+        if (articleParam.getId() == null) { // 插入
+            article = new ArticleEntity();
+            article.setGmtCreated(System.currentTimeMillis());
+        } else {  // 更新
+            article = getEntityById(articleParam.getId());
+            if (article == null) {
+                throw new CustomizeException(CustomizeErrorCode.ARTICLE_NOT_FOUND);
+            }
+        }
+        BeanUtils.copyProperties(articleParam, article);
+        article.setType(ArticleTypeEnum.getType(articleParam.getType()));
+        article.setGmtModified(System.currentTimeMillis());
+        articleRepository.save(article);
     }
 
     /**
@@ -54,25 +73,32 @@ public class ArticleService {
      * @param article
      * @return
      */
-    public ArticleDto convertToDto(ArticleEntity article) {
+    public ArticleDto preConvert(ArticleEntity article) {
         UserEntity user = userRepository.findById(article.getCreator()).get();
         ArticleDto articleDto = new ArticleDto();
         BeanUtils.copyProperties(article, articleDto);
         articleDto.setGmtCreated(DateUtils.timestamp2Date(article.getGmtCreated(), "yyyy-MM-dd HH:mm"));
         articleDto.setGmtModified(DateUtils.timestamp2Date(article.getGmtModified(), "yyyy-MM-dd HH:mm"));
         articleDto.setType(ArticleTypeEnum.getName(article.getType()));
-        articleDto.setUser(user);
+        articleDto.setCreator(user);
         return articleDto;
     }
-    
+
     /**
      * 调用getPageByType方法取出相应类型的文章列表，并作预处理后封装至ArticleDto
+     * @param page
+     * @param size
+     * @param type
+     * @return
      */
     public PagesDto<ArticleDto> listByType(Integer page, Integer size, Integer type) {
+        if (!ArticleTypeEnum.isExist(type)) {
+            throw new CustomizeException(CustomizeErrorCode.TYPE_NOT_EXIST);
+        }
         List<ArticleEntity> articles = getPageByType(page - 1, size, type);
         List<ArticleDto> articleDtos = new ArrayList<>();
         for (ArticleEntity article : articles) {
-            ArticleDto articleDto = convertToDto(article);
+            ArticleDto articleDto = preConvert(article);
             articleDto.setDescription(StringUtils.truncate(articleDto.getDescription(), 150) + ".....");
             articleDtos.add(articleDto);
         }
@@ -118,20 +144,24 @@ public class ArticleService {
         return (long) Math.ceil((double) count / size);
     }
     
-    public ArticleDto getArticleById(Integer id) {
-        ArticleEntity article = articleRepository.findById(id).orElse(null);
+    public ArticleDto getDtoById(Integer id) {
+        ArticleEntity article = getEntityById(id);
         if (article == null) {
             throw new CustomizeException(CustomizeErrorCode.ARTICLE_NOT_FOUND);
         }
-        return convertToDto(article);
+        return preConvert(article);
+    }
+
+    public ArticleEntity getEntityById(Integer id) {
+        return articleRepository.findById(id).orElse(null);
     }
 
     /**
      * 增加对应id文章的阅读数
-     * @param id
+     * @param articleId
      */
     @Transactional
-    public void incViewCount(Integer id) {
-        articleRepository.incViewCount(id, 1);
+    public void incViewCount(Integer articleId) {
+        articleRepository.incViewCount(articleId, 1);
     }
 }

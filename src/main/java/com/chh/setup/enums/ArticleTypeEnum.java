@@ -10,21 +10,21 @@ public enum ArticleTypeEnum {
     INTERNATIONAL("国际", 2),
     TECHNOLOGY("科技", 3),
     ENTERTAINMENT("娱乐", 4),
-    MIXED("杂谈", 5);
+    SPORTS("体育", 5);
 
     private String name;
-    private int type;
+    private Integer type;
 
     ArticleTypeEnum(String name, int type) {
         this.name = name;
         this.type = type;
     }
-
+    
     public String getName() {
         return name;
     }
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
@@ -33,7 +33,7 @@ public enum ArticleTypeEnum {
      * @param name
      * @return
      */
-    public static int getType(String name) {
+    public static Integer getType(String name) {
         for (ArticleTypeEnum value : ArticleTypeEnum.values()) {
             if (value.name.equals(name)) {
                 return value.type;
@@ -54,5 +54,23 @@ public enum ArticleTypeEnum {
             }
         }
         return "";
+    }
+    
+    public static boolean isExist(String name) {
+        for (ArticleTypeEnum value : ArticleTypeEnum.values()) {
+            if (value.name.equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isExist(Integer type) {
+        for (ArticleTypeEnum value : ArticleTypeEnum.values()) {
+            if (value.type == type) {
+                return true;
+            }
+        }
+        return false;
     }
 }

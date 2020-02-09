@@ -27,4 +27,12 @@ public interface ArticleRepository extends JpaRepository<ArticleEntity, Integer>
     @Modifying
     @Query("update ArticleEntity e set e.viewCount = e.viewCount + :count where e.id = :id")
     void incViewCount(@Param("id") Integer id, @Param("count") int count);
+
+    @Modifying
+    @Query("update ArticleEntity e set e.commentCount = e.commentCount + :count where e.id = :id")
+    void incCommentCount(@Param("id")Integer id, @Param("count")int count);
+
+    @Modifying
+    @Query("update ArticleEntity e set e.likeCount = e.likeCount + :count where e.id = :id")
+    void incLikeCount(@Param("id")Integer id, @Param("count")int count);
 }

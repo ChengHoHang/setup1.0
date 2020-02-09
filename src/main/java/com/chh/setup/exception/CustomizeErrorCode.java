@@ -9,9 +9,23 @@ package com.chh.setup.exception;
  */
 public enum CustomizeErrorCode implements BaseExceptionInterface {
     SUCCESS(200, "成功"),
-    ARTICLE_NOT_FOUND(2005, "文章不存在"),
-    USER_LOG_OUT(3001, "用户未登录"),
-    EDIT_PERMISSION_DENY(3002, "用户无权限修改其他文章");
+
+    REGISTER_ACCOUNT_ABNORMAL(1001, "您输入的账号不存在或者密码错误，请重试！"),
+    REGISTER_PARAM_ERROR(1002, "账号或者密码不能为空！"),
+    REGISTER_ACCOUNT_EXIST(1003, "该账号已存在，请重新设置账号！"),
+    
+    BLANK_TITLE(2001, "标题不能为空"),
+    BLANK_DESCRIPTION(2002, "新闻内容不能为空"),
+    BLANK_TYPE(2003, "类型不能为空"),
+    BLANK_TAG(2004, "标签不能为空"),
+    ARTICLE_NOT_FOUND(2005, "文章不存在，要不换一篇看看？"),
+    TYPE_NOT_EXIST(2006, "文章类型不存在"),
+
+    BLANK_CONTENT(2051, "评论内容不能为空"),
+    
+    USER_LOG_OUT(3001, "用户未登录，请登陆后重试~"),
+    EDIT_PERMISSION_DENY(3002, "用户无权限修改其他文章"),
+    USER_NOT_EXIST(3003, "用户不存在");
 
     private Integer errorCode;
 

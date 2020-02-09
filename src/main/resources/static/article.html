@@ -65,7 +65,8 @@
                                 {{article.title}}
                             </h1>
                             <div class="list-meta">
-                                作者：<span class="content-creator"><a :href="'/u/' + creator.id">{{creator.name}}</a></span>
+                                作者：<span class="content-creator"><a
+                                    :href="'/u/' + creator.id">{{creator.name}}</a></span>
                                 发布时间：<span class="meta-content">{{article.gmtModified}} </span>
                                 阅读数：<span class="meta-content">{{article.viewCount}}</span>
                             </div>
@@ -78,10 +79,60 @@
                         </div>
                         <div class="mod-footer">
                             <hr>
+                            <div class="favor-action">
+                                <div :class="['favor-icon', {'active' : article.favorState}]"
+                                     @click="clickFavorIcon($event)">
+                                    <span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span>
+                                </div>
+                                <span class="favor-num" v-text="article.likeCount"></span>
+                                <span> 人点赞 ></span>
+                            </div>
+                            <hr>
                             <a :href="'/edit/' + article.id" class="article-menu"
                                v-if="user != null && creator.token == user.token">
                                 <span class="glyphicon glyphicon-edit" aria-hidden="true">编辑</span>
                             </a>
+                        </div>
+                    </div>
+                    <div class="article-comment">
+                        <div class="mod-header comment-count">
+                            <h4>{{article.commentCount}} 个回复</h4>
+                        </div>
+                        <div class="mod-body comment-body">
+                            <div v-if="article.comments" v-for="(comment, index) in article.comments">
+                                <div class="comment-commentator">
+                                    <a :href="'/u/' + comment.commentator.id" class="commentator-a"
+                                       v-text="comment.commentator.name"></a>
+                                </div>
+                                <div class="comment-otherInfo">
+                                    <span class="meta-content" v-text="(index + 1) + '楼'"></span>
+                                    <span v-text="comment.gmtCreated"></span>
+                                </div>
+                                <div class="comment-content" v-text="comment.content"></div>
+                                <div class="comment-actions" @click="addCommentRecord($event, index)">
+                                    <span :class="{'active': comment.favorState}">
+                                        <span class="glyphicon glyphicon-thumbs-up comment-action" aria-hidden="true"></span>
+                                        <span>{{comment.likeCount ? comment.likeCount : "赞"}}</span>
+                                    </span>
+                                </div>
+                                <hr>
+                            </div>
+                            <div v-if="!article.comments" class="comment-presentation">当前文章还没有人评论，赶紧抢沙发吧~</div>
+                        </div>
+                    </div>
+                    <div class="article-reply-box">
+                        <div class="mod-header">
+                            <label>{{user !== null ? "用户： " + user.name : "评论功能需要登陆"}}</label>
+                        </div>
+                        <div class="mod-body">
+                            <form>
+                                <div class="form-group comment-area">
+                                    <textarea class="form-control" rows="4" v-model="replyContent"
+                                              placeholder="写下你的评论.."></textarea>
+                                </div>
+                                <button type="button" class="btn btn-success btn-edit-summit" @click="publish">评论
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -108,12 +159,14 @@
             loginCode: '',
             user: '',
             article: '',
-            creator: ''
+            creator: '',
+            replyContent: '',
+            commentClickCounter: {},
+            mainClickCount: 0
         },
         methods: {
             getLoginInfo: function () {
-                console.log("getLoginInfo");
-                var that = this;
+                let that = this;
                 axios.get("http://localhost:8080/test_login", {}).then(function (response) {
                     that.loginCode = response.data.code;
                     that.user = response.data.rsData;
@@ -121,23 +174,133 @@
             },
 
             getArticle: function () {
-                console.log("getArticle");
-                var url = 'http://localhost:8080/article/' + window.location.pathname.split('/')[2];
-                var that = this;
+                let url = 'http://localhost:8080/article/' + window.location.pathname.split('/')[2];
+                let that = this;
                 axios.get(url, {}).then(function (response) {
                     if (response.data.code !== 200) {
                         window.location.href = "/error.html?" + response.data.code + "&" + response.data.message;
                     } else {
                         that.article = response.data.rsData;
-                        that.creator = response.data.rsData.user;
+                        that.creator = response.data.rsData.creator;
                         document.title = that.article.title;
                     }
                 });
             },
+
+            publish: function () {
+                if (this.user == null || this.user === '') {
+                    alert("用户未登录，请登录后重试！");
+                    return;
+                }
+                if (this.replyContent === '') {
+                    alert("内容不能为空！");
+                    return;
+                }
+                let param = {
+                    "articleId": this.article.id,
+                    "commentator": this.user.id,
+                    "content": this.replyContent
+                };
+                axios.post("http://localhost:8080/publish/comment", param).then(function (response) {
+                    if (response.data.code === 200) {
+                        window.location.reload();
+                    } else {
+                        alert(response.data.message)
+                    }
+                });
+            },
+
+            beforeunloadFn:async function () {
+                let records = [];
+                for (let index in this.commentClickCounter) {
+                    if (this.commentClickCounter[index] & 1) {// 过滤非单数的操作
+                        records.push({
+                            "commentId": this.article.comments[index].id, 
+                            "state": (this.article.comments[index].favorState + 1) & 1
+                        })
+                    }
+                }
+                let stateChange = this.mainClickCount & 1;
+                if (records.length !== 0 || stateChange !== 0) {
+                    let param = {
+                        "articleId": this.article.id,
+                        "records": records,
+                        "favorState": stateChange === 0 ? null : (this.article.favorState + 1) & 1
+                    };
+                    await axios.post("http://localhost:8080/favor-confirm", param).then(function (response) {
+                        if (response.data.code !== 200) {
+                            alert(response.data.message);
+                        }
+                    })
+                }
+                localStorage[1] = 1;
+            },
+
+            loginInterceptor: function () {
+                if (!this.user) {
+                    let confirm = window.confirm("该操作需要登陆。需要跳转到登录页吗？");
+                    if (confirm) {
+                        window.location.href = "/sign_in.html";
+                    }
+                    return confirm;
+                }
+                return true;
+            },
+
+            /**
+             * 点击评论点赞按钮触发事件
+             * @param e
+             * @param index
+             * @detail record的"clickCount"字段表示点赞与否的状态(0或1)
+             */
+            addCommentRecord: function (e, index) {
+                if (!this.loginInterceptor()) {
+                    return;
+                }
+                if (this.commentClickCounter.hasOwnProperty(index)) {
+                    this.commentClickCounter[index] += 1;
+                } else {
+                    this.commentClickCounter[index] = 1;
+                }
+                let likeCountTag = e.currentTarget.firstChild.children[1];
+                if (e.currentTarget.firstChild.className) {
+                    e.currentTarget.firstChild.className = '';
+                    likeCountTag.innerText = parseInt(likeCountTag.innerText) - 1;
+                } else {
+                    e.currentTarget.firstChild.className = 'active';
+                    likeCountTag.innerText = likeCountTag.innerText !== "赞" ? parseInt(likeCountTag.innerText) + 1 : 1;
+                }
+            },
+            
+            /**
+             * 点击文章点赞按钮触发事件
+             * @param e
+             */
+            clickFavorIcon: function (e) {
+                if (!this.loginInterceptor()) {
+                    return;
+                }
+                this.mainClickCount += 1;
+                if ((this.mainClickCount + this.article.favorState) & 1) {
+                    e.currentTarget.classList.add('active');
+                    e.currentTarget.nextElementSibling.innerText = parseInt(e.currentTarget.nextElementSibling.innerText) + 1;
+                } else {
+                    e.currentTarget.classList.remove('active');
+                    e.currentTarget.nextElementSibling.innerText = parseInt(e.currentTarget.nextElementSibling.innerText) - 1;
+                }
+            }
         },
         created: function () {
             this.getLoginInfo();
             this.getArticle();
+        },
+        mounted: function () {
+            window.addEventListener('beforeunload', this.beforeunloadFn);    //更新页面
+            window.addEventListener('unload', this.beforeunloadFn);          //关闭页面  
+        },
+        destroy: function () {
+            window.removeEventListener('beforeunload', this.beforeunloadFn);
+            window.removeEventListener('unload', this.beforeunloadFn);
         }
     })
 

@@ -23,17 +23,11 @@ public class ResultDto<T> {
     }
 
     public static ResultDto errorOf(BaseExceptionInterface baseExceptionInterface) {
-        ResultDto resultDto = new ResultDto();
-        resultDto.setCode(baseExceptionInterface.getErrorCode());
-        resultDto.setMessage(baseExceptionInterface.getErrorMsg());
-        return resultDto;
+        return ResultDto.errorOf(baseExceptionInterface.getErrorCode(), baseExceptionInterface.getErrorMsg());
     }
     
     public static ResultDto errorOf(CustomizeException ex) {
-        ResultDto resultDto = new ResultDto();
-        resultDto.setCode(ex.getErrorCode());
-        resultDto.setMessage(ex.getErrorMsg());
-        return resultDto;
+        return ResultDto.errorOf(ex.getErrorCode(), ex.getErrorMsg());
     }
 
     public static <T> ResultDto okOf(T t) {

@@ -85,10 +85,19 @@
                                 <div class="list-content">
                                     <a class="list-title" target="_blank" :href="'/a/' + article.id" v-text="article.title"></a>
                                     <div class="list-meta">
-                                        <span class="content-creator"><a :href="'/u/' + article.user.id">{{article.user.name}}</a></span>
-                                        <span class="meta-content">• {{article.likeCount}} 个点赞</span>
-                                        <span class="meta-content">• {{article.commentCount}} 个回复</span>
-                                        <span class="meta-content">• {{article.viewCount}} 次浏览</span>
+                                        <span class="content-creator"><a :href="'/u/' + article.creator.id">{{article.creator.name}}</a></span>
+                                        <span class="meta-content index-favor-icon">
+                                            <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+                                            <span v-text="article.likeCount"></span>
+                                        </span>
+                                        <span class="meta-content index-comment-icon">
+                                            <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+                                            <span v-text="article.commentCount"></span>
+                                        </span>
+                                        <span class="meta-content index-view-icon">
+                                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                                            <span v-text="article.viewCount"></span>
+                                        </span>
                                         <span class="meta-content">• {{article.gmtModified}} </span>
                                     </div>
                                 </div>
@@ -150,9 +159,13 @@
                         "page": that.currentPage
                     }
                 }).then(function (response) {
-                    that.homeUser = response.data.rsData.user;
-                    that.articleList = response.data.rsData.data.data;
-                    that.setPage(that.currentPage, response.data.rsData.data.totalPage, that.getUserRecord, index);
+                    if (response.data.code !== 200) {
+                        window.location.href = "/error.html?" + response.data.code + "&" + response.data.message;
+                    } else {
+                        that.homeUser = response.data.rsData.user;
+                        that.articleList = response.data.rsData.data.data;
+                        that.setPage(that.currentPage, response.data.rsData.data.totalPage, that.getUserRecord, index);
+                    }
                 })
             },
 

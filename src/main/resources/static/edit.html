@@ -67,11 +67,7 @@
                                 <label for="title" class="col-sm-2 control-label">请选择主题分类</label>
                                 <div class="col-sm-2">
                                     <select class="form-control" v-model="type">
-                                        <option>国内</option>
-                                        <option>国际</option>
-                                        <option>科技</option>
-                                        <option>娱乐</option>
-                                        <option>杂谈</option>
+                                        <option v-for="(type, index) in dropDownOption">{{type}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -124,13 +120,15 @@
             loginCode: '',
             user: '',
             type: '国内',
+            dropDownOption: ['国内', '国际', '科技', '娱乐', '体育'],
             title: '',
             description: '',
-            tag: ''
+            tag: '',
+            creator: '',
+            id: ''
         },
         methods: {
             getLoginInfo: function () {
-                console.log("getLoginInfo");
                 var that = this;
                 axios.get("http://localhost:8080/test_login", {}).then(function (response) {
                     that.loginCode = response.data.code;
@@ -159,14 +157,14 @@
                 var url_split = window.location.pathname.split('/');
                 var message = url_split.length === 2 ? "发布" : "编辑";
                 var param = {
-                    "id": url_split.length === 2 ? null : url_split[2],
+                    "id": message === "发布" ? null : that.id,
                     "type": that.type,
                     "title": that.title,
                     "description": that.description,
                     "tag": that.tag,
-                    "creator": that.user.id
+                    "creator": message === "发布" ? that.user.id : that.creator
                 };
-                axios.post("http://localhost:8080/publish", param).then(function (response) {
+                axios.post("http://localhost:8080/publish/article", param).then(function (response) {
                     if (response.data.code === 200) {
                         alert(message + "成功，3秒后跳转至首页~");
                         setTimeout(window.location.href = '/', 3000);
@@ -177,7 +175,6 @@
             },
 
             getArticle: function () {
-                console.log("getArticle");
                 var url_split = window.location.pathname.split('/');
                 if (url_split.length !== 3) {
                     return;
@@ -188,10 +185,12 @@
                     if (response.data.code !== 200) {
                         window.location.href = "/error.html?" + response.data.code + "&" + response.data.message;
                     } else {
+                        that.id = response.data.rsData.id;
                         that.type = response.data.rsData.type;
                         that.title = response.data.rsData.title;
                         that.description = response.data.rsData.description;
                         that.tag = response.data.rsData.tag;
+                        that.creator = response.data.rsData.creator;
                     }
                 });
             }

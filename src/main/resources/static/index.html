@@ -86,10 +86,21 @@
                                     <a class="list-title" target="_blank" :href="'/a/' + article.id" v-text="article.title"></a>
                                     <p class="list-abstract" v-text="article.description"></p>
                                     <div class="list-meta">
-                                        <span class="content-creator"><a :href="'/u/' + article.user.id">{{article.user.name}}</a></span>
-                                        <span class="meta-content">• {{article.likeCount}} 个点赞</span>
-                                        <span class="meta-content">• {{article.commentCount}} 个回复</span>
-                                        <span class="meta-content">• {{article.viewCount}} 次浏览</span>
+                                        <span class="content-creator">
+                                            <a :href="'/u/' + article.creator.id" v-text="article.creator.name"></a>
+                                        </span>
+                                        <span class="meta-content index-favor-icon">
+                                            <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+                                            <span v-text="article.likeCount"></span>
+                                        </span>
+                                        <span class="meta-content index-comment-icon">
+                                            <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+                                            <span v-text="article.commentCount"></span>
+                                        </span>
+                                        <span class="meta-content index-view-icon">
+                                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                                            <span v-text="article.viewCount"></span>
+                                        </span>
                                         <span class="meta-content">• {{article.gmtModified}} </span>
                                     </div>
                                 </div>
@@ -120,14 +131,13 @@
         data: {
             loginCode: '',
             user: '',
-            category: ['全部', '国内', '国际', '科技', '娱乐', '杂谈'],
+            category: ['全部', '国内', '国际', '科技', '娱乐', '体育'],
             homeType: 0,
             articleList: [],
             currentPage: 1   // 访问首页时默认请求第一页的数据，每页数据量pageSize由application.properties指定
         },
         methods: {
             getLoginInfo: function () {
-                console.log("getLoginInfo");
                 var that = this;
                 axios.get("http://localhost:8080/test_login", {}).then(function (response) {
                     that.loginCode = response.data.code;
@@ -157,7 +167,6 @@
             },
             
             getArticleList: function () {
-                console.log("getArticleList");
                 var that = this;
                 axios.get("http://localhost:8080/articles", {
                     params: {

@@ -2,6 +2,9 @@ package com.chh.setup.controller;
 
 import com.chh.setup.dto.ArticleParam;
 import com.chh.setup.dto.ResultDto;
+import com.chh.setup.entity.UserEntity;
+import com.chh.setup.exception.CustomizeErrorCode;
+import com.chh.setup.exception.CustomizeException;
 import com.chh.setup.service.ArticleService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,33 +30,37 @@ public class EditController {
     public String publish() {
         return "edit.html";
     }
-
-    @PostMapping("/publish")
-    @ResponseBody
-    public Object doPublish(@RequestBody ArticleParam articleParam,
-                            HttpServletRequest request) {
-        //防止用户输入长型的空字符串"          "
-        if (StringUtils.isBlank(articleParam.getTitle()) || "".equals(StringUtils.trim(articleParam.getTitle()))) {
-            return ResultDto.errorOf(3001, "标题不能为空");
-        }
-        if (StringUtils.isBlank(articleParam.getDescription()) || "".equals(StringUtils.trim(articleParam.getDescription()))) {
-            return ResultDto.errorOf(3002, "新闻内容不能为空");
-        }
-        if (StringUtils.isBlank(articleParam.getType())) {
-            return ResultDto.errorOf(3003, "类型不能为空");
-        }
-        if (StringUtils.isBlank(articleParam.getTag()) || "".equals(StringUtils.trim(articleParam.getTag()))) {
-            return ResultDto.errorOf(3004, "标签不能为空");
-        }
-        if (request.getSession().getAttribute("user") == null || articleParam.getCreator() == null) {
-            return ResultDto.errorOf(201, "用户未登录");
-        }
-        articleService.createOrUpdate(articleParam);
-        return ResultDto.okOf(articleParam);
-    }
-
+    
     @GetMapping("/edit/*")
     public String edit() {
         return "/edit.html";
+    }
+    
+    @PostMapping("/publish/article")
+    @ResponseBody
+    public Object publishArticle(@RequestBody ArticleParam articleParam,
+                                 HttpServletRequest request) {
+        //防止用户输入长型的空字符串"          "
+        if (StringUtils.isBlank(articleParam.getTitle()) || "".equals(StringUtils.trim(articleParam.getTitle()))) {
+            throw new CustomizeException(CustomizeErrorCode.BLANK_TITLE);
+        }
+        if (StringUtils.isBlank(articleParam.getDescription()) || "".equals(StringUtils.trim(articleParam.getDescription()))) {
+            throw new CustomizeException(CustomizeErrorCode.BLANK_DESCRIPTION);
+        }
+        if (StringUtils.isBlank(articleParam.getType())) {
+            throw new CustomizeException(CustomizeErrorCode.BLANK_TYPE);
+        }
+        if (StringUtils.isBlank(articleParam.getTag()) || "".equals(StringUtils.trim(articleParam.getTag()))) {
+            throw new CustomizeException(CustomizeErrorCode.BLANK_TAG);
+        }
+        if (request.getSession().getAttribute("user") == null || articleParam.getCreator() == null) {
+            throw new CustomizeException(CustomizeErrorCode.USER_LOG_OUT);
+        }
+        UserEntity user = (UserEntity) request.getSession().getAttribute("user");
+        if (articleParam.getId() != null && !articleParam.getCreator().equals(user.getId())) {
+            throw new CustomizeException(CustomizeErrorCode.EDIT_PERMISSION_DENY);
+        }
+        articleService.createOrUpdate(articleParam);
+        return ResultDto.okOf(null);
     }
 }
