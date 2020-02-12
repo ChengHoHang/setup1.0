@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-    <title>个人中心</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/css/community.css"/>
@@ -80,20 +79,25 @@
                 <!--新闻列表-->
                 <div class="col-md-9">
                     <div class="list-container">
-                        <ul class="news-list">
-                            <li v-for="(article, index) in articleList">
+                        <ul class="news-list" v-if="recordType === 'article'">
+                            <li v-if="dataList.length" v-for="(article, index) in dataList">
                                 <div class="list-content">
-                                    <a class="list-title" target="_blank" :href="'/a/' + article.id" v-text="article.title"></a>
+                                    <a class="list-title" target="_blank" :href="'/a/' + article.id"
+                                       v-text="article.title"></a>
                                     <div class="list-meta">
-                                        <span class="content-creator"><a :href="'/u/' + article.creator.id">{{article.creator.name}}</a></span>
+                                        <span class="content-creator">
+                                            <a :href="'/u/' + homeUser.id" v-text="homeUser.name"></a>
+                                        </span>
                                         <span class="meta-content index-favor-icon">
                                             <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
                                             <span v-text="article.likeCount"></span>
                                         </span>
-                                        <span class="meta-content index-comment-icon">
-                                            <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
-                                            <span v-text="article.commentCount"></span>
-                                        </span>
+                                        <a target="_blank" :href="'/a/' + article.id + '#comment'">
+                                            <span class="meta-content index-comment-icon">
+                                                <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+                                                <span v-text="article.commentCount"></span>
+                                            </span>
+                                        </a>
                                         <span class="meta-content index-view-icon">
                                             <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
                                             <span v-text="article.viewCount"></span>
@@ -103,9 +107,77 @@
                                 </div>
                                 <hr>
                             </li>
+                            <li class="blank-guide" v-if="!dataList.length">你还没发布过一篇新闻呢，赶紧尝试一下把</li>
+                        </ul>
+                        <ul class="news-list" v-if="recordType === 'comment'">
+                            <li v-if="dataList.length" v-for="(record, index) in dataList" class="display:table-cell;">
+                                <div class="b_left_up">
+                                    <span class="glyphicon glyphicon-comment index-comment-icon" aria-hidden="true"></span>
+                                </div>
+                                <div class="b_right_up">
+                                    <div class="list-content">
+                                        <h4>
+                                            <a :href="'/u/' + homeUser.id" v-text="homeUser.name" target="_blank"></a>
+                                            回复
+                                            <cite v-text="record.gmtCreated"></cite>
+                                        </h4>
+                                        <div>
+                                            <img src="http://static.tieba.baidu.com/tb/static-itieba3/img/yh_0.png">
+                                            <a class="list-comment" :href="'/a/' + record.articleId + '#comment'"
+                                               v-text="record.content" target="_blank"></a>
+                                            <img src="http://static.tieba.baidu.com/tb/static-itieba3/img/yh_1.png">
+                                            <span class="meta-content index-favor-icon">
+                                                <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+                                                <span v-text="record.likeCount"></span>
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <div class="common_source_top"></div>
+                                            <div class="common_source_main">
+                                                <span class="source-description">来自：</span>
+                                                <a class="" target="_blank" :href="'/a/' + record.articleId"
+                                                   v-text="record.articleTitle"></a>
+                                            </div>
+                                            <div class="common_source_bottom"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                            </li>
+                            <li class="blank-guide" v-if="!dataList.length">你还没评论过一篇新闻呢，赶紧尝试一下把</li>
+                        </ul>
+                        <ul class="news-list" v-if="recordType === 'favor'">
+                            <li v-if="dataList.length" v-for="(article, index) in dataList">
+                                <div class="list-content">
+                                    <a class="list-title" target="_blank" :href="'/a/' + article.id"
+                                       v-text="article.title"></a>
+                                    <div class="list-meta">
+                                        <span class="content-creator">
+                                            <a :href="'/u/' + article.creator.id"v-text="article.creator.name"></a>
+                                        </span>
+                                        <span class="meta-content index-favor-icon">
+                                            <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+                                            <span v-text="article.likeCount"></span>
+                                        </span>
+                                        <a target="_blank" :href="'/a/' + article.id + '#comment'">
+                                            <span class="meta-content index-comment-icon">
+                                                <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+                                                <span v-text="article.commentCount"></span>
+                                            </span>
+                                        </a>
+                                        <span class="meta-content index-view-icon">
+                                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                                            <span v-text="article.viewCount"></span>
+                                        </span>
+                                        <span class="meta-content">• {{article.gmtModified}} </span>
+                                    </div>
+                                </div>
+                                <hr>
+                            </li>
+                            <li class="blank-guide" v-if="!dataList.length">你还没推荐过一篇新闻呢，赶紧尝试一下把</li>
                         </ul>
                     </div>
-                    <div class="home-page">
+                    <div id="paginator" class="home-page">
                         <ul class="pagination" id="home-page"></ul>
                     </div>
                 </div>
@@ -125,18 +197,32 @@
             loginCode: '',
             user: '',
             homeUser: '',
-            category: ['发布', '评论', '点赞'],
+            category: ['发布', '评论', '推荐'],
             homeType: 0,    // 默认为0，初次打开页面时访问'我的发布'
-            articleList: [],
+            dataList: [],
+            recordType: '',
             currentPage: 1   // 访问首页时默认请求第一页的数据，每页数据量pageSize由application.properties指定
         },
         methods: {
             getLoginInfo: function () {
-                var that = this;
+                let that = this;
                 axios.get("http://localhost:8080/test_login", {}).then(function (response) {
                     that.loginCode = response.data.code;
                     that.user = response.data.rsData;
                 })
+            },
+
+            getHomeUser: function () {
+                let url = 'http://localhost:8080/user/' + window.location.pathname.split('/')[2];
+                let that = this;
+                axios.get(url, {}).then(function (response) {
+                    if (response.data.code !== 200) {
+                        window.location.href = "/error.html?" + response.data.code + "&" + response.data.message;
+                    } else {
+                        that.homeUser = response.data.rsData;
+                        document.title = that.homeUser.name + " 的个人中心";
+                    }
+                });
             },
 
             convertToAction: function (index) {
@@ -145,15 +231,15 @@
                 } else if (index === 1) {
                     return '/comment';
                 } else if (index === 2) {
-                    return '/favour';
+                    return '/favor';
                 } else {
                     return '';
                 }
             },
 
             getUserRecord: function (index) {
-                var url = 'http://localhost:8080/user/' + window.location.pathname.split('/')[2] + this.convertToAction(index);
-                var that = this;
+                let url = 'http://localhost:8080/user/' + window.location.pathname.split('/')[2] + this.convertToAction(index);
+                let that = this;
                 axios.get(url, {
                     params: {
                         "page": that.currentPage
@@ -162,10 +248,17 @@
                     if (response.data.code !== 200) {
                         window.location.href = "/error.html?" + response.data.code + "&" + response.data.message;
                     } else {
-                        that.homeUser = response.data.rsData.user;
-                        that.articleList = response.data.rsData.data.data;
+                        if (!response.data.rsData.data.data.length) {
+                            $("#paginator").hide();
+                        } else {
+                            $("#paginator").show();
+                        }
+                        that.dataList = response.data.rsData.data.data;
+                        that.recordType = response.data.rsData.recordType;
                         that.setPage(that.currentPage, response.data.rsData.data.totalPage, that.getUserRecord, index);
                     }
+                }).catch(function (reason) {
+                    console.log(reason);
                 })
             },
 
@@ -177,24 +270,19 @@
              * @param param
              */
             setPage: function (pageCurrent, pageSum, callback, param) {
-                var that = this;
+                let that = this;
                 $("#home-page").bootstrapPaginator({
                     bootstrapMajorVersion: 3, //设置版本号
                     currentPage: pageCurrent, // 显示第几页
                     totalPages: pageSum,      // 总页数
                     alignment: "center",
                     onPageClicked: function (event, originalEvent, type, page) {
-                        // 把当前点击的页码赋值给currentPage, 再次getArticleList
                         that.currentPage = page;
                         callback && callback(param);
                     }
                 })
             },
 
-            /**
-             * 获取当前页面的新闻类型，并传给后端并接受数据由getArticleList渲染
-             * @param index
-             */
             toggle: function (index) {
                 this.homeType = index;
                 this.currentPage = 1;
@@ -202,6 +290,7 @@
             }
         },
         created: function () {
+            this.getHomeUser();
             this.getLoginInfo();
             this.getUserRecord(this.homeType);
         }

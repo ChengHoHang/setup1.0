@@ -10,11 +10,6 @@ public class CustomizeException extends RuntimeException {
 
     public String errorMsg;
 
-    public CustomizeException(Integer errorCode, String errorMsg) {
-        this.errorCode = errorCode;
-        this.errorMsg = errorMsg;
-    }
-
     public CustomizeException(BaseExceptionInterface exceptionInterface) {
         this.errorCode = exceptionInterface.getErrorCode();
         this.errorMsg = exceptionInterface.getErrorMsg();
@@ -23,16 +18,9 @@ public class CustomizeException extends RuntimeException {
     public Integer getErrorCode() {
         return errorCode;
     }
-
-    public void setErrorCode(Integer errorCode) {
-        this.errorCode = errorCode;
-    }
-
+    
     public String getErrorMsg() {
         return errorMsg;
     }
-
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
-    }
+    
 }

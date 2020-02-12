@@ -25,8 +25,11 @@ public enum CustomizeErrorCode implements BaseExceptionInterface {
     
     USER_LOG_OUT(3001, "用户未登录，请登陆后重试~"),
     EDIT_PERMISSION_DENY(3002, "用户无权限修改其他文章"),
-    USER_NOT_EXIST(3003, "用户不存在");
+    USER_NOT_EXIST(3003, "用户不存在"),
 
+    SYS_ERROR(5001, "服务器冒烟了~~~请稍后再访问~~~"),
+    PARAM_ERROR(5002, "未知参数错误");
+    
     private Integer errorCode;
 
     private String errorMsg;

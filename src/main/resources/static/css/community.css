@@ -241,3 +241,68 @@ body {
     color: #ec7259;
     display: flex;
 }
+
+/*用户主页样式*/
+.common_source_top {
+    width: 637px;
+    height: 12px;
+    background: url(//tb2.bdstatic.com/tb/static-itieba3/img/base/icons.gif?v=6&t=1572504362374) no-repeat scroll 0 -875px;
+}
+
+.common_source_main {
+    border-left: 1px solid #dcdcdc;
+    border-right: 1px solid #dcdcdc;
+    background: #fafafa;
+    padding: 12px 15px;
+    margin-left: 1px;
+    width: 620px;
+}
+
+.common_source_bottom {
+    width: 623px;
+    height: 12px;
+    background: url(//tb2.bdstatic.com/tb/static-itieba3/img/base/icons.gif?v=6&t=1572504362374) no-repeat scroll 0 -890px;
+}
+
+cite {
+    font-size: 12px;
+    color: #7f7f7f;
+    margin-right: 10px;
+    float: right;
+    font-style: normal;
+}
+
+.b_left_up {
+    padding: 0;
+    width: 38px;
+    overflow: hidden;
+    float: left;
+    border: 0;
+    text-align: center;
+    margin: 7px;
+    font-size: 36px;
+}
+
+.b_right_up {
+    margin-left: 72px;
+    border: 0;
+    width: 625px;
+}
+
+.list-comment {
+    padding-left: 10px;
+    font-size: 12px;
+    color: black;
+}
+
+.b_right_up .list-content .meta-content {
+    float: right;
+}
+
+.source-description {
+    font-size: 12px;
+}
+
+.blank-guide {
+    height: 50vh;
+}

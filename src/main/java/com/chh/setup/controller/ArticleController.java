@@ -67,7 +67,7 @@ public class ArticleController {
         if (user != null) {
             article.setFavorState(favorService.getFavorState(articleId, user.getId()));
             if (comments != null) {
-                favorService.setCommentFavorState(comments, articleId, user.getId());
+                favorService.setCommentFavorState(comments, user.getId());
             }
         }
         article.setComments(comments);

@@ -61,21 +61,17 @@
                 <div class="col-md-9">
                     <div class="article-detail">
                         <div class="mod-header">
-                            <h1 class="mod-header-title">
-                                {{article.title}}
-                            </h1>
+                            <h1 class="mod-header-title" v-text="article.title"></h1>
                             <div class="list-meta">
                                 作者：<span class="content-creator"><a
-                                    :href="'/u/' + creator.id">{{creator.name}}</a></span>
-                                发布时间：<span class="meta-content">{{article.gmtModified}} </span>
-                                阅读数：<span class="meta-content">{{article.viewCount}}</span>
+                                    :href="'/u/' + creator.id" v-text="creator.name"></a></span>
+                                发布时间：<span class="meta-content" v-text="article.gmtModified"> </span>
+                                阅读数：<span class="meta-content" v-text="article.viewCount"></span>
                             </div>
                             <hr>
                         </div>
                         <div class="mod-body">
-                            <div class="markitup-box">
-                                {{article.description}}
-                            </div>
+                            <div class="markitup-box" v-text="article.description"></div>
                         </div>
                         <div class="mod-footer">
                             <hr>
@@ -85,7 +81,7 @@
                                     <span class="glyphicon glyphicon-heart-empty" aria-hidden="true"></span>
                                 </div>
                                 <span class="favor-num" v-text="article.likeCount"></span>
-                                <span> 人点赞 ></span>
+                                <span>  人已推荐 > </span>
                             </div>
                             <hr>
                             <a :href="'/edit/' + article.id" class="article-menu"
@@ -96,10 +92,10 @@
                     </div>
                     <div class="article-comment">
                         <div class="mod-header comment-count">
-                            <h4>{{article.commentCount}} 个回复</h4>
+                            <h4 v-text="article.commentCount + '个回复'"></h4>
                         </div>
-                        <div class="mod-body comment-body">
-                            <div v-if="article.comments" v-for="(comment, index) in article.comments">
+                        <div id="comment" class="mod-body comment-body">
+                            <div v-if="article.comments" v-for="(comment, index) in article.comments" :id="'comment-' + comment.id">
                                 <div class="comment-commentator">
                                     <a :href="'/u/' + comment.commentator.id" class="commentator-a"
                                        v-text="comment.commentator.name"></a>
@@ -112,7 +108,7 @@
                                 <div class="comment-actions" @click="addCommentRecord($event, index)">
                                     <span :class="{'active': comment.favorState}">
                                         <span class="glyphicon glyphicon-thumbs-up comment-action" aria-hidden="true"></span>
-                                        <span>{{comment.likeCount ? comment.likeCount : "赞"}}</span>
+                                        <span v-text="comment.likeCount ? comment.likeCount : '赞'"></span>
                                     </span>
                                 </div>
                                 <hr>
@@ -122,7 +118,7 @@
                     </div>
                     <div class="article-reply-box">
                         <div class="mod-header">
-                            <label>{{user !== null ? "用户： " + user.name : "评论功能需要登陆"}}</label>
+                            <label v-text="user !== null ? '用户：'  + user.name : '评论功能需要登陆'"></label>
                         </div>
                         <div class="mod-body">
                             <form>
@@ -139,9 +135,7 @@
                 <div class="col-md-3 aw-side-bar">
                     <div class="aw-mod">
                         <div class="aw-head">信息来源</div>
-                        <div class="aw-user-name">
-                            {{creator.name}}
-                        </div>
+                        <div class="aw-user-name" v-text="creator.name"></div>
                         <hr>
                     </div>
                 </div>
@@ -291,8 +285,8 @@
             }
         },
         created: function () {
-            this.getLoginInfo();
             this.getArticle();
+            this.getLoginInfo();
         },
         mounted: function () {
             window.addEventListener('beforeunload', this.beforeunloadFn);    //更新页面

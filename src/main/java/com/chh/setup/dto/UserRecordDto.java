@@ -1,6 +1,5 @@
 package com.chh.setup.dto;
 
-import com.chh.setup.entity.UserEntity;
 import lombok.Data;
 
 /**
@@ -10,6 +9,7 @@ import lombok.Data;
  */
 @Data
 public class UserRecordDto<T> {
-    UserEntity user;
+    Integer userId;
     PagesDto<T> data;
+    String recordType;
 }

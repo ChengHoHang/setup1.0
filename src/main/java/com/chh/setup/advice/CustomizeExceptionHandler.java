@@ -1,6 +1,7 @@
 package com.chh.setup.advice;
 
 import com.chh.setup.dto.ResultDto;
+import com.chh.setup.exception.CustomizeErrorCode;
 import com.chh.setup.exception.CustomizeException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,9 +13,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class CustomizeExceptionHandler {
 
-    @ExceptionHandler(CustomizeException.class)
-    public Object handle(CustomizeException ex) {
-        return ResultDto.errorOf(ex);
+        @ExceptionHandler(Exception.class)
+        public Object handle(Exception ex) {
+            if (ex instanceof CustomizeException) {
+                return ResultDto.errorOf((CustomizeException) ex);
+            } else {
+                System.out.println(ex.getMessage());
+                ex.printStackTrace();
+                return ResultDto.errorOf(CustomizeErrorCode.SYS_ERROR);
+            } 
+        }
+
     }
-    
-}

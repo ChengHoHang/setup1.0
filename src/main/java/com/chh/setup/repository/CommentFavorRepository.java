@@ -9,10 +9,8 @@ import java.util.List;
 
 public interface CommentFavorRepository extends JpaRepository<CommentFavorEntity, Integer> {
     
-    @Query("select e from CommentFavorEntity e " +
-            "where e.commentId in (:commentIds) and e.userId = :userId and " +
-            "e.articleId = :articleId and e.state = 1")
-    List<CommentFavorEntity> getFavourComments(@Param("commentIds") List<Integer> commentIds,
-                                               @Param("userId") Integer userId,
-                                               @Param("articleId") Integer articleId);
+    @Query("select e.commentId from CommentFavorEntity e " +
+            "where e.commentId in (:commentIds) and e.userId = :userId and e.state = 1")
+    List<Integer> getFavourComments(@Param("commentIds") List<Integer> commentIds,
+                                               @Param("userId") Integer userId);
 }

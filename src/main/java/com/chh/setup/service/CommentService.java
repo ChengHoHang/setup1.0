@@ -7,18 +7,16 @@ import com.chh.setup.entity.CommentEntity;
 import com.chh.setup.entity.UserEntity;
 import com.chh.setup.exception.CustomizeErrorCode;
 import com.chh.setup.exception.CustomizeException;
-import com.chh.setup.myutils.DateUtils;
 import com.chh.setup.repository.ArticleRepository;
 import com.chh.setup.repository.CommentRepository;
 import com.chh.setup.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author chh
@@ -64,17 +62,8 @@ public class CommentService {
      * @return 对应文章id下的所有评论
      */
     public List<CommentDto> getCommentsByArticleId(Integer id) {
-        List<CommentEntity> dbComments = commentRepository.findByArticleIdOrderByGmtModified(id);
-        List<Integer> userIds = dbComments.stream().map(CommentEntity::getCommentator).distinct().collect(Collectors.toList());
-        List<UserEntity> users = userRepository.findAllByIds(userIds);
-        Map<Integer, UserEntity> userMap = users.stream().collect(Collectors.toMap(UserEntity::getId, user -> user));
-        return dbComments.stream().map(comment -> {
-            CommentDto commentDto = new CommentDto();
-            BeanUtils.copyProperties(comment, commentDto);
-            commentDto.setCommentator(userMap.get(comment.getCommentator()));
-            commentDto.setGmtCreated(DateUtils.timestamp2Date(comment.getGmtCreated(), "yyyy-MM-dd HH:mm"));
-            return commentDto;
-        }).collect(Collectors.toList());
+        Sort sort = Sort.by(Sort.Direction.ASC, "gmtCreated");
+        return commentRepository.getDtoByArticleId(id, sort);
     }
     
 }

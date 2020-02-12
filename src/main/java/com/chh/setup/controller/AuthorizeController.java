@@ -39,9 +39,9 @@ public class AuthorizeController {
                         HttpServletResponse response) {
         UserEntity user = authorizeService.loginCheck(param);
         if (user != null) {
-            UserEntity updateUser = authorizeService.updateUser(user, response);
+            authorizeService.updateUser(user, response);
             request.getSession().setAttribute("user", user);
-            return ResultDto.okOf(updateUser);
+            return ResultDto.okOf(null);
         } else {
             throw new CustomizeException(CustomizeErrorCode.REGISTER_ACCOUNT_ABNORMAL);
         }

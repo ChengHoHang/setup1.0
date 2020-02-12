@@ -1,5 +1,6 @@
 package com.chh.setup.repository;
 
+import com.chh.setup.dto.ArticleDto;
 import com.chh.setup.entity.ArticleEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,13 +15,7 @@ import org.springframework.data.repository.query.Param;
  */
 public interface ArticleRepository extends JpaRepository<ArticleEntity, Integer> {
     
-    @Query("select e from ArticleEntity e where e.type = :type")
-    Page<ArticleEntity> findAllByType(@Param("type") Integer type, Pageable pageable);
-    
     Long countByType(Integer type);
-
-    @Query("select e from ArticleEntity e where e.creator = :creator")
-    Page<ArticleEntity> findAllByCreator(@Param("creator") Integer creator, Pageable pageable);
     
     Long countByCreator(Integer creator);
 
@@ -35,4 +30,19 @@ public interface ArticleRepository extends JpaRepository<ArticleEntity, Integer>
     @Modifying
     @Query("update ArticleEntity e set e.likeCount = e.likeCount + :count where e.id = :id")
     void incLikeCount(@Param("id")Integer id, @Param("count")int count);
+
+    @Query("select new com.chh.setup.dto.ArticleDto(a, u) " +
+            "from ArticleEntity a join UserEntity u on a.creator = u.id and a.type = :type")
+    Page<ArticleDto> getAllDtoByType(@Param("type") Integer type, Pageable pageable);
+
+    @Query("select new com.chh.setup.dto.ArticleDto(a, u) " +
+            "from ArticleEntity a join UserEntity u on a.creator = u.id")
+    Page<ArticleDto> getAllDto(Pageable pageable);
+
+    @Query("select new com.chh.setup.dto.ArticleDto(a, u) " +
+            "from ArticleEntity a join UserEntity u on a.creator = u.id and a.id = :id")
+    ArticleDto findDtoById(@Param("id") Integer id);
+
+    @Query("select a from ArticleEntity a where a.creator = :creator")
+    Page<ArticleEntity> findAllByCreator(@Param("creator") Integer creator, Pageable pageable);
 }

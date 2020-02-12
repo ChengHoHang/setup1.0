@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class FavorService {
 
     @Autowired
     CommentFavorRepository commentFavorRepository;
-    
+
     @Autowired
     ArticleRepository articleRepository;
 
@@ -50,15 +51,16 @@ public class FavorService {
     }
 
     /**
-     * 计算每条commentDto的isCurrentFavor字段
+     * 计算每条commentDto的favorState字段
      * @param comments 一篇文章下的评论列表
-     * @param articleId
-     * @param userId       userId
+     * @param userId   userId
      */
-    public void setCommentFavorState(List<CommentDto> comments, Integer articleId, Integer userId) {
+    public void setCommentFavorState(List<CommentDto> comments, Integer userId) {
         List<Integer> commentIds = comments.stream().map(CommentDto::getId).collect(Collectors.toList());
-        List<CommentFavorEntity> favourComments = commentFavorRepository.getFavourComments(commentIds, userId, articleId);
-        Set<Integer> favourCommentIds = favourComments.stream().map(CommentFavorEntity::getCommentId).collect(Collectors.toSet());
+        Set<Integer> favourCommentIds = new HashSet<>(commentFavorRepository.getFavourComments(commentIds, userId));
+        if (favourCommentIds.size() == 0) {
+            return;
+        }
         comments.forEach(comment -> {
             if (favourCommentIds.contains(comment.getId())) {
                 comment.setFavorState(1);
@@ -68,7 +70,8 @@ public class FavorService {
 
     /**
      * 更新article表点赞数，插入或更新favor表点赞记录
-     * @param state 0(取消点赞) or 1(点赞)
+     *
+     * @param state     0(取消点赞) or 1(点赞)
      * @param articleId 文章id
      * @param userId
      */
@@ -82,12 +85,13 @@ public class FavorService {
         articleFavor.setGmtModified(System.currentTimeMillis());
         articleFavorRepository.save(articleFavor);
     }
-    
+
     /**
      * 更新comment表点赞数，插入或更新favor表点赞记录
-     * @param records 用户点赞评论的更新记录
+     *
+     * @param records   用户点赞评论的更新记录
      * @param articleId 文章id
-     * @param userId 用户id
+     * @param userId    用户id
      */
     @Transactional
     public void createOrUpdateStates(List<Record> records, Integer articleId, Integer userId) {

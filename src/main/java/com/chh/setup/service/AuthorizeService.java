@@ -30,13 +30,12 @@ public class AuthorizeService {
         return null;
     }
 
-    public UserEntity updateUser(UserEntity user, HttpServletResponse response) {
+    public void updateUser(UserEntity user, HttpServletResponse response) {
         String token = UUID.randomUUID().toString();
         user.setToken(token);
         user.setGmtModified(System.currentTimeMillis());
         response.addCookie(new Cookie("token", token));
         userRepository.save(user);
-        return user;
     }
 
 

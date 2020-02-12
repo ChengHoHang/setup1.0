@@ -93,10 +93,12 @@
                                             <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
                                             <span v-text="article.likeCount"></span>
                                         </span>
-                                        <span class="meta-content index-comment-icon">
-                                            <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
-                                            <span v-text="article.commentCount"></span>
-                                        </span>
+                                        <a target="_blank" :href="'/a/' + article.id + '#comment'">
+                                            <span class="meta-content index-comment-icon">
+                                                <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+                                                <span v-text="article.commentCount"></span>
+                                            </span>
+                                        </a>
                                         <span class="meta-content index-view-icon">
                                             <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
                                             <span v-text="article.viewCount"></span>
@@ -108,7 +110,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="home-page">
+                    <div id="paginator" class="home-page">
                         <ul class="pagination" id="home-page"></ul>
                     </div>
                 </div>
@@ -138,7 +140,7 @@
         },
         methods: {
             getLoginInfo: function () {
-                var that = this;
+                let that = this;
                 axios.get("http://localhost:8080/test_login", {}).then(function (response) {
                     that.loginCode = response.data.code;
                     that.user = response.data.rsData;
@@ -152,7 +154,7 @@
              * @param callback
              */
             setPage: function (pageCurrent, pageSum, callback) {
-                var that = this;
+                let that = this;
                 $("#home-page").bootstrapPaginator({
                     bootstrapMajorVersion: 3, //设置版本号
                     currentPage: pageCurrent, // 显示第几页
@@ -167,13 +169,18 @@
             },
             
             getArticleList: function () {
-                var that = this;
+                let that = this;
                 axios.get("http://localhost:8080/articles", {
                     params: {
                         "type": that.homeType,
                         "page": that.currentPage
                     }
                 }).then(function (response) {
+                    if (response.data.rsData.data.length === 0) {
+                        $("#paginator").hide();
+                    } else {
+                        $("#paginator").show();
+                    }
                     that.articleList = response.data.rsData.data;
                     that.setPage(that.currentPage, response.data.rsData.totalPage, that.getArticleList);
                 });

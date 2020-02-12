@@ -2,6 +2,7 @@ package com.chh.setup.interceptor;
 
 import com.chh.setup.entity.UserEntity;
 import com.chh.setup.exception.CustomizeErrorCode;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -15,16 +16,19 @@ import java.net.URLEncoder;
  */
 @Component
 public class SessionHandlerInterceptor implements HandlerInterceptor {
-
+    
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        UserEntity user = (UserEntity) request.getSession().getAttribute("user");
-        if (user == null) {
+        String[] requestURI = request.getRequestURI().split("/");
+        if (requestURI.length != 3 || !StringUtils.isNumeric(requestURI[2])) {
+            response.sendRedirect("/error.html");
+        }
+        UserEntity sessionUser = (UserEntity) request.getSession().getAttribute("user");
+        if (sessionUser == null) {
             response.sendRedirect("/error.html?"
                     + CustomizeErrorCode.USER_LOG_OUT.getErrorCode()
                     + "&"
                     + URLEncoder.encode(CustomizeErrorCode.USER_LOG_OUT.getErrorMsg(), "UTF-8"));
-            return false;
         }
         return true;
     }

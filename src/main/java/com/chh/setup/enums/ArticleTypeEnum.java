@@ -66,8 +66,11 @@ public enum ArticleTypeEnum {
     }
 
     public static boolean isExist(Integer type) {
+        if (type == null || type < 0) {
+            return false;
+        }
         for (ArticleTypeEnum value : ArticleTypeEnum.values()) {
-            if (value.type == type) {
+            if (value.type.equals(type)) {
                 return true;
             }
         }
