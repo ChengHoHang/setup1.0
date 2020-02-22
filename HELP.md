@@ -16,8 +16,10 @@ For further reference, please consider the following sections:
 * [jqPaginator分页插件](http://jqpaginator.keenwon.com/#a3)
 * [SpringMVC](https://docs.spring.io/spring/docs/5.2.3.RELEASE/spring-framework-reference/web.html#spring-web)
 * [jpa指南](https://www.w3cschool.cn/java/jpa-query-in.html)
+* [jpa官方](https://docs.spring.io/spring-data/jpa/docs/2.2.4.RELEASE/reference/html/#reference)
 * [联合索引1](https://www.cnblogs.com/smallleiit/p/10890071.html)    [联合索引2](https://blog.csdn.net/hknaruto/article/details/91449501)
 * [js获取子元素](https://blog.csdn.net/laok_/article/details/75760572)
+* [标签插件](https://github.com/xoxco/jQuery-Tags-Input)
 
 ### Guides
 The following guides illustrate how to use some features concretely:

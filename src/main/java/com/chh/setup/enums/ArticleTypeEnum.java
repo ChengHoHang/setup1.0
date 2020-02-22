@@ -8,7 +8,7 @@ public enum ArticleTypeEnum {
     ALL("全部", 0),
     NATIONAL("国内", 1),
     INTERNATIONAL("国际", 2),
-    TECHNOLOGY("科技", 3),
+    TECHNOLOGY("互联网", 3),
     ENTERTAINMENT("娱乐", 4),
     SPORTS("体育", 5);
 

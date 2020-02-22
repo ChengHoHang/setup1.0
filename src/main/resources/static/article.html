@@ -15,7 +15,7 @@
 
 <div id="app">
     <!--导航栏-->
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header"> <!--首页跳转-->
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
@@ -69,6 +69,13 @@
                                 阅读数：<span class="meta-content" v-text="article.viewCount"></span>
                             </div>
                             <hr>
+                            <div class="article-tags">
+                                <span class="label label-info" v-for="(tag, index) in article.tags">
+                                    <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+                                    <span v-text="tag"></span>
+                                </span>
+                            </div>
+                            <hr>
                         </div>
                         <div class="mod-body">
                             <div class="markitup-box" v-text="article.description"></div>
@@ -85,7 +92,7 @@
                             </div>
                             <hr>
                             <a :href="'/edit/' + article.id" class="article-menu"
-                               v-if="user != null && creator.token == user.token">
+                               v-if="user != null && creator.id == user.id">
                                 <span class="glyphicon glyphicon-edit" aria-hidden="true">编辑</span>
                             </a>
                         </div>
@@ -134,9 +141,21 @@
                 </div>
                 <div class="col-md-3 aw-side-bar">
                     <div class="aw-mod">
-                        <div class="aw-head">信息来源</div>
-                        <div class="aw-user-name" v-text="creator.name"></div>
-                        <hr>
+                        <div class="article-creator-info">
+                            <div class="aw-head">信息来源</div>
+                            <div class="aw-user-name" v-text="creator.name"></div>
+                            <hr>
+                        </div>
+                        <div class="article-related">
+                            <div class="aw-head">相关新闻</div>
+                            <div class="aw-body">
+                                <ul class="list-body">
+                                    <li v-for="(article, index) in article.relatedArticle">
+                                        <a :href="'/a/' + article[0]" v-text="article[1]" target="_blank"></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -227,7 +246,6 @@
                         }
                     })
                 }
-                localStorage[1] = 1;
             },
 
             loginInterceptor: function () {

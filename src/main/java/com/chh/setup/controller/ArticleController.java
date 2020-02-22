@@ -8,6 +8,7 @@ import com.chh.setup.entity.UserEntity;
 import com.chh.setup.service.ArticleService;
 import com.chh.setup.service.CommentService;
 import com.chh.setup.service.FavorService;
+import com.chh.setup.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -71,6 +73,9 @@ public class ArticleController {
             }
         }
         article.setComments(comments);
+        List<Object[]> relatedArticles = articleService.getRelatedArticle(articleId, article.getTags());
+        article.setRelatedArticle(relatedArticles);
+        article.setTags(Arrays.stream(article.getTags()).map(tag -> TagService.getIdMap().get(tag)).toArray(String[]::new));
         return ResultDto.okOf(article);
     }
     

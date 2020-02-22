@@ -16,8 +16,27 @@ body {
 
 /*发布页面样式*/
 .aw-container-wrap {
-    margin: 30px;
+    margin: 55px 30px;
     background-color: white;
+}
+
+.tag-selector {
+    margin-top: 5px;
+}
+
+.tab-content {
+    border: 1px solid #ddd;
+    border-top: 0;
+}
+
+.tab-content .label-info {
+    margin: 5px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.tag-selector .tab-content {
+    padding: 20px;
 }
 
 .control-label {
@@ -92,6 +111,12 @@ body {
     margin-right: 15px;
 }
 
+.index-tag {
+    float: right;
+    margin-right: 15px;
+    font-size: 11px;
+}
+
 .category-item {
     height: 40px;
     width: 80px;
@@ -131,6 +156,7 @@ body {
     margin-left: -1px;
     padding-top: 20px;
     border-left: 1px solid #e6e6e6;
+    padding-bottom: 25%;
 }
 
 .aw-mod {
@@ -152,6 +178,29 @@ body {
 .article-menu {
     font-size: 12px;
     color: #999;
+}
+
+.article-tags {
+    font-size: 16px;
+}
+
+.article-detail .mod-header hr {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.article-tags .label {
+    margin-right: 10px;
+}
+
+.aw-body .list-body {
+    list-style: none;
+    padding: 5px;
+    font-size: 12px;
+}
+
+.aw-body .list-body li {
+    padding-top: 8px;
 }
 
 .comment-count {
@@ -203,7 +252,7 @@ body {
     display: inline-block;
 }
 
-.comment-actions .comment-action {
+.comment-actions .comment-action, .label-info .glyphicon-tag {
     vertical-align: -0.125em;
 }
 

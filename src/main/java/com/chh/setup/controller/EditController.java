@@ -6,6 +6,7 @@ import com.chh.setup.entity.UserEntity;
 import com.chh.setup.exception.CustomizeErrorCode;
 import com.chh.setup.exception.CustomizeException;
 import com.chh.setup.service.ArticleService;
+import com.chh.setup.service.TagService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,7 +51,7 @@ public class EditController {
         if (StringUtils.isBlank(articleParam.getType())) {
             throw new CustomizeException(CustomizeErrorCode.BLANK_TYPE);
         }
-        if (StringUtils.isBlank(articleParam.getTag()) || "".equals(StringUtils.trim(articleParam.getTag()))) {
+        if (StringUtils.isBlank(StringUtils.replace(articleParam.getTag(), ",", ""))) {
             throw new CustomizeException(CustomizeErrorCode.BLANK_TAG);
         }
         if (request.getSession().getAttribute("user") == null || articleParam.getCreator() == null) {
@@ -62,5 +63,11 @@ public class EditController {
         }
         articleService.createOrUpdate(articleParam);
         return ResultDto.okOf(null);
+    }
+
+    @GetMapping("/tags")
+    @ResponseBody
+    public Object getTags() {
+        return TagService.showTags();
     }
 }

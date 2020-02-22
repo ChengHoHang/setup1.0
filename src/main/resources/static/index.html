@@ -16,7 +16,7 @@
 
 <div id="app">
     <!--导航栏-->
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header"> <!--首页跳转-->
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
@@ -104,6 +104,10 @@
                                             <span v-text="article.viewCount"></span>
                                         </span>
                                         <span class="meta-content">• {{article.gmtModified}} </span>
+                                        <span class="label label-info index-tag" v-for="(tag, index) in article.tags">
+                                            <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+                                            <span v-text="tag"></span>
+                                        </span>
                                     </div>
                                 </div>
                                 <hr>
@@ -133,7 +137,7 @@
         data: {
             loginCode: '',
             user: '',
-            category: ['全部', '国内', '国际', '科技', '娱乐', '体育'],
+            category: ['全部', '国内', '国际', '互联网', '娱乐', '体育'],
             homeType: 0,
             articleList: [],
             currentPage: 1   // 访问首页时默认请求第一页的数据，每页数据量pageSize由application.properties指定

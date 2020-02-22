@@ -6,16 +6,18 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/css/community.css"/>
+    <link rel="stylesheet" href="/css/jquery.tagsinput.css"/>
     <script src="/js/jquery-3.4.1.min.js" type="text/javascript"></script>
     <script src="/js/vue.js" type="text/javascript"></script>
     <script src="/js/axios.min.js" type="text/javascript"></script>
-    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/js/jquery.tagsinput.min.js" type="text/javascript"></script>
 </head>
 <body>
 
 <div id="app">
     <!--导航栏-->
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header"> <!--首页跳转-->
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
@@ -84,8 +86,24 @@
                         </div>
                         <div class="form-group">
                             <label for="title">添加标签：</label>
-                            <input type="text" class="form-control" id="tag" name="tag" placeholder="输入标签，以逗号分隔"
-                                   v-model="tag">
+                            <input type="text" id="myTags">
+                            <div class="tag-selector">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" v-for="(tag, index) in tagInfo">
+                                        <a :href="'#' + tag.typeName" :aria-controls="tag.typeName" 
+                                           role="tab" data-toggle="tab" v-text="tag.categoryName">
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane" :id="tag.typeName" v-for="(tag, index) in tagInfo">
+                                        <span class="label label-info" v-for="(selectTag, index) in tag.tags" @click="addTags(selectTag.id, selectTag.remarks)">
+                                            <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+                                            <span v-text="selectTag.remarks"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <button type="button" class="btn btn-success btn-edit-summit" @click="publish">发布</button>
                     </form>
@@ -113,17 +131,19 @@
 
 
 <script>
-
+    
     var app = new Vue({
         el: "#app",
         data: {
             loginCode: '',
             user: '',
             type: '国内',
-            dropDownOption: ['国内', '国际', '科技', '娱乐', '体育'],
+            dropDownOption: ['国内', '国际', '互联网', '娱乐', '体育'],
             title: '',
             description: '',
-            tag: '',
+            tag: [],
+            tagMap: new Map(),
+            tagInfo: '',
             creator: '',
             id: ''
         },
@@ -136,20 +156,53 @@
                 })
             },
 
+            restore: function () {
+                let that = this;
+                axios.get("http://localhost:8080/tags", {}).then(function (response) {
+                    that.tagInfo = response.data;
+                    let temp = that.tagInfo.flatMap(x => x.tags);
+                    for (let i = 0; i < temp.length; i++) {
+                        that.tagMap.set(temp[i].remarks, temp[i].id);
+                    }
+                })
+                .then(function () {
+                    let url_split = window.location.pathname.split('/');
+                    if (url_split.length !== 3) {
+                        return;
+                    }
+                    let url = 'http://localhost:8080/article/' + url_split[2];
+                    return axios.get(url, {}).then(function (response) {
+                        if (response.data.code !== 200) {
+                            window.location.href = "/error.html?" + response.data.code + "&" + response.data.message;
+                        } else {
+                            that.id = response.data.rsData.id;
+                            that.type = response.data.rsData.type;
+                            that.title = response.data.rsData.title;
+                            that.description = response.data.rsData.description;
+                            that.creator = response.data.rsData.creator;
+                            for (let tag of response.data.rsData.tags) {
+                                $('#myTags').addTag(tag);
+                                that.tag.push(that.tagMap.get(tag));
+                            }
+                        }
+                    });
+                });
+            },
+            
             publish: function () {
-                if (this.user == null || this.user === '') {
+                if (this.user === null) {
                     alert("用户未登录，请登录后重试！");
                     return;
                 }
-                if (this.title === '') {
+                if (!this.title) {
                     alert("标题不能为空！");
                     return;
                 }
-                if (this.description === '') {
+                if (!this.description) {
                     alert("内容不能为空！");
                     return;
                 }
-                if (this.tag === '') {
+                if (!this.tag) {
                     alert("标签不能为空！");
                     return;
                 }
@@ -161,8 +214,8 @@
                     "type": that.type,
                     "title": that.title,
                     "description": that.description,
-                    "tag": that.tag,
-                    "creator": message === "发布" ? that.user.id : that.creator
+                    "tag": that.tag.join(),
+                    "creator": message === "发布" ? that.user.id : that.creator.id
                 };
                 axios.post("http://localhost:8080/publish/article", param).then(function (response) {
                     if (response.data.code === 200) {
@@ -173,31 +226,26 @@
                     }
                 })
             },
-
-            getArticle: function () {
-                let url_split = window.location.pathname.split('/');
-                if (url_split.length !== 3) {
-                    return;
+            
+            addTags: function (id, remarks) {
+                let myTag = $('#myTags');
+                if (!myTag.tagExist(remarks)){
+                    myTag.addTag(remarks);
+                    this.tag.push(id);
                 }
-                let url = 'http://localhost:8080/article/' + url_split[2];
-                let that = this;
-                axios.get(url, {}).then(function (response) {
-                    if (response.data.code !== 200) {
-                        window.location.href = "/error.html?" + response.data.code + "&" + response.data.message;
-                    } else {
-                        that.id = response.data.rsData.id;
-                        that.type = response.data.rsData.type;
-                        that.title = response.data.rsData.title;
-                        that.description = response.data.rsData.description;
-                        that.tag = response.data.rsData.tag;
-                        that.creator = response.data.rsData.creator;
-                    }
-                });
             }
         },
         created: function () {
+            let that = this;
+            $('#myTags').tagsInput({
+                    'height':'34px', //设置高度
+                    'width':'100%',  //设置宽度
+                    'onRemoveTag': function (tag) {
+                        that.tag = that.tag.filter(x => x !== that.tagMap.get(tag));
+                    }
+                });
+            this.restore();
             this.getLoginInfo();
-            this.getArticle();
         }
     })
 

@@ -3,7 +3,6 @@ package com.chh.setup.controller;
 import com.chh.setup.dto.FavorParam;
 import com.chh.setup.dto.ResultDto;
 import com.chh.setup.dto.muilty.Record;
-import com.chh.setup.entity.ArticleEntity;
 import com.chh.setup.entity.UserEntity;
 import com.chh.setup.exception.CustomizeErrorCode;
 import com.chh.setup.exception.CustomizeException;
@@ -36,8 +35,7 @@ public class FavorController {
         if (user == null) {
             throw new CustomizeException(CustomizeErrorCode.USER_LOG_OUT);
         }
-        ArticleEntity article = articleService.getEntityById(favorParam.getArticleId());
-        if (article == null) {
+        if (articleService.getEntityById(favorParam.getArticleId()) == null) {
             throw new CustomizeException(CustomizeErrorCode.ARTICLE_NOT_FOUND);
         }
         if (favorParam.getFavorState() != null) { // 更新article表点赞数，插入或更新favor表点赞记录

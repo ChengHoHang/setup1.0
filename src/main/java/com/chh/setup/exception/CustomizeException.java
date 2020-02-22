@@ -10,7 +10,7 @@ public class CustomizeException extends RuntimeException {
 
     public String errorMsg;
 
-    public CustomizeException(BaseExceptionInterface exceptionInterface) {
+    public CustomizeException(IBaseException exceptionInterface) {
         this.errorCode = exceptionInterface.getErrorCode();
         this.errorMsg = exceptionInterface.getErrorMsg();
     }

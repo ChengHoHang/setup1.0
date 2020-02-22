@@ -15,7 +15,7 @@
 
 <div id="app">
     <!--导航栏-->
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header"> <!--首页跳转-->
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
@@ -103,6 +103,10 @@
                                             <span v-text="article.viewCount"></span>
                                         </span>
                                         <span class="meta-content">• {{article.gmtModified}} </span>
+                                        <a :href="'/edit/' + article.id" class="article-menu"
+                                           v-if="user != null && homeUser.id == user.id">
+                                            <span class="glyphicon glyphicon-edit" aria-hidden="true">编辑</span>
+                                        </a>
                                     </div>
                                 </div>
                                 <hr>

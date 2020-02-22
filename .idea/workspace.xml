@@ -2,30 +2,33 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6db1fd30-2c5f-45e5-a5b3-e7e475910158" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/UserDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/myutils/PageUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/TagDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/TagNotes.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/tag/EntertainmentTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/tag/GeneralTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/tag/InternetTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/tag/SportTag.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/myutils/MapUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/TagService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/css/jquery.tagsinput.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/js/jquery.tagsinput.min.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/advice/CustomizeExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/advice/CustomizeExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HELP.md" beforeDir="false" afterPath="$PROJECT_DIR$/HELP.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/ArticleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/ArticleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/AuthorizeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/AuthorizeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/EditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/EditController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/FavorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/FavorController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/ArticleDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/ArticleDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/CommentDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/CommentDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/UserRecordDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/UserRecordDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/ResultDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/ResultDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/ArticleTypeEnum.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/ArticleTypeEnum.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/exception/BaseExceptionInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/exception/IBaseException.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/exception/CustomizeErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/exception/CustomizeErrorCode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/exception/CustomizeException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/exception/CustomizeException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/interceptor/SessionHandlerInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/interceptor/SessionHandlerInterceptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/ArticleFavorRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/ArticleFavorRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/ArticleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/ArticleRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/CommentFavorRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/CommentFavorRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/CommentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/CommentRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/ArticleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/ArticleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/AuthorizeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/AuthorizeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/CommentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/CommentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/FavorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/FavorService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/UserRecordService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/UserRecordService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/article.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/article.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap-theme.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap-theme.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/bootstrap.css.map" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/community.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/css/community.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/edit.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/index.html" afterDir="false" />
@@ -58,8 +61,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="HTML File" />
-        <option value="Interface" />
         <option value="Enum" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -83,7 +86,9 @@
     </option>
   </component>
   <component name="ProjectId" id="1Vw1MQN9nqUOAxLKEg6M62z2WsA" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="abbreviatePackageNames" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -91,6 +96,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RequestMappingsPanelOrder0" value="0" />
     <property name="RequestMappingsPanelOrder1" value="1" />
@@ -101,7 +107,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="extract.method.default.visibility" value="public" />
     <property name="js.last.introduce.type" value="VAR" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/templates" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/static/js" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -114,74 +120,26 @@
     <property name="settings.editor.selected.configurable" value="fileTemplates" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static" />
-      <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static\myuser" />
-      <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static\js" />
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.chh.setup.interceptor" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static\js" />
       <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\templates" />
       <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static\templates" />
       <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static" />
-      <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static\js" />
       <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\java\com\chh\setup\service" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.chh.setup.entity.key" />
     </key>
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="com.chh.setup.interceptor" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static" />
+      <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static\myuser" />
+      <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static\js" />
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.SetupApplication">
-    <configuration name="SetupApplicationTests.test11" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="setup1.0" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.chh.setup.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.chh.setup" />
-      <option name="MAIN_CLASS_NAME" value="com.chh.setup.SetupApplicationTests" />
-      <option name="METHOD_NAME" value="test11" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="SetupApplicationTests.test12" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="setup1.0" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.chh.setup.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.chh.setup" />
-      <option name="MAIN_CLASS_NAME" value="com.chh.setup.SetupApplicationTests" />
-      <option name="METHOD_NAME" value="test12" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="SetupApplicationTests.test13" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="setup1.0" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.chh.setup.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.chh.setup" />
-      <option name="MAIN_CLASS_NAME" value="com.chh.setup.SetupApplicationTests" />
-      <option name="METHOD_NAME" value="test13" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="SetupApplicationTests.test14" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="setup1.0" />
       <extension name="coverage">
@@ -214,6 +172,54 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="SetupApplicationTests.test16" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="setup1.0" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.chh.setup.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.chh.setup" />
+      <option name="MAIN_CLASS_NAME" value="com.chh.setup.SetupApplicationTests" />
+      <option name="METHOD_NAME" value="test16" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SetupApplicationTests.test17" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="setup1.0" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.chh.setup.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.chh.setup" />
+      <option name="MAIN_CLASS_NAME" value="com.chh.setup.SetupApplicationTests" />
+      <option name="METHOD_NAME" value="test17" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SetupApplicationTests.test18" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="setup1.0" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.chh.setup.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.chh.setup" />
+      <option name="MAIN_CLASS_NAME" value="com.chh.setup.SetupApplicationTests" />
+      <option name="METHOD_NAME" value="test18" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="SetupApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="setup1.0" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.chh.setup.SetupApplication" />
@@ -223,11 +229,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.SetupApplicationTests.test14" />
-        <item itemvalue="JUnit.SetupApplicationTests.test13" />
+        <item itemvalue="JUnit.SetupApplicationTests.test18" />
+        <item itemvalue="JUnit.SetupApplicationTests.test17" />
+        <item itemvalue="JUnit.SetupApplicationTests.test16" />
         <item itemvalue="JUnit.SetupApplicationTests.test15" />
-        <item itemvalue="JUnit.SetupApplicationTests.test12" />
-        <item itemvalue="JUnit.SetupApplicationTests.test11" />
+        <item itemvalue="JUnit.SetupApplicationTests.test14" />
       </list>
     </recent_temporary>
   </component>
@@ -296,7 +302,12 @@
       <workItem from="1581262131017" duration="1255000" />
       <workItem from="1581312074260" duration="29104000" />
       <workItem from="1581391657248" duration="33018000" />
-      <workItem from="1581477181060" duration="23811000" />
+      <workItem from="1581477181060" duration="24746000" />
+      <workItem from="1581747351149" duration="6635000" />
+      <workItem from="1581830639333" duration="20644000" />
+      <workItem from="1582077762006" duration="32314000" />
+      <workItem from="1582264740801" duration="27415000" />
+      <workItem from="1582362794077" duration="5692000" />
     </task>
     <servers />
   </component>
@@ -316,19 +327,22 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
   <component name="WindowStateProjectService">
     <state x="361" y="71" key="#Assign_Data_Sources" timestamp="1580900744034">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="361" y="71" key="#Assign_Data_Sources/0.0.1536.824@0.0.1536.824" timestamp="1580900744034" />
-    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1581241037605">
+    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1582083516069">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1581241037605" />
-    <state x="802" y="133" key="#com.intellij.ide.util.MemberChooser" timestamp="1581422653895">
+    <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1582083516069" />
+    <state x="802" y="133" key="#com.intellij.ide.util.MemberChooser" timestamp="1582113483579">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="802" y="133" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1581422653895" />
+    <state x="802" y="133" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1582113483579" />
     <state x="331" y="337" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1580636393577">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -337,22 +351,22 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="523" y="241" key="#com.intellij.refactoring.move.moveInstanceMethod.MoveInstanceMethodDialog/0.0.1536.824@0.0.1536.824" timestamp="1581344429703" />
-    <state x="155" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1581507147386">
+    <state x="155" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1582095410109">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="155" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.824@0.0.1536.824" timestamp="1581507147386" />
-    <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1581434721827">
+    <state x="155" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.824@0.0.1536.824" timestamp="1582095410109" />
+    <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1582279560117">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.824@0.0.1536.824" timestamp="1581434721827" />
+    <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.824@0.0.1536.824" timestamp="1582279560117" />
     <state x="499" y="159" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1581170379632">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="499" y="159" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.0.1536.824@0.0.1536.824" timestamp="1581170379632" />
-    <state x="524" y="114" key="#xdebugger.evaluate" timestamp="1581514933296">
+    <state x="524" y="114" key="#xdebugger.evaluate" timestamp="1582363682920">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="524" y="114" key="#xdebugger.evaluate/0.0.1536.824@0.0.1536.824" timestamp="1581514933296" />
+    <state x="524" y="114" key="#xdebugger.evaluate/0.0.1536.824@0.0.1536.824" timestamp="1582363682920" />
     <state x="481" y="266" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1578569472289">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -361,10 +375,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="453" height="466" key="DebuggerActiveHint/0.0.1536.824@0.0.1536.824" timestamp="1581140625831" />
-    <state x="93" y="93" width="1338" height="638" maximized="true" key="DiffContextDialog" timestamp="1581516929973">
+    <state x="93" y="93" width="1338" height="638" maximized="true" key="DiffContextDialog" timestamp="1582365175535">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="93" y="93" width="1338" height="638" maximized="true" key="DiffContextDialog/0.0.1536.824@0.0.1536.824" timestamp="1581516929973" />
+    <state x="93" y="93" width="1338" height="638" maximized="true" key="DiffContextDialog/0.0.1536.824@0.0.1536.824" timestamp="1582365175535" />
     <state x="548" y="154" key="FileChooserDialogImpl" timestamp="1580996958399">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -373,54 +387,54 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="641" y="303" width="272" height="218" key="Github.ShareDialog/0.0.1536.824@0.0.1536.824" timestamp="1578491076862" />
-    <state width="1493" height="233" key="GridCell.Tab.0.bottom" timestamp="1581516087347">
+    <state width="1493" height="233" key="GridCell.Tab.0.bottom" timestamp="1582368212165">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="233" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1581516087347" />
-    <state width="1493" height="233" key="GridCell.Tab.0.center" timestamp="1581516087347">
+    <state width="1493" height="233" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1582368212165" />
+    <state width="1493" height="233" key="GridCell.Tab.0.center" timestamp="1582368212164">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="233" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1581516087347" />
-    <state width="1493" height="233" key="GridCell.Tab.0.left" timestamp="1581516087346">
+    <state width="1493" height="233" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1582368212164" />
+    <state width="1493" height="233" key="GridCell.Tab.0.left" timestamp="1582368212164">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="233" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1581516087346" />
-    <state width="1493" height="233" key="GridCell.Tab.0.right" timestamp="1581516087347">
+    <state width="1493" height="233" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1582368212164" />
+    <state width="1493" height="233" key="GridCell.Tab.0.right" timestamp="1582368212165">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="233" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1581516087347" />
-    <state width="1493" height="233" key="GridCell.Tab.1.bottom" timestamp="1581516087347">
+    <state width="1493" height="233" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1582368212165" />
+    <state width="1493" height="233" key="GridCell.Tab.1.bottom" timestamp="1582368212165">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="233" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1581516087347" />
-    <state width="1493" height="233" key="GridCell.Tab.1.center" timestamp="1581516087347">
+    <state width="1493" height="233" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1582368212165" />
+    <state width="1493" height="233" key="GridCell.Tab.1.center" timestamp="1582368212165">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="233" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1581516087347" />
-    <state width="1493" height="233" key="GridCell.Tab.1.left" timestamp="1581516087347">
+    <state width="1493" height="233" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1582368212165" />
+    <state width="1493" height="233" key="GridCell.Tab.1.left" timestamp="1582368212165">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="233" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1581516087347" />
-    <state width="1493" height="233" key="GridCell.Tab.1.right" timestamp="1581516087347">
+    <state width="1493" height="233" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1582368212165" />
+    <state width="1493" height="233" key="GridCell.Tab.1.right" timestamp="1582368212165">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="233" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1581516087347" />
-    <state width="1493" height="233" key="GridCell.Tab.2.bottom" timestamp="1581516087348">
+    <state width="1493" height="233" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1582368212165" />
+    <state width="1493" height="233" key="GridCell.Tab.2.bottom" timestamp="1582368212165">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="233" key="GridCell.Tab.2.bottom/0.0.1536.824@0.0.1536.824" timestamp="1581516087348" />
-    <state width="1493" height="233" key="GridCell.Tab.2.center" timestamp="1581516087348">
+    <state width="1493" height="233" key="GridCell.Tab.2.bottom/0.0.1536.824@0.0.1536.824" timestamp="1582368212165" />
+    <state width="1493" height="233" key="GridCell.Tab.2.center" timestamp="1582368212165">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="233" key="GridCell.Tab.2.center/0.0.1536.824@0.0.1536.824" timestamp="1581516087348" />
-    <state width="1493" height="233" key="GridCell.Tab.2.left" timestamp="1581516087347">
+    <state width="1493" height="233" key="GridCell.Tab.2.center/0.0.1536.824@0.0.1536.824" timestamp="1582368212165" />
+    <state width="1493" height="233" key="GridCell.Tab.2.left" timestamp="1582368212165">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="233" key="GridCell.Tab.2.left/0.0.1536.824@0.0.1536.824" timestamp="1581516087347" />
-    <state width="1493" height="233" key="GridCell.Tab.2.right" timestamp="1581516087348">
+    <state width="1493" height="233" key="GridCell.Tab.2.left/0.0.1536.824@0.0.1536.824" timestamp="1582368212165" />
+    <state width="1493" height="233" key="GridCell.Tab.2.right" timestamp="1582368212165">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="233" key="GridCell.Tab.2.right/0.0.1536.824@0.0.1536.824" timestamp="1581516087348" />
+    <state width="1493" height="233" key="GridCell.Tab.2.right/0.0.1536.824@0.0.1536.824" timestamp="1582368212165" />
     <state x="583" y="346" key="ReplaceDuplicatesPrompt" timestamp="1581161960604">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -437,22 +451,26 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="490" y="154" width="540" height="524" key="StructurePopup/0.0.1536.824@0.0.1536.824" timestamp="1578151057387" />
-    <state width="498" height="498" key="SwitcherDM" timestamp="1581513057427">
+    <state width="498" height="498" key="SwitcherDM" timestamp="1582368476625">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="498" height="498" key="SwitcherDM/0.0.1536.824@0.0.1536.824" timestamp="1581513057427" />
-    <state x="93" y="93" width="1350" height="638" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1581421790118">
+    <state width="498" height="498" key="SwitcherDM/0.0.1536.824@0.0.1536.824" timestamp="1582368476625" />
+    <state x="93" y="93" width="1350" height="638" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1582365175535">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="93" y="93" width="1350" height="638" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.0.1536.824@0.0.1536.824" timestamp="1581421790118" />
-    <state x="449" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1581477250997">
+    <state x="93" y="93" width="1350" height="638" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.0.1536.824@0.0.1536.824" timestamp="1582365175535" />
+    <state x="449" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1582362812270">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="449" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1581477250997" />
+    <state x="449" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1582362812270" />
     <state x="315" y="21" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1580637722588">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="315" y="21" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1536.824@0.0.1536.824" timestamp="1580637722588" />
+    <state x="562" y="329" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1582083052583">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="562" y="329" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1536.824@0.0.1536.824" timestamp="1582083052583" />
     <state x="321" y="148" width="894" height="605" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1581515413134">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -469,14 +487,14 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="178" y="45" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1580997009911" />
-    <state x="210" y="19" key="refactoring.ChangeSignatureDialog" timestamp="1581508853984">
+    <state x="210" y="19" key="refactoring.ChangeSignatureDialog" timestamp="1582364786462">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="210" y="19" key="refactoring.ChangeSignatureDialog/0.0.1536.824@0.0.1536.824" timestamp="1581508853984" />
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1581442865073">
+    <state x="210" y="19" key="refactoring.ChangeSignatureDialog/0.0.1536.824@0.0.1536.824" timestamp="1582364786462" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1582278258172">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1581442865073" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1582278258172" />
     <state x="599" y="203" key="svn.repositoryBrowser" timestamp="1578490018405">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

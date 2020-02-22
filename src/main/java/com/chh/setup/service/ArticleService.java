@@ -18,6 +18,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,6 +43,9 @@ public class ArticleService {
     public void createOrUpdate(ArticleParam articleParam) {
         if (!ArticleTypeEnum.isExist(articleParam.getType())) {
             throw new CustomizeException(CustomizeErrorCode.TYPE_NOT_EXIST);
+        }
+        if (TagService.isInvalid(articleParam.getTag())) {
+            throw new CustomizeException(CustomizeErrorCode.TAG_NOT_EXIST);
         }
         UserEntity user = userRepository.findById(articleParam.getCreator()).orElse(null);
         if (user == null) {
@@ -82,6 +87,7 @@ public class ArticleService {
         }
         articleDtos.forEach(articleDto -> {
             articleDto.setDescription(StringUtils.truncate(articleDto.getDescription(), 150) + ".....");
+            articleDto.setTags(Arrays.stream(articleDto.getTags()).limit(2).map(tag -> TagService.getIdMap().get(tag)).toArray(String[]::new));
         });
         PagesDto<ArticleDto> pagesDto = new PagesDto<>();
         pagesDto.setData(articleDtos);
@@ -125,5 +131,13 @@ public class ArticleService {
     @Transactional
     public void incViewCount(Integer articleId) {
         articleRepository.incViewCount(articleId, 1);
+    }
+
+    
+    public List<Object[]> getRelatedArticle(Integer id, String[] tags) {
+        if (tags == null) {
+            return new ArrayList<>();
+        }
+        return articleRepository.getRelatedArticleById(id, StringUtils.join(tags, '|'), 0, 15);
     }
 }
