@@ -1,7 +1,5 @@
 package com.chh.setup.enums.tag;
 
-import com.chh.setup.dto.TagDto;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,31 +14,31 @@ public enum InternetTag {
     PYTHON("306", "python");
 
     private String id;
-    private String remarks;
+    private String remark;
     private static Map<String, String> map = new HashMap<>();
-    private static List<TagDto> list = new ArrayList<>();
+    private static List<String> list;
 
     static {
         for (InternetTag value : InternetTag.values()) {
-            map.put(value.getId(), value.getRemarks());
-            list.add(new TagDto(value.getId(), value.getRemarks()));
+            map.put(value.getId(), value.getRemark());
         }
+        list = new ArrayList<>(map.values());
     }
 
-    InternetTag(String id, String remarks) {
+    InternetTag(String id, String remark) {
         this.id = id;
-        this.remarks = remarks;
+        this.remark = remark;
     }
 
     public String getId() {
         return id;
     }
 
-    public String getRemarks() {
-        return remarks;
+    public String getRemark() {
+        return remark;
     }
 
-    public static List<TagDto> getDtos() {
+    public static List<String> getRemarks() {
         return list;
     }
     

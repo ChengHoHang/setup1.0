@@ -355,3 +355,12 @@ cite {
 .blank-guide {
     height: 50vh;
 }
+
+.list-meta .glyphicon-edit {
+    float: right;
+}
+
+.user-article-tag {
+    margin-left: 15px;
+    font-size: 10px;
+}

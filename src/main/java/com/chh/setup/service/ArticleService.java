@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author chh
@@ -44,7 +46,8 @@ public class ArticleService {
         if (!ArticleTypeEnum.isExist(articleParam.getType())) {
             throw new CustomizeException(CustomizeErrorCode.TYPE_NOT_EXIST);
         }
-        if (TagService.isInvalid(articleParam.getTag())) {
+        String[] tagSplit = StringUtils.split(articleParam.getTag(), ",");
+        if (TagService.isInvalid(tagSplit)) {
             throw new CustomizeException(CustomizeErrorCode.TAG_NOT_EXIST);
         }
         UserEntity user = userRepository.findById(articleParam.getCreator()).orElse(null);
@@ -61,9 +64,11 @@ public class ArticleService {
                 throw new CustomizeException(CustomizeErrorCode.ARTICLE_NOT_FOUND);
             }
         }
-        BeanUtils.copyProperties(articleParam, article);
+        BeanUtils.copyProperties(articleParam, article, "type", "gmtModified", "tag");
         article.setType(ArticleTypeEnum.getType(articleParam.getType()));
         article.setGmtModified(System.currentTimeMillis());
+        Map<String, String> remarkMap = TagService.getRemarkMap();
+        article.setTag(Arrays.stream(tagSplit).map(remarkMap::get).collect(Collectors.joining(",")));
         articleRepository.save(article);
     }
 
@@ -97,7 +102,6 @@ public class ArticleService {
 
     /**
      * 获取各类文章总页数
-     *
      * @param type
      * @param size
      * @return

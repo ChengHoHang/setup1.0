@@ -103,6 +103,10 @@
                                             <span v-text="article.viewCount"></span>
                                         </span>
                                         <span class="meta-content">• {{article.gmtModified}} </span>
+                                        <span class="label label-info user-article-tag" v-for="(tag, index) in article.tags">
+                                            <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+                                            <span v-text="tag"></span>
+                                        </span>
                                         <a :href="'/edit/' + article.id" class="article-menu"
                                            v-if="user != null && homeUser.id == user.id">
                                             <span class="glyphicon glyphicon-edit" aria-hidden="true">编辑</span>

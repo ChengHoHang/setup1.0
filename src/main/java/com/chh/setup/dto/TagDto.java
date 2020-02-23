@@ -2,18 +2,22 @@ package com.chh.setup.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author chh
- * @date 2020/2/16 23:09
+ * @date 2020/2/19 19:53
  */
 @Data
 public class TagDto {
 
-    private String id;
-    private String remarks;
+    private String typeName;
+    private String categoryName;
+    private List<String> tags;
 
-    public TagDto(String id, String remarks) {
-        this.id = id;
-        this.remarks = remarks;
+    public TagDto(String typeName, String categoryName, List<String> tags) {
+        this.typeName = typeName;
+        this.categoryName = categoryName;
+        this.tags = tags;
     }
 }

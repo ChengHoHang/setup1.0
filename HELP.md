@@ -20,6 +20,7 @@ For further reference, please consider the following sections:
 * [联合索引1](https://www.cnblogs.com/smallleiit/p/10890071.html)    [联合索引2](https://blog.csdn.net/hknaruto/article/details/91449501)
 * [js获取子元素](https://blog.csdn.net/laok_/article/details/75760572)
 * [标签插件](https://github.com/xoxco/jQuery-Tags-Input)
+* [markdown编辑器](http://editor.md.ipandao.com/)
 
 ### Guides
 The following guides illustrate how to use some features concretely:

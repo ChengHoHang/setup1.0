@@ -10,11 +10,13 @@ import com.chh.setup.repository.ArticleFavorRepository;
 import com.chh.setup.repository.ArticleRepository;
 import com.chh.setup.repository.CommentRepository;
 import com.chh.setup.repository.UserRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,7 +59,15 @@ public class UserRecordService {
     public PagesDto<ArticleDto> getMyArticles(Integer creator, Integer page) {
         PageRequest pageRequest = PageUtils.getDefaultPageRequest(page, pageSize, "gmtModified", "likeCount");
         List<ArticleEntity> articles = articleRepository.findAllByCreator(creator, pageRequest).getContent();
-        List<ArticleDto> articleDtos = articles.stream().map(ArticleDto::new).collect(Collectors.toList());
+        List<ArticleDto> articleDtos = articles.stream().map(article -> {
+            ArticleDto articleDto = new ArticleDto(article);
+            articleDto.setTags(
+                    Arrays.stream(StringUtils.split(article.getTag(), ","))
+                            .limit(2)
+                            .map(tag -> TagService.getIdMap().get(tag))
+                            .toArray(String[]::new));
+            return articleDto;
+        }).collect(Collectors.toList());
         PagesDto<ArticleDto> pagesDto = new PagesDto<>();
         pagesDto.setData(articleDtos);
         pagesDto.setTotalPage(getCountByCreator(creator));
