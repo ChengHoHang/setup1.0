@@ -16,6 +16,7 @@ public class CustomizeExceptionHandler {
         @ExceptionHandler(Exception.class)
         public Object handle(Exception ex) {
             if (ex instanceof CustomizeException) {
+                ex.printStackTrace();
                 return ResultDto.errorOf((CustomizeException) ex);
             } else {
                 System.out.println(ex.getMessage());

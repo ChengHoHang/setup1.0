@@ -46,7 +46,7 @@ public class ArticleService {
         if (!ArticleTypeEnum.isExist(articleParam.getType())) {
             throw new CustomizeException(CustomizeErrorCode.TYPE_NOT_EXIST);
         }
-        String[] tagSplit = StringUtils.split(articleParam.getTag(), ",");
+        String[] tagSplit = StringUtils.split(articleParam.getTag(), "|");
         if (TagService.isInvalid(tagSplit)) {
             throw new CustomizeException(CustomizeErrorCode.TAG_NOT_EXIST);
         }
@@ -68,7 +68,7 @@ public class ArticleService {
         article.setType(ArticleTypeEnum.getType(articleParam.getType()));
         article.setGmtModified(System.currentTimeMillis());
         Map<String, String> remarkMap = TagService.getRemarkMap();
-        article.setTag(Arrays.stream(tagSplit).map(remarkMap::get).collect(Collectors.joining(",")));
+        article.setTag(Arrays.stream(tagSplit).map(remarkMap::get).collect(Collectors.joining("|")));
         articleRepository.save(article);
     }
 
@@ -79,7 +79,7 @@ public class ArticleService {
      * @param type
      * @return
      */
-    public PagesDto<ArticleDto> listByType(Integer page, Integer size, Integer type) {
+    public PagesDto listByType(Integer page, Integer size, Integer type) {
         if (!ArticleTypeEnum.isExist(type)) {
             throw new CustomizeException(CustomizeErrorCode.TYPE_NOT_EXIST);
         }
@@ -94,7 +94,7 @@ public class ArticleService {
             articleDto.setDescription(StringUtils.truncate(articleDto.getDescription(), 150) + ".....");
             articleDto.setTags(Arrays.stream(articleDto.getTags()).limit(2).map(tag -> TagService.getIdMap().get(tag)).toArray(String[]::new));
         });
-        PagesDto<ArticleDto> pagesDto = new PagesDto<>();
+        PagesDto pagesDto = new PagesDto();
         pagesDto.setData(articleDtos);
         pagesDto.setTotalPage(getCountByType(type, size));
         return pagesDto;

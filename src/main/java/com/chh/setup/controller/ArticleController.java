@@ -50,7 +50,7 @@ public class ArticleController {
     @ResponseBody
     public Object allArticles(@RequestParam(value = "type", required = false) Integer type,
                               @RequestParam(value = "page", required = false, defaultValue = "1") Integer page) {
-        PagesDto<ArticleDto> pagesDto = articleService.listByType(page, size, type);
+        PagesDto pagesDto = articleService.listByType(page, size, type);
         return ResultDto.okOf(pagesDto);
     }
 

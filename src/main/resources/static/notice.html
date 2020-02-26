@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
-    <title>chh新闻社区</title>
+    <title>消息中心</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="/css/community.css"/>
@@ -15,6 +15,7 @@
 <body>
 
 <div id="app">
+
     <!--导航栏-->
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid ">
@@ -55,65 +56,39 @@
         </div>
     </nav>
 
-    <div class="aw-container-wrap">
-        <!--分类列表-->
-        <div class="container category">
-            <div class="row">
-                <div class="col-md-12 bs-example">
-                    <div class="btn-group" role="group" aria-label="...">
-                        <button type="button" v-for="(type, index) in category"
-                                :class="[{'active' : index == homeType}, 'btn', 'category-item']"
-                                @click="toggle(index)">
-                            {{type}}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+    <div class="aw-container-wrap notice-board">
         <div class="container container-fluid">
             <div class="row">
                 <!--新闻列表-->
                 <div class="col-md-9">
-                    <h2>
-                        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
-                        <span>发现</span>
-                    </h2>
-                    <hr>
-                    <div class="list-container">
-                        <ul class="news-list">
-                            <li v-for="(article, index) in articleList">
+                    <div class="list-head">
+                        <h2>
+                            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                            <span>我的通知</span>
+                        </h2>
+                        <hr>
+                    </div>
+                    <div class="list-container" v-if="dataList">
+                        <ul class="notice-list">
+                            <li v-for="(notice, index) in dataList">
                                 <div class="list-content">
-                                    <a class="list-title" target="_blank" :href="'/a/' + article.id" v-text="article.title"></a>
-                                    <p class="list-abstract" v-text="article.description"></p>
-                                    <div class="list-meta">
-                                        <span class="content-creator">
-                                            <a :href="'/u/' + article.creator.id" v-text="article.creator.name"></a>
-                                        </span>
-                                        <span class="meta-content index-favor-icon">
-                                            <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
-                                            <span v-text="article.likeCount"></span>
-                                        </span>
-                                        <a target="_blank" :href="'/a/' + article.id + '#comment'">
-                                            <span class="meta-content index-comment-icon">
-                                                <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
-                                                <span v-text="article.commentCount"></span>
-                                            </span>
-                                        </a>
-                                        <span class="meta-content index-view-icon">
-                                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-                                            <span v-text="article.viewCount"></span>
-                                        </span>
-                                        <span class="meta-content">• {{article.gmtModified}} </span>
-                                        <span class="label label-info index-tag" v-for="(tag, index) in article.tags">
-                                            <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
-                                            <span v-text="tag"></span>
-                                        </span>
-                                    </div>
+                                    <span class="notice-list-meta">
+                                        <a :href="'/u/' + notice.notifier.id" v-text="notice.notifier.name" target="_blank"></a>&nbsp;&nbsp;&nbsp;
+                                        <span v-text="notice.action"></span>&nbsp;&nbsp;&nbsp;
+                                        <img :src="notice.type !== 3 ? '/images/LeftSharp.png' : '/images/LeftQuotation.png'" >
+                                        <a :href="'/notice/' + notice.id + '?articleId=' + notice.articleId" target="_blank" v-text="notice.content"></a>
+                                        <img :src="notice.type !== 3 ? '/images/RightSharp.png' : '/images/RightQuotation.png'" >
+                                    </span>
+                                    <span class="notice-type">
+                                        <span class="notice-time" v-text="notice.gmtCreated"></span>&nbsp;&nbsp;&nbsp;
+                                        <span class="label label-warning" v-if="notice.state === 0">未读</span>
+                                    </span>
                                 </div>
-                                <hr>
                             </li>
                         </ul>
+                    </div>
+                    <div v-if="!dataList">
+                        <p class="none-notice">没有内容</p>
                     </div>
                     <div id="paginator" class="home-page">
                         <ul class="pagination" id="home-page"></ul>
@@ -122,25 +97,25 @@
 
                 <!--侧边栏-->
                 <div class="col-md-3">
-                    <h3>热门话题</h3>
+                    <div class="list-group notice-type-list">
+                        <a href="/my-notice/unread" :class="['list-group-item', {'active' : type === 'unread'}]">未读回复<span class="badge" v-text="unreadCount"></span></a>
+                        <a href="/my-notice/all" :class="['list-group-item', {'active' : type === 'all'}]">所有回复</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
 <script>
-
-
+    
     var app = new Vue({
         el: "#app",
         data: {
             loginCode: '',
             user: '',
-            category: ['全部', '国内', '国际', '互联网', '娱乐', '体育'],
-            homeType: 0,
-            articleList: [],
+            dataList: '',
+            type: location.pathname.split('/')[2],
             unreadCount: '',
             currentPage: 1   // 访问首页时默认请求第一页的数据，每页数据量pageSize由application.properties指定
         },
@@ -150,8 +125,25 @@
                 axios.get("http://localhost:8080/test_login", {}).then(function (response) {
                     that.loginCode = response.data.code;
                     that.user = response.data.rsData;
-                    if (that.loginCode === 200) {
-                        that.getUnreadCount();
+                    that.getNotices();
+                    that.getUnreadCount();
+                })
+            },
+
+            getNotices: function () {
+                let that = this;
+                let url = "http://localhost:8080/notice/" + that.user.id + "/" + that.type;
+                axios.get(url, {}).then(function (response) {
+                    if (response.data.code !== 200) {
+                        window.location.href = "/error.html?" + response.data.code + "&" + response.data.message;
+                    } else {
+                        if (response.data.rsData.data.length === 0) {
+                            $("#paginator").hide();
+                        } else {
+                            $("#paginator").show();
+                            that.dataList = response.data.rsData.data;
+                            that.setPage(that.currentPage, response.data.rsData.totalPage, that.getNotices);
+                        }
                     }
                 })
             },
@@ -162,7 +154,7 @@
                     that.unreadCount = response.data;
                 })
             },
-
+            
             /**
              * 动态设置分页栏
              * @param pageCurrent 当前所在页
@@ -183,44 +175,13 @@
                     }
                 })
             },
-            
-            getArticleList: function () {
-                let that = this;
-                axios.get("http://localhost:8080/articles", {
-                    params: {
-                        "type": that.homeType,
-                        "page": that.currentPage
-                    }
-                }).then(function (response) {
-                    if (response.data.rsData.data.length === 0) {
-                        $("#paginator").hide();
-                    } else {
-                        $("#paginator").show();
-                        that.articleList = response.data.rsData.data;
-                        that.setPage(that.currentPage, response.data.rsData.totalPage, that.getArticleList);
-                    }
-                });
-            },
-
-            /**
-             * 获取当前页面的新闻类型，并传给后端并接受数据由getArticleList渲染
-             * @param index
-             */
-            toggle: function (index) {
-                this.homeType = index;
-                this.currentPage = 1;
-                this.getArticleList();
-            }
         },
         created: function () {
             this.getLoginInfo();
-            this.getArticleList();
         }
     })
-
 
 </script>
 
 </body>
 </html>
-

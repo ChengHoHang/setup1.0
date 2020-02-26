@@ -1,11 +1,13 @@
 package com.chh.setup;
 
-import com.chh.setup.repository.ArticleRepository;
-import com.chh.setup.repository.CommentFavorRepository;
-import com.chh.setup.repository.CommentRepository;
-import com.chh.setup.repository.UserRepository;
+import com.chh.setup.dto.NoticeDto;
+import com.chh.setup.repository.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 @SpringBootTest
 class SetupApplicationTests {
@@ -21,6 +23,9 @@ class SetupApplicationTests {
 
     @Autowired
     CommentRepository commentRepository;
+
+    @Autowired
+    NoticeRepository noticeRepository;
 
 //    @Test
 //    void contextLoads() {
@@ -172,4 +177,12 @@ class SetupApplicationTests {
 //        List<Object[]> list = articleRepository.getRelatedArticleById(20, "101|104", 0, 15);
 //        System.out.println(list);
 //    }
+
+    @Test
+    public void test19() {
+        Sort sort = Sort.by(Sort.Order.asc("state"), Sort.Order.desc("gmtCreated"));
+        PageRequest pageRequest = PageRequest.of(0, 5, sort);
+        Page<NoticeDto> allByReceiver = noticeRepository.findAllByReceiver(5, pageRequest);
+        System.out.println(allByReceiver);
+    }
 }

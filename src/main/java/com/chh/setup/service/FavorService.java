@@ -1,9 +1,10 @@
 package com.chh.setup.service;
 
 import com.chh.setup.dto.CommentDto;
-import com.chh.setup.dto.muilty.Record;
+import com.chh.setup.dto.process.Record;
 import com.chh.setup.entity.ArticleFavorEntity;
 import com.chh.setup.entity.CommentFavorEntity;
+import com.chh.setup.enums.FavorStateEnum;
 import com.chh.setup.repository.ArticleFavorRepository;
 import com.chh.setup.repository.ArticleRepository;
 import com.chh.setup.repository.CommentFavorRepository;
@@ -63,7 +64,7 @@ public class FavorService {
         }
         comments.forEach(comment -> {
             if (favourCommentIds.contains(comment.getId())) {
-                comment.setFavorState(1);
+                comment.setFavorState(FavorStateEnum.FAVOR.getState());
             }
         });
     }
@@ -77,7 +78,7 @@ public class FavorService {
      */
     @Transactional
     public void createOrUpdateStates(Integer state, Integer articleId, Integer userId) {
-        articleRepository.incLikeCount(articleId, state == 1 ? 1 : -1);
+        articleRepository.incLikeCount(articleId, state == FavorStateEnum.FAVOR.getState() ? 1 : -1);
         ArticleFavorEntity articleFavor = new ArticleFavorEntity();
         articleFavor.setArticleId(articleId);
         articleFavor.setUserId(userId);
@@ -96,7 +97,7 @@ public class FavorService {
     @Transactional
     public void createOrUpdateStates(List<Record> records, Integer articleId, Integer userId) {
         for (Record record : records) {
-            commentRepository.incLikeCount(record.getCommentId(), record.getState() == 1 ? 1 : -1);
+            commentRepository.incLikeCount(record.getCommentId(), record.getState() == FavorStateEnum.FAVOR.getState() ? 1 : -1);
             CommentFavorEntity commentFavor = new CommentFavorEntity();
             commentFavor.setCommentId(record.getCommentId());
             commentFavor.setUserId(userId);

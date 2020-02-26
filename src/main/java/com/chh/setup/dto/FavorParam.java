@@ -1,6 +1,6 @@
 package com.chh.setup.dto;
 
-import com.chh.setup.dto.muilty.Record;
+import com.chh.setup.dto.process.Record;
 import lombok.Data;
 
 import java.util.List;
@@ -13,6 +13,8 @@ import java.util.List;
 public class FavorParam {
     
     private Integer articleId;
+    private Integer articleAuthor;
     private List<Record> records;
-    private Integer favorState;   // 若无改变则接收null
+    private Integer favorState;   // 若无改变则接收null。 1表示点赞， 0表示取消点赞
+    private Integer operator;
 }

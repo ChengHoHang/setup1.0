@@ -12,4 +12,5 @@ public class CommentParam {
     private Integer articleId;
     private Integer commentator;
     private String content;
+    private Integer author;
 }

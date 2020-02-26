@@ -1,5 +1,6 @@
 package com.chh.setup.dto;
 
+import com.chh.setup.dto.process.PageSuperDto;
 import lombok.Data;
 
 import java.util.List;
@@ -10,8 +11,8 @@ import java.util.List;
  * @date 2020/1/13 21:22
  */
 @Data
-public class PagesDto<T> {
+public class PagesDto {
     
-    List<T> data;  
+    List<? extends PageSuperDto> data;  
     Long totalPage;  //各类记录总页数
 }

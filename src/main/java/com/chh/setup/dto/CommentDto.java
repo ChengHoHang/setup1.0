@@ -1,9 +1,11 @@
 package com.chh.setup.dto;
 
+import com.chh.setup.dto.process.PageSuperDto;
 import com.chh.setup.entity.CommentEntity;
 import com.chh.setup.entity.UserEntity;
 import com.chh.setup.myutils.DateUtils;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
 
 /**
@@ -11,7 +13,8 @@ import org.springframework.beans.BeanUtils;
  * @date 2020/2/5 0:23
  */
 @Data
-public class CommentDto {
+@EqualsAndHashCode(callSuper = false)
+public class CommentDto extends PageSuperDto {
     
     private Integer id;
     private String content;
@@ -21,8 +24,6 @@ public class CommentDto {
     private Integer articleId;
     private String articleTitle;
     private Integer favorState = 0;   //当前session用户是否喜欢该评论；若未登录默认为0
-
-    public CommentDto() { }
 
     public CommentDto(CommentEntity commentEntity, Integer articleId, String articleTitle) {
         BeanUtils.copyProperties(commentEntity, this);

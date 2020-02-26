@@ -8,8 +8,8 @@ import lombok.Data;
  * @date 2020/1/20 15:41
  */
 @Data
-public class UserRecordDto<T> {
+public class UserRecordDto {
     Integer userId;
-    PagesDto<T> data;
+    PagesDto data;
     String recordType;
 }

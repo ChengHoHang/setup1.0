@@ -23,8 +23,8 @@ public class UserController {
     @Autowired
     UserRecordService userRecordService;
     
-    @GetMapping("/u/{id}")
-    public String user(@PathVariable(name = "id") Integer Id) {
+    @GetMapping("/u/*")
+    public String user() {
         return "/user.html";
     }
 
@@ -38,40 +38,16 @@ public class UserController {
         return ResultDto.okOf(user);
     }
 
-    @GetMapping("/user/{userId}/article")
+    @GetMapping("/user/{userId}/{action}")
     @ResponseBody
-    public Object getUserArticle(@PathVariable(name = "userId") Integer userId,
-                                     @RequestParam(value = "page", required = false, defaultValue = "1") Integer page) {
-        PagesDto<ArticleDto> pagesDto = userRecordService.getMyArticles(userId, page);
-        UserRecordDto<ArticleDto> userRecordDto = new UserRecordDto<>();
+    public Object getUserRecord(@PathVariable(name = "userId") Integer userId,
+                                @PathVariable(name = "action") String action,
+                                @RequestParam(value = "page", required = false, defaultValue = "1") Integer page) {
+        PagesDto pagesDto = userRecordService.getMyRecord(userId, action, page);
+        UserRecordDto userRecordDto = new UserRecordDto();
         userRecordDto.setData(pagesDto);
         userRecordDto.setUserId(userId);
-        userRecordDto.setRecordType("article");
+        userRecordDto.setRecordType(action);
         return ResultDto.okOf(userRecordDto);
     }
-
-    @GetMapping("/user/{userId}/comment")
-    @ResponseBody
-    public Object getUserComment(@PathVariable(name = "userId") Integer userId,
-                                     @RequestParam(value = "page", required = false, defaultValue = "1") Integer page) {
-        PagesDto<CommentDto> pagesDto = userRecordService.getMyComments(userId, page);
-        UserRecordDto<CommentDto> userRecordDto = new UserRecordDto<>();
-        userRecordDto.setData(pagesDto);
-        userRecordDto.setUserId(userId);
-        userRecordDto.setRecordType("comment");
-        return ResultDto.okOf(userRecordDto);
-    }
-
-    @GetMapping("/user/{userId}/favor")
-    @ResponseBody
-    public Object getUserFavorArticle(@PathVariable(name = "userId") Integer userId,
-                                     @RequestParam(value = "page", required = false, defaultValue = "1") Integer page) {
-        PagesDto<ArticleDto> pagesDto = userRecordService.getMyFavorArticles(userId, page);
-        UserRecordDto<ArticleDto> userRecordDto = new UserRecordDto<>();
-        userRecordDto.setData(pagesDto);
-        userRecordDto.setUserId(userId);
-        userRecordDto.setRecordType("favor");
-        return ResultDto.okOf(userRecordDto);
-    }
-    
 }

@@ -16,7 +16,7 @@ body {
 
 /*发布页面样式*/
 .aw-container-wrap {
-    margin: 55px 30px;
+    margin: 55px 30px 30px 30px;
     background-color: white;
 }
 
@@ -70,7 +70,7 @@ body {
 
 .news-list {
     list-style: none;
-    padding: 0 40px;
+    padding-left: 0;
 }
 
 .list-content {
@@ -363,4 +363,55 @@ cite {
 .user-article-tag {
     margin-left: 15px;
     font-size: 10px;
+}
+
+.user-index {
+    margin: 50px 0;
+}
+
+/*通知页样式*/
+.notice-list {
+    list-style: none;
+    padding-left: 0;
+    font-size: 17px;
+}
+
+.notice-list .list-content {
+    border-bottom: 1px solid #ddd;
+    padding: 25px;
+}
+
+.notice-board {
+    height: 87vh;
+    padding-top: 30px;
+}
+
+.notice-list .label-warning {
+    float: right;
+}
+
+.notice-type-list {
+    margin-top: 75px;
+}
+
+.notice-list .notice-list-meta {
+    display: inline-block;
+    width: 600px;
+}
+
+.notice-list .notice-type {
+    float: right;
+    width: 160px;
+}
+
+.notice-list .notice-time {
+    float: left;
+    font-size: 12px;
+}
+
+.none-notice {
+    text-align: center;
+    font-size: 17px;
+    padding-top: 25px;
+    border-bottom: 1px solid #eee;
 }

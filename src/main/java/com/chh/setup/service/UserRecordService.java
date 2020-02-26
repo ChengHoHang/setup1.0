@@ -3,8 +3,12 @@ package com.chh.setup.service;
 import com.chh.setup.dto.ArticleDto;
 import com.chh.setup.dto.CommentDto;
 import com.chh.setup.dto.PagesDto;
+import com.chh.setup.dto.process.PageSuperDto;
 import com.chh.setup.entity.ArticleEntity;
 import com.chh.setup.entity.UserEntity;
+import com.chh.setup.enums.UserRecordEnum;
+import com.chh.setup.exception.CustomizeErrorCode;
+import com.chh.setup.exception.CustomizeException;
 import com.chh.setup.myutils.PageUtils;
 import com.chh.setup.repository.ArticleFavorRepository;
 import com.chh.setup.repository.ArticleRepository;
@@ -49,29 +53,18 @@ public class UserRecordService {
         return userRepository.findById(userId);
     }
 
-    /**
-     * 用户个人资料页面分页展示
-     *
-     * @param creator
-     * @param page
-     * @return
-     */
-    public PagesDto<ArticleDto> getMyArticles(Integer creator, Integer page) {
+    public List<ArticleDto> getArticleDtos(Integer creator, Integer page) {
         PageRequest pageRequest = PageUtils.getDefaultPageRequest(page, pageSize, "gmtModified", "likeCount");
         List<ArticleEntity> articles = articleRepository.findAllByCreator(creator, pageRequest).getContent();
-        List<ArticleDto> articleDtos = articles.stream().map(article -> {
+        return articles.stream().map(article -> {
             ArticleDto articleDto = new ArticleDto(article);
             articleDto.setTags(
-                    Arrays.stream(StringUtils.split(article.getTag(), ","))
+                    Arrays.stream(StringUtils.split(article.getTag(), "|"))
                             .limit(2)
                             .map(tag -> TagService.getIdMap().get(tag))
                             .toArray(String[]::new));
             return articleDto;
         }).collect(Collectors.toList());
-        PagesDto<ArticleDto> pagesDto = new PagesDto<>();
-        pagesDto.setData(articleDtos);
-        pagesDto.setTotalPage(getCountByCreator(creator));
-        return pagesDto;
     }
 
     public Long getCountByCreator(Integer creator) {
@@ -79,15 +72,11 @@ public class UserRecordService {
         return (long) Math.ceil((double) count / pageSize);
     }
 
-    public PagesDto<CommentDto> getMyComments(Integer userId, Integer page) {
+    public List<CommentDto> getCommentDtos(Integer userId, Integer page) {
         PageRequest pageRequest = PageUtils.getDefaultPageRequest(page, pageSize, "likeCount", "gmtModified");
-        List<CommentDto> commentDtos = commentRepository
+        return commentRepository
                 .findAllByCommentator(userId, pageRequest)
                 .getContent();
-        PagesDto<CommentDto> pagesDto = new PagesDto<>();
-        pagesDto.setData(commentDtos);
-        pagesDto.setTotalPage(getCountByCommentator(userId));
-        return pagesDto;
     }
 
     public Long getCountByCommentator(Integer commentator) {
@@ -95,17 +84,41 @@ public class UserRecordService {
         return (long) Math.ceil((double) count / pageSize);
     }
 
-    public PagesDto<ArticleDto> getMyFavorArticles(Integer userId, Integer page) {
+    public List<ArticleDto> getFavorArticleDtos(Integer userId, Integer page) {
         PageRequest pageRequest = PageUtils.getDefaultPageRequest(page, pageSize, "gmtModified");
-        List<ArticleDto> articleDtos = articleFavorRepository.findAllByUserId(userId, pageRequest).getContent();
-        PagesDto<ArticleDto> pagesDto = new PagesDto<>();
-        pagesDto.setData(articleDtos);
-        pagesDto.setTotalPage(getFavorCountByUser(userId));
-        return pagesDto;
+        return articleFavorRepository.findAllByUserId(userId, pageRequest).getContent();
     }
 
     public Long getFavorCountByUser(Integer userId) {
         Long count = articleFavorRepository.countByUserIdAndState(userId, 1);
         return (long) Math.ceil((double) count / pageSize);
+    }
+
+    /**
+     * 用户个人资料页面分页展示
+     * @param userId
+     * @param action
+     * @param page
+     * @return
+     */
+    public PagesDto getMyRecord(Integer userId, String action, Integer page) {
+        Long totalPage;
+        List<? extends PageSuperDto> dataDtos;
+        if (action.equals(UserRecordEnum.ARTICLE.getAction())) {
+            dataDtos = getArticleDtos(userId, page);
+            totalPage = getCountByCreator(userId);
+        } else if (action.equals(UserRecordEnum.COMMENT.getAction())) {
+            dataDtos = getCommentDtos(userId, page);
+            totalPage = getCountByCommentator(userId);
+        } else if (action.equals(UserRecordEnum.FAVOR.getAction())) {
+            dataDtos = getFavorArticleDtos(userId, page);
+            totalPage = getFavorCountByUser(userId);
+        } else {
+            throw new CustomizeException(CustomizeErrorCode.PARAM_ERROR);
+        }
+        PagesDto pagesDto = new PagesDto();
+        pagesDto.setData(dataDtos);
+        pagesDto.setTotalPage(totalPage);
+        return pagesDto;
     }
 }

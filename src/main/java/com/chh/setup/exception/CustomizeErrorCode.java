@@ -21,15 +21,17 @@ public enum CustomizeErrorCode implements IBaseException {
     ARTICLE_NOT_FOUND(2005, "文章不存在，要不换一篇看看？"),
     TYPE_NOT_EXIST(2006, "文章类型不存在"),
     TAG_NOT_EXIST(2007, "不存在此标签"),
+    NOTICE_NOT_FOUND(2008, "消息不翼而飞了..."),
 
     BLANK_CONTENT(2051, "评论内容不能为空"),
     
     USER_LOG_OUT(3001, "用户未登录，请登陆后重试~"),
     EDIT_PERMISSION_DENY(3002, "用户无权限修改其他文章"),
     USER_NOT_EXIST(3003, "用户不存在"),
+    OPERATE_PERMISSION_DENY(3004, "用户无权限操作"),
 
     SYS_ERROR(5001, "服务器冒烟了~~~请稍后再访问~~~"),
-    PARAM_ERROR(5002, "未知参数错误");
+    PARAM_ERROR(5002, "参数错误");
     
     private Integer errorCode;
 

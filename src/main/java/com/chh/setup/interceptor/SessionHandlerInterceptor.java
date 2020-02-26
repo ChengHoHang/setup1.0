@@ -19,8 +19,8 @@ public class SessionHandlerInterceptor implements HandlerInterceptor {
     
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String[] requestURI = request.getRequestURI().split("/");
-        if (requestURI.length != 3 || !StringUtils.isNumeric(requestURI[2])) {
+        String[] urlSplit = request.getRequestURI().split("/");
+        if ("u".equals(urlSplit[1]) && !StringUtils.isNumeric(urlSplit[2])) {
             response.sendRedirect("/error.html");
         }
         UserEntity sessionUser = (UserEntity) request.getSession().getAttribute("user");

@@ -51,13 +51,13 @@ public class EditController {
         if (StringUtils.isBlank(articleParam.getType())) {
             throw new CustomizeException(CustomizeErrorCode.BLANK_TYPE);
         }
-        if (StringUtils.isBlank(StringUtils.replace(articleParam.getTag(), ",", ""))) {
+        if (StringUtils.isBlank(StringUtils.replace(articleParam.getTag(), "|", ""))) {
             throw new CustomizeException(CustomizeErrorCode.BLANK_TAG);
         }
-        if (request.getSession().getAttribute("user") == null || articleParam.getCreator() == null) {
+        UserEntity user = (UserEntity) request.getSession().getAttribute("user");
+        if (user == null || articleParam.getCreator() == null) {
             throw new CustomizeException(CustomizeErrorCode.USER_LOG_OUT);
         }
-        UserEntity user = (UserEntity) request.getSession().getAttribute("user");
         if (articleParam.getId() != null && !articleParam.getCreator().equals(user.getId())) {
             throw new CustomizeException(CustomizeErrorCode.EDIT_PERMISSION_DENY);
         }
