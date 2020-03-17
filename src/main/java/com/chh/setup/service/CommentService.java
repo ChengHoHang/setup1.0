@@ -1,12 +1,12 @@
 package com.chh.setup.service;
 
-import com.chh.setup.dto.CommentDto;
-import com.chh.setup.dto.CommentParam;
-import com.chh.setup.entity.ArticleEntity;
-import com.chh.setup.entity.CommentEntity;
-import com.chh.setup.entity.UserEntity;
-import com.chh.setup.exception.CustomizeErrorCode;
-import com.chh.setup.exception.CustomizeException;
+import com.chh.setup.advice.exception.CustomizeErrorCode;
+import com.chh.setup.advice.exception.CustomizeException;
+import com.chh.setup.dto.req.CommentParam;
+import com.chh.setup.enums.NoticeTypeEnum;
+import com.chh.setup.model.ArticleModel;
+import com.chh.setup.model.CommentModel;
+import com.chh.setup.model.UserModel;
 import com.chh.setup.repository.ArticleRepository;
 import com.chh.setup.repository.CommentRepository;
 import com.chh.setup.repository.UserRepository;
@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,34 +27,39 @@ import java.util.List;
 public class CommentService {
 
     @Autowired
-    CommentRepository commentRepository;
+    private CommentRepository commentRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    ArticleRepository articleRepository;
+    private ArticleRepository articleRepository;
+
+    @Autowired
+    private NoticeService noticeService;
 
     /**
      * 先搞新建，编辑功能有时间再搞
      * @param commentParam
+     * @param currentUser
      */
     @Transactional
-    public void createOrUpdate(CommentParam commentParam) {
-        UserEntity user = userRepository.findById(commentParam.getCommentator()).orElse(null);
-        if (user == null) {
-            throw new CustomizeException(CustomizeErrorCode.USER_NOT_EXIST);
-        }
-        ArticleEntity article = articleRepository.findById(commentParam.getArticleId()).orElse(null);
+    public void createCommentAndNotice(CommentParam commentParam, UserModel currentUser) {
+        CommentModel commentModel = new CommentModel();
+        commentModel.setCreateTime(new Date());
+        commentModel.setUpdateTime(new Date());
+        BeanUtils.copyProperties(commentParam, commentModel, "createTime", "updateTime");
+        ArticleModel article = articleRepository.findById(commentParam.getArticleId()).orElse(null);
         if (article == null) {
             throw new CustomizeException(CustomizeErrorCode.ARTICLE_NOT_FOUND);
         }
-        CommentEntity comment = new CommentEntity();
-        BeanUtils.copyProperties(commentParam, comment);
-        comment.setGmtCreated(System.currentTimeMillis());
-        comment.setGmtModified(System.currentTimeMillis());
-        commentRepository.save(comment);
-        articleRepository.incCommentCount(commentParam.getArticleId(), 1);
+        CommentModel comment = commentRepository.save(commentModel);
+        articleRepository.incCommentCount(commentModel.getArticleId(), 1);
+        
+        if (!currentUser.getId().equals(commentParam.getAuthorId())) {  //通知作者回复
+            noticeService.createNotice(commentParam.getCommentatorId(), commentParam.getAuthorId(),
+                    NoticeTypeEnum.REPLAY_ARTICLE.getType(), comment.getId());
+        }
     }
 
     /**
@@ -61,9 +67,11 @@ public class CommentService {
      * @param id 文章id
      * @return 对应文章id下的所有评论
      */
-    public List<CommentDto> getCommentsByArticleId(Integer id) {
-        Sort sort = Sort.by(Sort.Direction.ASC, "gmtCreated");
-        return commentRepository.getDtoByArticleId(id, sort);
+    public List<CommentModel> getCommentsByArticleId(Integer id) {
+        Sort sort = Sort.by(Sort.Direction.ASC, "createTime");
+        List<CommentModel> comments = commentRepository.findAllByArticleId(id, sort);
+        comments.forEach(comment -> comment.setCommentator(userRepository.findById(comment.getCommentatorId()).get()));
+        return comments;
     }
     
 }

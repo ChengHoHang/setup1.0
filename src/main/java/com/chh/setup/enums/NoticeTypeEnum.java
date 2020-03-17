@@ -1,7 +1,7 @@
 package com.chh.setup.enums;
 
-import com.chh.setup.exception.CustomizeErrorCode;
-import com.chh.setup.exception.CustomizeException;
+import com.chh.setup.advice.exception.CustomizeErrorCode;
+import com.chh.setup.advice.exception.CustomizeException;
 
 public enum NoticeTypeEnum {
     REPLAY_ARTICLE(1, "回复了文章"),

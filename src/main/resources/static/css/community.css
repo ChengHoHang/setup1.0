@@ -99,7 +99,7 @@ body {
     line-height: 20px;
 }
 
-.content-creator {
+.content-author {
     background-color: #f2f2f2;
     color: #999;
     padding: 0 5px;
@@ -169,10 +169,10 @@ body {
 }
 
 .aw-user-name {
-    padding: 5px;
+    padding-top: 10px;
     font-size: 12px;
-    line-height: 20px;
-    font-weight: normal;
+    line-height: 30px;
+    display: flex;
 }
 
 .article-menu {
@@ -214,10 +214,12 @@ body {
 }
 
 .comment-commentator {
-    display: flex;
-    align-items: center;
     font-size: 15px;
     font-weight: 500;
+}
+
+.comment-item {
+    width: 100%;
 }
 
 .comment-otherInfo {
@@ -242,7 +244,7 @@ body {
 }
 
 .comment-body {
-    padding-left: 40px;
+    display: flex;
 }
 
 .comment-actions {
@@ -378,11 +380,11 @@ cite {
 
 .notice-list .list-content {
     border-bottom: 1px solid #ddd;
-    padding: 25px;
+    padding: 25px 25px 10px;
+    display: flex;
 }
 
 .notice-board {
-    height: 87vh;
     padding-top: 30px;
 }
 
@@ -395,13 +397,13 @@ cite {
 }
 
 .notice-list .notice-list-meta {
-    display: inline-block;
+    padding-bottom: 10px;
     width: 600px;
 }
 
 .notice-list .notice-type {
     float: right;
-    width: 160px;
+    width: 180px;
 }
 
 .notice-list .notice-time {
@@ -414,4 +416,30 @@ cite {
     font-size: 17px;
     padding-top: 25px;
     border-bottom: 1px solid #eee;
+}
+
+a:hover {
+    text-decoration:none;
+    color: #252423;
+}
+
+.notice-user-url {
+    color: #252423;
+    font-weight: 600;
+}
+
+.notice-user-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+    margin-top: 3px;
+}
+
+.notice-source {
+    padding-top: 10px;
+    font-size: 14px;
+}
+
+.notice-source a {
+    color: #777777;
 }

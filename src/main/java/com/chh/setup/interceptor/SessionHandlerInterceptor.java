@@ -1,7 +1,7 @@
 package com.chh.setup.interceptor;
 
-import com.chh.setup.entity.UserEntity;
-import com.chh.setup.exception.CustomizeErrorCode;
+import com.chh.setup.model.UserModel;
+import com.chh.setup.advice.exception.CustomizeErrorCode;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -23,7 +23,7 @@ public class SessionHandlerInterceptor implements HandlerInterceptor {
         if ("u".equals(urlSplit[1]) && !StringUtils.isNumeric(urlSplit[2])) {
             response.sendRedirect("/error.html");
         }
-        UserEntity sessionUser = (UserEntity) request.getSession().getAttribute("user");
+        UserModel sessionUser = (UserModel) request.getSession().getAttribute("user");
         if (sessionUser == null) {
             response.sendRedirect("/error.html?"
                     + CustomizeErrorCode.USER_LOG_OUT.getErrorCode()

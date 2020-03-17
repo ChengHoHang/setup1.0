@@ -1,10 +1,12 @@
 package com.chh.setup.service;
 
-import com.chh.setup.dto.CommentDto;
-import com.chh.setup.dto.process.Record;
-import com.chh.setup.entity.ArticleFavorEntity;
-import com.chh.setup.entity.CommentFavorEntity;
+import com.chh.setup.advice.exception.CustomizeErrorCode;
+import com.chh.setup.advice.exception.CustomizeException;
+import com.chh.setup.dto.req.Record;
 import com.chh.setup.enums.FavorStateEnum;
+import com.chh.setup.model.ArticleFavorModel;
+import com.chh.setup.model.CommentFavorModel;
+import com.chh.setup.model.CommentModel;
 import com.chh.setup.repository.ArticleFavorRepository;
 import com.chh.setup.repository.ArticleRepository;
 import com.chh.setup.repository.CommentFavorRepository;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,16 +31,16 @@ import java.util.stream.Collectors;
 public class FavorService {
 
     @Autowired
-    ArticleFavorRepository articleFavorRepository;
+    private ArticleFavorRepository articleFavorRepository;
 
     @Autowired
-    CommentFavorRepository commentFavorRepository;
+    private CommentFavorRepository commentFavorRepository;
 
     @Autowired
-    ArticleRepository articleRepository;
+    private ArticleRepository articleRepository;
 
     @Autowired
-    CommentRepository commentRepository;
+    private CommentRepository commentRepository;
 
     /**
      * 判断当前user是否点赞该id文章
@@ -47,7 +50,7 @@ public class FavorService {
      * @return
      */
     public Integer getFavorState(Integer articleId, Integer userId) {
-        ArticleFavorEntity result = articleFavorRepository.findByArticleIdAndUserId(articleId, userId);
+        ArticleFavorModel result = articleFavorRepository.findByArticleIdAndUserId(articleId, userId);
         return result != null ? result.getState() : 0;
     }
 
@@ -56,12 +59,9 @@ public class FavorService {
      * @param comments 一篇文章下的评论列表
      * @param userId   userId
      */
-    public void setCommentFavorState(List<CommentDto> comments, Integer userId) {
-        List<Integer> commentIds = comments.stream().map(CommentDto::getId).collect(Collectors.toList());
+    public void setCommentFavorState(List<CommentModel> comments, Integer userId) {
+        List<Integer> commentIds = comments.stream().map(CommentModel::getId).collect(Collectors.toList());
         Set<Integer> favourCommentIds = new HashSet<>(commentFavorRepository.getFavourComments(commentIds, userId));
-        if (favourCommentIds.size() == 0) {
-            return;
-        }
         comments.forEach(comment -> {
             if (favourCommentIds.contains(comment.getId())) {
                 comment.setFavorState(FavorStateEnum.FAVOR.getState());
@@ -78,13 +78,19 @@ public class FavorService {
      */
     @Transactional
     public void createOrUpdateStates(Integer state, Integer articleId, Integer userId) {
-        articleRepository.incLikeCount(articleId, state == FavorStateEnum.FAVOR.getState() ? 1 : -1);
-        ArticleFavorEntity articleFavor = new ArticleFavorEntity();
+        ArticleFavorModel articleFavor = new ArticleFavorModel();
+        articleFavor.setUpdateTime(new Date());
         articleFavor.setArticleId(articleId);
         articleFavor.setUserId(userId);
         articleFavor.setState(state);
-        articleFavor.setGmtModified(System.currentTimeMillis());
         articleFavorRepository.save(articleFavor);
+        if (state == FavorStateEnum.FAVOR.getState()) {
+            articleRepository.incLikeCount(articleId, 1);
+        } else if (state == FavorStateEnum.CANCEL_FAVOR.getState()) {
+            articleRepository.incLikeCount(articleId, -1);
+        } else {
+            throw new CustomizeException(CustomizeErrorCode.PARAM_ERROR);
+        } 
     }
 
     /**
@@ -97,14 +103,20 @@ public class FavorService {
     @Transactional
     public void createOrUpdateStates(List<Record> records, Integer articleId, Integer userId) {
         for (Record record : records) {
-            commentRepository.incLikeCount(record.getCommentId(), record.getState() == FavorStateEnum.FAVOR.getState() ? 1 : -1);
-            CommentFavorEntity commentFavor = new CommentFavorEntity();
+            CommentFavorModel commentFavor = new CommentFavorModel();
+            commentFavor.setUpdateTime(new Date());
             commentFavor.setCommentId(record.getCommentId());
             commentFavor.setUserId(userId);
             commentFavor.setArticleId(articleId);
             commentFavor.setState(record.getState());
-            commentFavor.setGmtModified(System.currentTimeMillis());
             commentFavorRepository.save(commentFavor);
+            if (record.getState() == FavorStateEnum.FAVOR.getState()) {
+                commentRepository.incLikeCount(record.getCommentId(), 1);
+            } else if (record.getState() == FavorStateEnum.CANCEL_FAVOR.getState()) {
+                commentRepository.incLikeCount(record.getCommentId(), -1);
+            } else {
+                throw new CustomizeException(CustomizeErrorCode.PARAM_ERROR);
+            } 
         }
     }
 }

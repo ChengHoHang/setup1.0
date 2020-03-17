@@ -86,7 +86,7 @@
                     "name": that.name,
                     "passWord": that.passWord
                 };
-                axios.post("http://localhost:8080/register", param).then(function (response) {
+                axios.post("http://localhost:8080/authorize/register", param).then(function (response) {
                     if (response.data.code === 200) {
                         that.register_info = '注册中';
                         alert("注册成功，3秒后跳转至登陆首页");

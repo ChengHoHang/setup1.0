@@ -1,15 +1,16 @@
 package com.chh.setup.service;
 
-import com.chh.setup.dto.ArticleDto;
-import com.chh.setup.dto.ArticleParam;
-import com.chh.setup.dto.PagesDto;
-import com.chh.setup.entity.ArticleEntity;
-import com.chh.setup.entity.UserEntity;
-import com.chh.setup.enums.ArticleTypeEnum;
-import com.chh.setup.exception.CustomizeErrorCode;
-import com.chh.setup.exception.CustomizeException;
+import com.chh.setup.advice.exception.CustomizeErrorCode;
+import com.chh.setup.advice.exception.CustomizeException;
+import com.chh.setup.dto.req.ArticleParam;
+import com.chh.setup.dto.res.PagesDto;
+import com.chh.setup.model.ArticleModel;
+import com.chh.setup.model.CategoryModel;
+import com.chh.setup.model.CommentModel;
+import com.chh.setup.model.UserModel;
 import com.chh.setup.myutils.PageUtils;
 import com.chh.setup.repository.ArticleRepository;
+import com.chh.setup.repository.CategoryRepository;
 import com.chh.setup.repository.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -18,11 +19,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author chh
@@ -32,116 +33,101 @@ import java.util.stream.Collectors;
 public class ArticleService {
 
     @Autowired
-    ArticleRepository articleRepository;
+    private ArticleRepository articleRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
-    /**
-     * 发布新闻，并持久化到数据库
-     *
-     * @param articleParam
-     */
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private CommentService commentService;
+
+    @Autowired
+    private FavorService favorService;
+    
+    @Transactional
     public void createOrUpdate(ArticleParam articleParam) {
-        if (!ArticleTypeEnum.isExist(articleParam.getType())) {
-            throw new CustomizeException(CustomizeErrorCode.TYPE_NOT_EXIST);
+        if (categoryRepository.findById(articleParam.getCategoryId()).orElse(null) == null) {
+            throw new CustomizeException(CustomizeErrorCode.CATEGORY_NOT_EXISIT);
         }
-        String[] tagSplit = StringUtils.split(articleParam.getTag(), "|");
-        if (TagService.isInvalid(tagSplit)) {
-            throw new CustomizeException(CustomizeErrorCode.TAG_NOT_EXIST);
-        }
-        UserEntity user = userRepository.findById(articleParam.getCreator()).orElse(null);
-        if (user == null) {
-            throw new CustomizeException(CustomizeErrorCode.USER_NOT_EXIST);
-        }
-        ArticleEntity article;
-        if (articleParam.getId() == null) { // 插入
-            article = new ArticleEntity();
-            article.setGmtCreated(System.currentTimeMillis());
+        ArticleModel article;
+        if (articleParam.getArticleId() == null) { // 插入
+            article = new ArticleModel();
+            article.setCreateTime(new Date());
         } else {  // 更新
-            article = getEntityById(articleParam.getId());
+            article = getEntityById(articleParam.getArticleId());
             if (article == null) {
                 throw new CustomizeException(CustomizeErrorCode.ARTICLE_NOT_FOUND);
             }
         }
-        BeanUtils.copyProperties(articleParam, article, "type", "gmtModified", "tag");
-        article.setType(ArticleTypeEnum.getType(articleParam.getType()));
-        article.setGmtModified(System.currentTimeMillis());
-        Map<String, String> remarkMap = TagService.getRemarkMap();
-        article.setTag(Arrays.stream(tagSplit).map(remarkMap::get).collect(Collectors.joining("|")));
+        article.setUpdateTime(new Date());
+        BeanUtils.copyProperties(articleParam, article, "gmtModified");
         articleRepository.save(article);
     }
-
-    /**
-     * 调用getPageByType方法取出相应类型的文章列表，并作预处理后封装至ArticleDto
-     * @param page
-     * @param size
-     * @param type
-     * @return
-     */
-    public PagesDto listByType(Integer page, Integer size, Integer type) {
-        if (!ArticleTypeEnum.isExist(type)) {
-            throw new CustomizeException(CustomizeErrorCode.TYPE_NOT_EXIST);
-        }
-        PageRequest pageRequest = PageUtils.getDefaultPageRequest(page, size, "gmtModified");
-        List<ArticleDto> articleDtos;
-        if (type != 0) {
-            articleDtos = articleRepository.getAllDtoByType(type, pageRequest).getContent();
+    
+    public PagesDto listByType(Integer page, Integer size, Integer categoryId) {
+        PageRequest pageRequest = PageUtils.getDefaultPageRequest(page, size, "updateTime");
+        List<ArticleModel> contents;
+        if (categoryId == null) {
+            contents = articleRepository.findAll(pageRequest).getContent();
         } else {
-            articleDtos = articleRepository.getAllDto(pageRequest).getContent();
+            if (categoryRepository.findById(categoryId).orElse(null) == null) {
+                throw new CustomizeException(CustomizeErrorCode.CATEGORY_NOT_EXISIT);
+            }
+            contents = articleRepository.findAllByCategoryId(categoryId, pageRequest).getContent();
         }
-        articleDtos.forEach(articleDto -> {
-            articleDto.setDescription(StringUtils.truncate(articleDto.getDescription(), 150) + ".....");
-            articleDto.setTags(Arrays.stream(articleDto.getTags()).limit(2).map(tag -> TagService.getIdMap().get(tag)).toArray(String[]::new));
+        contents.forEach(content -> {
+            content.setDescription(StringUtils.truncate(content.getDescription(), 150) + ".....");
+            content.setTags(Arrays.stream(StringUtils.split(content.getTag(), "|")).limit(2).toArray(String[]::new));
+            content.setAuthor(userRepository.findById(content.getAuthorId()).get());
         });
         PagesDto pagesDto = new PagesDto();
-        pagesDto.setData(articleDtos);
-        pagesDto.setTotalPage(getCountByType(type, size));
+        pagesDto.setData(contents);
+        pagesDto.setTotalPage(getCountByType(categoryId, size));
         return pagesDto;
     }
-
-    /**
-     * 获取各类文章总页数
-     * @param type
-     * @param size
-     * @return
-     */
+    
     public Long getCountByType(Integer type, Integer size) {
-        long count = type == 0 ? articleRepository.count() : articleRepository.countByType(type);
+        long count = type == null ? articleRepository.count() : articleRepository.countByCategoryId(type);
         return (long) Math.ceil((double) count / size);
     }
 
-    /**
-     * 将ArticleEntity转换成ArticleDto类型
-     * @param id articleId
-     * @return
-     */
-    public ArticleDto getDtoById(Integer id) {
-        ArticleDto articleDto = articleRepository.findDtoById(id);
-        if (articleDto == null) {  // 当然 也可能是作者的数据丢失了；不过小型网站就不做的这么细了
-            throw new CustomizeException(CustomizeErrorCode.ARTICLE_NOT_FOUND);
-        }
-        return articleDto;
-    }
-
-    public ArticleEntity getEntityById(Integer id) {
+    public ArticleModel getEntityById(Integer id) {
         return articleRepository.findById(id).orElse(null);
     }
-
-    /**
-     * 增加对应id文章的阅读数
-     * @param articleId
-     */
+    
     @Transactional
     public void incViewCount(Integer articleId) {
         articleRepository.incViewCount(articleId, 1);
     }
 
-    
+    public ArticleModel getDtoModel(ArticleModel articleModel, HttpServletRequest request) {
+        List<CommentModel> comments = articleModel.getCommentCount() != 0 ? commentService.getCommentsByArticleId(articleModel.getId()) : null;
+        UserModel user = (UserModel) request.getSession().getAttribute("user");
+        if (user != null) {
+            articleModel.setFavorState(favorService.getFavorState(articleModel.getId(), user.getId()));
+            if (comments != null) {
+                favorService.setCommentFavorState(comments, user.getId());
+            }
+        }
+        articleModel.setAuthor(userRepository.findById(articleModel.getAuthorId()).get());
+        articleModel.setTags(StringUtils.split(articleModel.getTag(), "|"));
+        articleModel.setComments(comments);
+        List<Object[]> relatedArticles = getRelatedArticle(articleModel.getId(), articleModel.getTags());
+        articleModel.setRelatedArticle(relatedArticles);
+        return articleModel;
+    }
+
     public List<Object[]> getRelatedArticle(Integer id, String[] tags) {
         if (tags == null) {
             return new ArrayList<>();
         }
         return articleRepository.getRelatedArticleById(id, StringUtils.join(tags, '|'), 0, 15);
+    }
+
+    public List<CategoryModel> selectAll() {
+        return categoryRepository.findAll();
     }
 }

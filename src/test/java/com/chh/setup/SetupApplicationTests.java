@@ -1,13 +1,15 @@
 package com.chh.setup;
 
-import com.chh.setup.dto.NoticeDto;
+import com.chh.setup.dto.req.Record;
 import com.chh.setup.repository.*;
+import com.chh.setup.service.FavorService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 class SetupApplicationTests {
@@ -26,6 +28,9 @@ class SetupApplicationTests {
 
     @Autowired
     NoticeRepository noticeRepository;
+
+    @Autowired
+    private FavorService favorService;
 
 //    @Test
 //    void contextLoads() {
@@ -178,11 +183,57 @@ class SetupApplicationTests {
 //        System.out.println(list);
 //    }
 
+//    @Test
+//    public void test19() {
+//        Sort sort = Sort.by(Sort.Order.asc("state"), Sort.Order.desc("gmtCreated"));
+//        PageRequest pageRequest = PageRequest.of(0, 5, sort);
+//        Page<NoticeDto> allByReceiver = noticeRepository.findAllByReceiver(5, pageRequest);
+//        System.out.println(allByReceiver);
+//    }
+
+//    @Test
+//    @Transactional
+//    public void test20() {
+//        NoticeModel noticeModel = new NoticeModel();
+//        noticeModel.setNotifier(5);
+//        noticeModel.setReceiver(4);
+//        noticeModel.setType(1);
+//        noticeModel.setParentId(48);
+//        try {
+//            noticeRepository.save(noticeModel);
+//        } catch (DataIntegrityViolationException ex) {
+//            ex.printStackTrace();
+//        }
+//    }
+
+
+//    @Test
+//    @Transactional
+//    @Rollback(value = false)
+//    public void test21() {
+//        List<Record> records = new ArrayList<>();
+//        Record e = new Record();
+//        e.setCommentatorId(4);
+//        e.setCommentId(38);
+//        e.setState(1);
+//        records.add(e);
+//        records.add(e);
+//        favorService.createOrUpdateStates(records, 48, 4);
+//    }
+
     @Test
-    public void test19() {
-        Sort sort = Sort.by(Sort.Order.asc("state"), Sort.Order.desc("gmtCreated"));
-        PageRequest pageRequest = PageRequest.of(0, 5, sort);
-        Page<NoticeDto> allByReceiver = noticeRepository.findAllByReceiver(5, pageRequest);
-        System.out.println(allByReceiver);
+    public void test22() {
+        Record record1 = new Record();
+        Record record2 = new Record();
+        record1.setCommentatorId(1);
+        record2.setCommentatorId(1);
+        record1.setCommentId(1);
+        record2.setCommentId(1);
+        record1.setState(1);
+        record2.setState(1);
+        System.out.println(record1.equals(record2));
+        List<Record> objects = Arrays.asList(record1, record2);
+        List<Record> collect = objects.stream().distinct().collect(Collectors.toList());
     }
+    
 }

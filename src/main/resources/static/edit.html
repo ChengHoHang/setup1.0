@@ -50,7 +50,7 @@
                             <li><a :href="'/u/' + user.id">个人资料</a></li>
                             <li><a href="/my-notice/unread">我的通知 <span class="badge" v-text="unreadCount"></span></a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="/logout">退出登录</a></li>
+                            <li><a href="/authorize/logout">退出登录</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -70,8 +70,10 @@
                             <div class="col-md-12 type-article">
                                 <label class="col-sm-2 control-label">请选择主题分类</label>
                                 <div class="col-sm-2">
-                                    <select class="form-control" v-model="type">
-                                        <option v-for="(type, index) in dropDownOption">{{type}}</option>
+                                    <select class="form-control" v-model="categoryId">
+                                        <option v-for="(categoryItem, index) in dropDownOption" 
+                                                :value="categoryItem.id" v-text="categoryItem.type">
+                                        </option>
                                     </select>
                                 </div>
                             </div>
@@ -140,20 +142,19 @@
         data: {
             loginCode: '',
             user: '',
-            type: '国内',
-            dropDownOption: ['国内', '国际', '互联网', '娱乐', '体育'],
+            categoryId: 1,
+            dropDownOption: '',
             title: '',
             description: '',
             tag: [],
             tagInfo: '',
-            creator: '',
             unreadCount: '',
-            id: ''
+            articleId: null
         },
         methods: {
             getLoginInfo: function () {
                 let that = this;
-                axios.get("http://localhost:8080/test_login", {}).then(function (response) {
+                axios.get("http://localhost:8080/authorize/test_login", {}).then(function (response) {
                     that.loginCode = response.data.code;
                     that.user = response.data.rsData;
                     if (that.loginCode === 200) {
@@ -164,31 +165,31 @@
 
             getUnreadCount: function () {
                 let that = this;
-                axios.get("http://localhost:8080/unreadCount", {}).then(function (response) {
+                axios.get("http://localhost:8080/notice/unreadCount", {}).then(function (response) {
                     that.unreadCount = response.data;
                 })
             },
             
             restore: function () {
                 let that = this;
-                axios.get("http://localhost:8080/tags", {}).then(function (response) {
-                    that.tagInfo = response.data;
+                axios.get("http://localhost:8080/edit/static", {}).then(function (response) {
+                    that.dropDownOption = response.data[0];
+                    that.tagInfo = response.data[1];
                 })
                 .then(function () {
                     let url_split = window.location.pathname.split('/');
                     if (url_split.length !== 3) {
                         return;
                     }
-                    let url = 'http://localhost:8080/article/' + url_split[2];
+                    let url = 'http://localhost:8080/edit/article/' + url_split[2];
                     return axios.get(url, {}).then(function (response) {
                         if (response.data.code !== 200) {
                             window.location.href = "/error.html?" + response.data.code + "&" + response.data.message;
                         } else {
-                            that.id = response.data.rsData.id;
-                            that.type = response.data.rsData.type;
+                            that.articleId = response.data.rsData.id;
+                            that.categoryId = response.data.rsData.categoryId;
                             that.title = response.data.rsData.title;
                             that.description = response.data.rsData.description;
-                            that.creator = response.data.rsData.creator;
                             for (let tag of response.data.rsData.tags) {
                                 $('#myTags').addTag(tag);
                                 that.tag.push(tag);
@@ -217,19 +218,17 @@
                     return;
                 }
                 let that = this;
-                let url_split = window.location.pathname.split('/');
-                let message = url_split.length === 2 ? "发布" : "编辑";
                 let param = {
-                    "id": message === "发布" ? null : that.id,
-                    "type": that.type,
+                    "articleId": that.articleId,
+                    "categoryId": that.categoryId,
                     "title": that.title,
                     "description": that.description,
                     "tag": that.tag.join("|"),
-                    "creator": message === "发布" ? that.user.id : that.creator.id
+                    "authorId": that.user.id
                 };
-                axios.post("http://localhost:8080/publish/article", param).then(function (response) {
+                axios.post("http://localhost:8080/edit/publish/article", param).then(function (response) {
                     if (response.data.code === 200) {
-                        alert(message + "成功，3秒后跳转至首页~");
+                        alert((that.articleId == null ? "发布" : "编辑") + "成功，3秒后跳转至首页~");
                         setTimeout(window.location.href = '/', 3000);
                     } else {
                         alert(response.data.message)

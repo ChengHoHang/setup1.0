@@ -1,73 +1,68 @@
 package com.chh.setup.controller;
 
-import com.chh.setup.dto.ArticleParam;
-import com.chh.setup.dto.ResultDto;
-import com.chh.setup.entity.UserEntity;
-import com.chh.setup.exception.CustomizeErrorCode;
-import com.chh.setup.exception.CustomizeException;
+import com.chh.setup.advice.exception.CustomizeErrorCode;
+import com.chh.setup.advice.exception.CustomizeException;
+import com.chh.setup.dto.req.ArticleParam;
+import com.chh.setup.dto.res.ResultDto;
+import com.chh.setup.model.ArticleModel;
+import com.chh.setup.model.UserModel;
+import com.chh.setup.myutils.NetUtils;
 import com.chh.setup.service.ArticleService;
 import com.chh.setup.service.TagService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.Arrays;
 
 /**
  * @author chh
  * @date 2020/1/10 14:17
  */
-@Controller
+@RestController
+@RequestMapping("/edit")
 public class EditController {
 
     @Autowired
-    ArticleService articleService;
+    private ArticleService articleService;
 
-    @GetMapping("/edit")
-    public String publish() {
-        return "edit.html";
+    @Autowired
+    private HttpServletRequest request;
+
+    @GetMapping("/tags")
+    public Object getTags() {
+        return TagService.showTags();
     }
-    
-    @GetMapping("/edit/*")
-    public String edit() {
-        return "/edit.html";
+
+    @GetMapping("/static")
+    public Object getStaticRes() {
+        return Arrays.asList(articleService.selectAll(), TagService.showTags());
     }
-    
+
     @PostMapping("/publish/article")
-    @ResponseBody
-    public Object publishArticle(@RequestBody ArticleParam articleParam,
-                                 HttpServletRequest request) {
-        //防止用户输入长型的空字符串"          "
-        if (StringUtils.isBlank(articleParam.getTitle()) || "".equals(StringUtils.trim(articleParam.getTitle()))) {
-            throw new CustomizeException(CustomizeErrorCode.BLANK_TITLE);
+    public Object publishArticle(@Valid @RequestBody ArticleParam articleParam, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new CustomizeException(CustomizeErrorCode.PARAM_ERROR, NetUtils.processErrorMsg(bindingResult));
         }
-        if (StringUtils.isBlank(articleParam.getDescription()) || "".equals(StringUtils.trim(articleParam.getDescription()))) {
-            throw new CustomizeException(CustomizeErrorCode.BLANK_DESCRIPTION);
-        }
-        if (StringUtils.isBlank(articleParam.getType())) {
-            throw new CustomizeException(CustomizeErrorCode.BLANK_TYPE);
-        }
-        if (StringUtils.isBlank(StringUtils.replace(articleParam.getTag(), "|", ""))) {
-            throw new CustomizeException(CustomizeErrorCode.BLANK_TAG);
-        }
-        UserEntity user = (UserEntity) request.getSession().getAttribute("user");
-        if (user == null || articleParam.getCreator() == null) {
+        UserModel user = (UserModel) request.getSession().getAttribute("user");
+        if (user == null || !user.getId().equals(articleParam.getAuthorId())) {
             throw new CustomizeException(CustomizeErrorCode.USER_LOG_OUT);
         }
-        if (articleParam.getId() != null && !articleParam.getCreator().equals(user.getId())) {
-            throw new CustomizeException(CustomizeErrorCode.EDIT_PERMISSION_DENY);
+        String[] tagSplit = StringUtils.split(articleParam.getTag(), "|");
+        if (TagService.isInvalid(tagSplit)) {
+            throw new CustomizeException(CustomizeErrorCode.TAG_NOT_EXIST);
         }
         articleService.createOrUpdate(articleParam);
         return ResultDto.okOf(null);
     }
 
-    @GetMapping("/tags")
-    @ResponseBody
-    public Object getTags() {
-        return TagService.showTags();
+    @GetMapping("/article/{id}")
+    public Object getArticleModel(@PathVariable Integer id) {
+        ArticleModel article = articleService.getEntityById(id);
+        article.setTags(StringUtils.split(article.getTag(), "|"));
+        return ResultDto.okOf(article);
     }
 }

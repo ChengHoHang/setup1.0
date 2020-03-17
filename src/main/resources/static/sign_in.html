@@ -63,13 +63,12 @@
         },
         methods: {
             login: function () {
-                console.log("login");
                 var that = this;
                 var param = {
                     "account" : that.account,
-                    "passWord" : that.passWord
+                    "password" : that.passWord
                 };
-                axios.post("http://localhost:8080/login", param).then(function (response) {
+                axios.post("http://localhost:8080/authorize/login", param).then(function (response) {
                     if (response.data.code === 200) {
                         window.location.href = '/';
                     } else {

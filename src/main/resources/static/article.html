@@ -50,7 +50,7 @@
                             <li><a :href="'/u/' + user.id">个人资料</a></li>
                             <li><a href="/my-notice/unread">我的通知 <span class="badge" v-text="unreadCount"></span></a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="/logout">退出登录</a></li>
+                            <li><a href="/authorize/logout">退出登录</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -67,9 +67,9 @@
                         <div class="mod-header">
                             <h1 class="mod-header-title" v-text="article.title"></h1>
                             <div class="list-meta">
-                                作者：<span class="content-creator"><a
-                                    :href="'/u/' + creator.id" v-text="creator.name"></a></span>
-                                发布时间：<span class="meta-content" v-text="article.gmtModified"> </span>
+                                作者：<span class="content-author"><a
+                                    :href="'/u/' + author.id" v-text="author.name"></a></span>
+                                发布时间：<span class="meta-content" v-text="article.createTime"> </span>
                                 阅读数：<span class="meta-content" v-text="article.viewCount"></span>
                             </div>
                             <hr>
@@ -98,7 +98,7 @@
                             </div>
                             <hr>
                             <a :href="'/edit/' + article.id" class="article-menu"
-                               v-if="user != null && creator.id == user.id">
+                               v-if="user != null && author.id == user.id">
                                 <span class="glyphicon glyphicon-edit" aria-hidden="true">编辑</span>
                             </a>
                         </div>
@@ -107,24 +107,29 @@
                         <div class="mod-header comment-count">
                             <h4 v-text="article.commentCount + '个回复'"></h4>
                         </div>
-                        <div id="comment" class="mod-body comment-body">
-                            <div v-if="article.comments" v-for="(comment, index) in article.comments" :id="'comment-' + comment.id">
-                                <div class="comment-commentator">
-                                    <a :href="'/u/' + comment.commentator.id" class="commentator-a"
-                                       v-text="comment.commentator.name"></a>
+                        <div id="comment" class="mod-body">
+                            <div v-if="article.comments" v-for="(comment, index) in article.comments" :id="'comment-' + comment.id" class="comment-body">
+                                <div>
+                                    <a :href="'/u/' + comment.commentator.id"><img src="/images/user.png" class="notice-user-icon"></a>
                                 </div>
-                                <div class="comment-otherInfo">
-                                    <span class="meta-content" v-text="(index + 1) + '楼'"></span>
-                                    <span v-text="comment.gmtCreated"></span>
-                                </div>
-                                <div class="comment-content" v-text="comment.content"></div>
-                                <div class="comment-actions" @click="addCommentRecord($event, index)">
+                                <div class="comment-item">
+                                    <div class="comment-commentator">
+                                        <a :href="'/u/' + comment.commentator.id" class="commentator-a"
+                                           v-text="comment.commentator.name"></a>
+                                    </div>
+                                    <div class="comment-otherInfo">
+                                        <span class="meta-content" v-text="(index + 1) + '楼'"></span>
+                                        <span v-text="comment.createTime"></span>
+                                    </div>
+                                    <div class="comment-content" v-text="comment.content"></div>
+                                    <div class="comment-actions" @click="addCommentRecord($event, index)">
                                     <span :class="{'active': comment.favorState}">
                                         <span class="glyphicon glyphicon-thumbs-up comment-action" aria-hidden="true"></span>
                                         <span v-text="comment.likeCount ? comment.likeCount : '赞'"></span>
                                     </span>
+                                    </div>
+                                    <hr>
                                 </div>
-                                <hr>
                             </div>
                             <div v-if="!article.comments" class="comment-presentation">当前文章还没有人评论，赶紧抢沙发吧~</div>
                         </div>
@@ -149,7 +154,10 @@
                     <div class="aw-mod">
                         <div class="article-creator-info">
                             <div class="aw-head">信息来源</div>
-                            <div class="aw-user-name" v-text="creator.name"></div>
+                            <div class="aw-user-name">
+                                <a :href="'/u/' + author.id"><img src="/images/user.png" class="notice-user-icon"></a>
+                                <div v-text="author.name"></div>
+                            </div>
                             <hr>
                         </div>
                         <div class="article-related">
@@ -178,7 +186,7 @@
             loginCode: '',
             user: '',
             article: '',
-            creator: '',
+            author: '',
             replyContent: '',
             commentClickCounter: {},
             unreadCount: '',
@@ -187,7 +195,7 @@
         methods: {
             getLoginInfo: function () {
                 let that = this;
-                axios.get("http://localhost:8080/test_login", {}).then(function (response) {
+                axios.get("http://localhost:8080/authorize/test_login", {}).then(function (response) {
                     that.loginCode = response.data.code;
                     that.user = response.data.rsData;
                     if (that.loginCode === 200) {
@@ -198,7 +206,7 @@
 
             getUnreadCount: function () {
                 let that = this;
-                axios.get("http://localhost:8080/unreadCount", {}).then(function (response) {
+                axios.get("http://localhost:8080/notice/unreadCount", {}).then(function (response) {
                     that.unreadCount = response.data;
                 })
             },
@@ -211,7 +219,7 @@
                         window.location.href = "/error.html?" + response.data.code + "&" + response.data.message;
                     } else {
                         that.article = response.data.rsData;
-                        that.creator = response.data.rsData.creator;
+                        that.author = response.data.rsData.author;
                         document.title = that.article.title;
                         $('#description').val(response.data.rsData.description);
                         editormd.markdownToHTML("article-view", {});
@@ -230,11 +238,11 @@
                 }
                 let param = {
                     "articleId": this.article.id,
-                    "commentator": this.user.id,
+                    "commentatorId": this.user.id,
                     "content": this.replyContent,
-                    "author": this.creator.id
+                    "authorId": this.author.id
                 };
-                axios.post("http://localhost:8080/publish/comment", param).then(function (response) {
+                axios.post("http://localhost:8080/article/publish/comment", param).then(function (response) {
                     if (response.data.code === 200) {
                         window.location.reload();
                     } else {
@@ -245,11 +253,12 @@
 
             beforeunloadFn:async function () {
                 let records = [];
+                debugger;
                 for (let index in this.commentClickCounter) {
                     if (this.commentClickCounter[index] & 1) {// 过滤非单数的操作
                         records.push({
                             "commentId": this.article.comments[index].id,
-                            "commentator": this.article.comments[index].commentator.id,
+                            "commentatorId": this.article.comments[index].commentator.id,
                             "state": (this.article.comments[index].favorState + 1) & 1
                         })
                     }
@@ -258,12 +267,12 @@
                 if (records.length !== 0 || stateChange !== 0) {
                     let param = {
                         "articleId": this.article.id,
-                        "articleAuthor": this.creator.id,
+                        "articleAuthor": this.author.id,
                         "records": records,
                         "favorState": stateChange === 0 ? null : (this.article.favorState + 1) & 1,
-                        "operator": this.user.id
+                        "currentUserId": this.user.id
                     };
-                    await axios.post("http://localhost:8080/favor-confirm", param).then(function (response) {
+                    await axios.post("http://localhost:8080/article/favor-confirm", param).then(function (response) {
                         if (response.data.code !== 200) {
                             alert(response.data.message);
                         }
@@ -331,11 +340,6 @@
         },
         mounted: function () {
             window.addEventListener('beforeunload', this.beforeunloadFn);    //更新页面
-            window.addEventListener('unload', this.beforeunloadFn);          //关闭页面  
-        },
-        destroy: function () {
-            window.removeEventListener('beforeunload', this.beforeunloadFn);
-            window.removeEventListener('unload', this.beforeunloadFn);
         }
     })
 

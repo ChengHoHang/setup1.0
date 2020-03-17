@@ -1,82 +1,99 @@
 package com.chh.setup.controller;
 
-import com.chh.setup.dto.ArticleDto;
-import com.chh.setup.dto.CommentDto;
-import com.chh.setup.dto.PagesDto;
-import com.chh.setup.dto.ResultDto;
-import com.chh.setup.entity.UserEntity;
+import com.chh.setup.advice.exception.CustomizeErrorCode;
+import com.chh.setup.advice.exception.CustomizeException;
+import com.chh.setup.advice.exception.JumpExcetion;
+import com.chh.setup.dto.req.CommentParam;
+import com.chh.setup.dto.req.FavorParam;
+import com.chh.setup.dto.req.Record;
+import com.chh.setup.dto.res.ResultDto;
+import com.chh.setup.enums.FavorStateEnum;
+import com.chh.setup.enums.NoticeTypeEnum;
+import com.chh.setup.model.ArticleModel;
+import com.chh.setup.model.UserModel;
+import com.chh.setup.myutils.NetUtils;
 import com.chh.setup.service.ArticleService;
 import com.chh.setup.service.CommentService;
 import com.chh.setup.service.FavorService;
-import com.chh.setup.service.TagService;
+import com.chh.setup.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
  * @author chh
  * @date 2020/1/11 17:42
  */
-@Controller
+@RestController
+@RequestMapping("/article")
 public class ArticleController {
 
     @Autowired
-    ArticleService articleService;
+    private ArticleService articleService;
 
     @Autowired
-    CommentService commentService;
+    private CommentService commentService;
 
     @Autowired
-    FavorService favorService;
-    
-    @Value("${page.size}")
-    Integer size;
+    private NoticeService noticeService;
 
-    /**
-     * 将分页数据交给前端在首页渲染，提供如下参数
-     * article 新闻内容
-     * page 页码
-     * @return
-     */
-    @GetMapping("/articles")
-    @ResponseBody
-    public Object allArticles(@RequestParam(value = "type", required = false) Integer type,
-                              @RequestParam(value = "page", required = false, defaultValue = "1") Integer page) {
-        PagesDto pagesDto = articleService.listByType(page, size, type);
-        return ResultDto.okOf(pagesDto);
+    @Autowired
+    private FavorService favorService;
+
+    @Autowired
+    private HttpServletRequest request;
+
+    @GetMapping("/{id}")
+    public Object getArticleById(@PathVariable("id") Integer articleId) {
+        ArticleModel articleModel = articleService.getEntityById(articleId);
+        if (articleModel == null) {
+            throw new JumpExcetion(CustomizeErrorCode.ARTICLE_NOT_FOUND);
+        }
+        articleService.incViewCount(articleId);
+        articleModel = articleService.getDtoModel(articleModel, request);
+        return ResultDto.okOf(articleModel);
     }
 
-    @GetMapping("/a/{id}")
-    public String article(@PathVariable("id") Integer id) {
-        articleService.incViewCount(id);
-        return "/article.html";
+    @PostMapping("/publish/comment")
+    public Object publishComment(@Valid @RequestBody CommentParam commentParam, BindingResult bindingResult) {
+        UserModel user = (UserModel) request.getSession().getAttribute("user");
+        if (user == null || !commentParam.getCommentatorId().equals(user.getId())) {
+            throw new CustomizeException(CustomizeErrorCode.OPERATE_PERMISSION_DENY);
+        }
+        if (bindingResult.hasErrors()) {
+            throw new CustomizeException(CustomizeErrorCode.PARAM_ERROR, NetUtils.processErrorMsg(bindingResult));
+        }
+        commentService.createCommentAndNotice(commentParam, user);
+        return ResultDto.okOf(null);
     }
 
-    @GetMapping("/article/{id}")
-    @ResponseBody
-    public Object getArticleById(@PathVariable("id") Integer articleId, HttpServletRequest request) {
-        ArticleDto article = articleService.getDtoById(articleId);
-        List<CommentDto> comments = article.getCommentCount() != 0 ? commentService.getCommentsByArticleId(articleId) : null;
-        UserEntity user = (UserEntity) request.getSession().getAttribute("user");
-        if (user != null) {
-            article.setFavorState(favorService.getFavorState(articleId, user.getId()));
-            if (comments != null) {
-                favorService.setCommentFavorState(comments, user.getId());
+    @PostMapping("/favor-confirm")
+    public Object favorConfirm(@RequestBody FavorParam favorParam) {
+        UserModel user = (UserModel) request.getSession().getAttribute("user");
+        if (user == null || favorParam.getCurrentUserId() == null) {
+            throw new CustomizeException(CustomizeErrorCode.USER_LOG_OUT);
+        }
+        if (!user.getId().equals(favorParam.getCurrentUserId())) {
+            throw new CustomizeException(CustomizeErrorCode.OPERATE_PERMISSION_DENY);
+        }
+        if (articleService.getEntityById(favorParam.getArticleId()) == null) {
+            throw new CustomizeException(CustomizeErrorCode.ARTICLE_NOT_FOUND);
+        }
+        if (favorParam.getFavorState() != null) { // 更新article表点赞数，插入或更新favor表点赞记录
+            favorService.createOrUpdateStates(favorParam.getFavorState(), favorParam.getArticleId(), user.getId());
+            if (favorParam.getFavorState() == FavorStateEnum.FAVOR.getState() && !user.getId().equals(favorParam.getArticleAuthor())) {
+                noticeService.createNotice(user.getId(), favorParam.getArticleAuthor(), NoticeTypeEnum.LIKE_ARTICLE.getType(), favorParam.getArticleId());
             }
         }
-        article.setComments(comments);
-        List<Object[]> relatedArticles = articleService.getRelatedArticle(articleId, article.getTags());
-        article.setRelatedArticle(relatedArticles);
-        article.setTags(Arrays.stream(article.getTags()).map(tag -> TagService.getIdMap().get(tag)).toArray(String[]::new));
-        return ResultDto.okOf(article);
+        List<Record> records = favorParam.getRecords();
+        if (records.size() != 0) { // 更新comment表点赞数，插入或更新favor表点赞记录
+            favorService.createOrUpdateStates(records, favorParam.getArticleId(), user.getId());
+            noticeService.createNotice(user.getId(), records, NoticeTypeEnum.LIKE_COMMENT.getType());
+        }
+        return ResultDto.okOf(null);
     }
-    
 }

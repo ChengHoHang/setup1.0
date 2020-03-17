@@ -46,7 +46,7 @@
                             <li><a :href="'/u/' + user.id">个人资料</a></li>
                             <li><a href="/my-notice/unread">我的通知 <span class="badge" v-text="unreadCount"></span></a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="/logout">退出登录</a></li>
+                            <li><a href="/authorize/logout">退出登录</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -58,6 +58,7 @@
         
         <div class="container category">
             <div class=" user-index">
+                <img src="/images/user.png" class="notice-user-icon">
                 <span>用户：</span>
                 <span v-text="homeUser.name" style="font-size: 25px;"></span>
             </div>
@@ -82,10 +83,9 @@
                         <ul class="news-list" v-if="recordType === 'article'">
                             <li v-if="dataList.length" v-for="(article, index) in dataList">
                                 <div class="list-content">
-                                    <a class="list-title" target="_blank" :href="'/a/' + article.id"
-                                       v-text="article.title"></a>
+                                    <a class="list-title" target="_blank" :href="'/a/' + article.id" v-text="article.title"></a>
                                     <div class="list-meta">
-                                        <span class="content-creator">
+                                        <span class="content-author">
                                             <a :href="'/u/' + homeUser.id" v-text="homeUser.name"></a>
                                         </span>
                                         <span class="meta-content index-favor-icon">
@@ -102,7 +102,7 @@
                                             <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
                                             <span v-text="article.viewCount"></span>
                                         </span>
-                                        <span class="meta-content">• {{article.gmtModified}} </span>
+                                        <span class="meta-content">• {{article.updateTime}} </span>
                                         <span class="label label-info user-article-tag" v-for="(tag, index) in article.tags">
                                             <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
                                             <span v-text="tag"></span>
@@ -127,7 +127,7 @@
                                         <h4>
                                             <a :href="'/u/' + homeUser.id" v-text="homeUser.name" target="_blank"></a>
                                             回复
-                                            <cite v-text="record.gmtCreated"></cite>
+                                            <cite v-text="record.createTime"></cite>
                                         </h4>
                                         <div>
                                             <img src="/images/LeftQuotation.png">
@@ -160,8 +160,8 @@
                                     <a class="list-title" target="_blank" :href="'/a/' + article.id"
                                        v-text="article.title"></a>
                                     <div class="list-meta">
-                                        <span class="content-creator">
-                                            <a :href="'/u/' + article.creator.id"v-text="article.creator.name"></a>
+                                        <span class="content-author">
+                                            <a :href="'/u/' + article.author.id"v-text="article.author.name"></a>
                                         </span>
                                         <span class="meta-content index-favor-icon">
                                             <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
@@ -177,7 +177,7 @@
                                             <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
                                             <span v-text="article.viewCount"></span>
                                         </span>
-                                        <span class="meta-content">• {{article.gmtModified}} </span>
+                                        <span class="meta-content" style="float: right;">• {{article.updateTime}} </span>
                                     </div>
                                 </div>
                                 <hr>
@@ -205,7 +205,7 @@
             loginCode: '',
             user: '',
             homeUser: '',
-            category: ['发布', '评论', '推荐'],
+            category: ['发布', '评论', '收藏'],
             homeType: 0,    // 默认为0，初次打开页面时访问'我的发布'
             dataList: [],
             recordType: '',
@@ -215,7 +215,7 @@
         methods: {
             getLoginInfo: function () {
                 let that = this;
-                axios.get("http://localhost:8080/test_login", {}).then(function (response) {
+                axios.get("http://localhost:8080/authorize/test_login", {}).then(function (response) {
                     that.loginCode = response.data.code;
                     that.user = response.data.rsData;
                     if (that.loginCode === 200) {
@@ -226,7 +226,7 @@
 
             getUnreadCount: function () {
                 let that = this;
-                axios.get("http://localhost:8080/unreadCount", {}).then(function (response) {
+                axios.get("http://localhost:8080/notice/unreadCount", {}).then(function (response) {
                     that.unreadCount = response.data;
                 })
             },

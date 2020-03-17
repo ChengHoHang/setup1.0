@@ -1,14 +1,13 @@
 package com.chh.setup.service;
 
-import com.chh.setup.dto.ArticleDto;
-import com.chh.setup.dto.CommentDto;
-import com.chh.setup.dto.PagesDto;
-import com.chh.setup.dto.process.PageSuperDto;
-import com.chh.setup.entity.ArticleEntity;
-import com.chh.setup.entity.UserEntity;
+import com.chh.setup.advice.exception.CustomizeErrorCode;
+import com.chh.setup.advice.exception.CustomizeException;
+import com.chh.setup.dto.res.PagesDto;
+import com.chh.setup.dto.res.process.PageSuperDto;
 import com.chh.setup.enums.UserRecordEnum;
-import com.chh.setup.exception.CustomizeErrorCode;
-import com.chh.setup.exception.CustomizeException;
+import com.chh.setup.model.ArticleModel;
+import com.chh.setup.model.CommentModel;
+import com.chh.setup.model.UserModel;
 import com.chh.setup.myutils.PageUtils;
 import com.chh.setup.repository.ArticleFavorRepository;
 import com.chh.setup.repository.ArticleRepository;
@@ -20,10 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 用户主页服务层
@@ -35,58 +31,53 @@ import java.util.stream.Collectors;
 public class UserRecordService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    ArticleRepository articleRepository;
+    private ArticleRepository articleRepository;
 
     @Autowired
-    CommentRepository commentRepository;
+    private CommentRepository commentRepository;
 
     @Autowired
-    ArticleFavorRepository articleFavorRepository;
+    private ArticleFavorRepository articleFavorRepository;
 
     @Value("${page.size}")
     Integer pageSize;
 
-    public Optional<UserEntity> findById(int userId) {
-        return userRepository.findById(userId);
+    public UserModel findById(int userId) {
+        return userRepository.findById(userId).orElse(null);
     }
 
-    public List<ArticleDto> getArticleDtos(Integer creator, Integer page) {
-        PageRequest pageRequest = PageUtils.getDefaultPageRequest(page, pageSize, "gmtModified", "likeCount");
-        List<ArticleEntity> articles = articleRepository.findAllByCreator(creator, pageRequest).getContent();
-        return articles.stream().map(article -> {
-            ArticleDto articleDto = new ArticleDto(article);
-            articleDto.setTags(
-                    Arrays.stream(StringUtils.split(article.getTag(), "|"))
-                            .limit(2)
-                            .map(tag -> TagService.getIdMap().get(tag))
-                            .toArray(String[]::new));
-            return articleDto;
-        }).collect(Collectors.toList());
+    public List<ArticleModel> getArticleDtos(Integer authorId, Integer page) {
+        PageRequest pageRequest = PageUtils.getDefaultPageRequest(page, pageSize, "updateTime", "likeCount");
+        List<ArticleModel> articles = articleRepository.findAllByAuthorId(authorId, pageRequest).getContent();
+        articles.forEach(article -> {
+            article.setTags(StringUtils.split(article.getTag(), "|", 2));
+        });
+        return articles;
     }
 
-    public Long getCountByCreator(Integer creator) {
-        Long count = articleRepository.countByCreator(creator);
+    public Long getCountByAuthorId(Integer authorId) {
+        Long count = articleRepository.countByAuthorId(authorId);
         return (long) Math.ceil((double) count / pageSize);
     }
 
-    public List<CommentDto> getCommentDtos(Integer userId, Integer page) {
-        PageRequest pageRequest = PageUtils.getDefaultPageRequest(page, pageSize, "likeCount", "gmtModified");
-        return commentRepository
-                .findAllByCommentator(userId, pageRequest)
-                .getContent();
+    public List<CommentModel> getCommentDtos(Integer userId, Integer page) {
+        PageRequest pageRequest = PageUtils.getDefaultPageRequest(page, pageSize, "likeCount", "updateTime");
+        List<CommentModel> contents = commentRepository.findAllByCommentatorId(userId, pageRequest).getContent();
+        contents.forEach(content -> content.setArticleTitle(articleRepository.findById(content.getArticleId()).get().getTitle()));
+        return contents;
     }
 
-    public Long getCountByCommentator(Integer commentator) {
-        Long count = commentRepository.countByCommentator(commentator);
+    public Long getCountByCommentatorId(Integer commentatorId) {
+        Long count = commentRepository.countByCommentatorId(commentatorId);
         return (long) Math.ceil((double) count / pageSize);
     }
 
-    public List<ArticleDto> getFavorArticleDtos(Integer userId, Integer page) {
-        PageRequest pageRequest = PageUtils.getDefaultPageRequest(page, pageSize, "gmtModified");
-        return articleFavorRepository.findAllByUserId(userId, pageRequest).getContent();
+    public List<ArticleModel> getFavorArticleDtos(Integer userId, Integer page) {
+        PageRequest pageRequest = PageUtils.getDefaultPageRequest(page, pageSize, "updateTime");
+        return articleFavorRepository.findAllByUserIdAndState(userId, 1, pageRequest).getContent();
     }
 
     public Long getFavorCountByUser(Integer userId) {
@@ -96,6 +87,7 @@ public class UserRecordService {
 
     /**
      * 用户个人资料页面分页展示
+     *
      * @param userId
      * @param action
      * @param page
@@ -106,10 +98,10 @@ public class UserRecordService {
         List<? extends PageSuperDto> dataDtos;
         if (action.equals(UserRecordEnum.ARTICLE.getAction())) {
             dataDtos = getArticleDtos(userId, page);
-            totalPage = getCountByCreator(userId);
+            totalPage = getCountByAuthorId(userId);
         } else if (action.equals(UserRecordEnum.COMMENT.getAction())) {
             dataDtos = getCommentDtos(userId, page);
-            totalPage = getCountByCommentator(userId);
+            totalPage = getCountByCommentatorId(userId);
         } else if (action.equals(UserRecordEnum.FAVOR.getAction())) {
             dataDtos = getFavorArticleDtos(userId, page);
             totalPage = getFavorCountByUser(userId);

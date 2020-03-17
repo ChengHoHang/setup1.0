@@ -48,7 +48,7 @@
                             <li><a :href="'/u/' + user.id">个人资料</a></li>
                             <li><a href="/my-notice/unread">我的通知 <span class="badge" v-text="unreadCount"></span></a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="/logout">退出登录</a></li>
+                            <li><a href="/authorize/logout">退出登录</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -70,24 +70,81 @@
                     </div>
                     <div class="list-container" v-if="dataList">
                         <ul class="notice-list">
-                            <li v-for="(notice, index) in dataList">
-                                <div class="list-content">
-                                    <span class="notice-list-meta">
-                                        <a :href="'/u/' + notice.notifier.id" v-text="notice.notifier.name" target="_blank"></a>&nbsp;&nbsp;&nbsp;
-                                        <span v-text="notice.action"></span>&nbsp;&nbsp;&nbsp;
-                                        <img :src="notice.type !== 3 ? '/images/LeftSharp.png' : '/images/LeftQuotation.png'" >
-                                        <a :href="'/notice/' + notice.id + '?articleId=' + notice.articleId" target="_blank" v-text="notice.content"></a>
-                                        <img :src="notice.type !== 3 ? '/images/RightSharp.png' : '/images/RightQuotation.png'" >
-                                    </span>
-                                    <span class="notice-type">
-                                        <span class="notice-time" v-text="notice.gmtCreated"></span>&nbsp;&nbsp;&nbsp;
+                            <li v-if="dataList.length" v-for="(notice, index) in dataList">
+                                <div class="list-content" v-if="notice.type === 1">
+                                    <a :href="'/u/' + notice.notifier.id"><img src="/images/user.png" class="notice-user-icon"></a>
+                                    <div>
+                                        <div class="notice-list-meta">
+                                            <div class="notice-title">
+                                                <a :href="'/u/' + notice.notifier.id" v-text="notice.notifier.name" target="_blank" class="notice-user-url"></a>&nbsp;&nbsp;&nbsp;
+                                                <span v-text="notice.action"></span>&nbsp;&nbsp;&nbsp;
+                                                <img src="/images/LeftSharp.png">
+                                                <a :href="(notice.state === 0 ? '/notice/' + notice.id + '?articleId=' : '/a/') + notice.comment.articleId"
+                                                   target="_blank" v-text="notice.comment.articleTitle">
+                                                </a>
+                                                <img src="/images/RightSharp.png">
+                                            </div>
+                                            <div class="notice-source">
+                                                <a :href="(notice.state === 0 ? '/notice/' + notice.id + '?articleId=' : '/a/') + notice.comment.articleId"
+                                                   target="_blank" v-text="notice.comment.content">
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="notice-time" v-text="notice.createTime"></div>
+                                    </div>
+                                    <div class="notice-type">
                                         <span class="label label-warning" v-if="notice.state === 0">未读</span>
-                                    </span>
+                                    </div>
+                                </div>
+                                <div class="list-content" v-if="notice.type === 2">
+                                    <a :href="'/u/' + notice.notifier.id"><img src="/images/user.png" class="notice-user-icon"></a>
+                                    <div>
+                                        <div class="notice-list-meta">
+                                            <a :href="'/u/' + notice.notifier.id" v-text="notice.notifier.name" target="_blank" class="notice-user-url"></a>&nbsp;&nbsp;&nbsp;
+                                            <span v-text="notice.action"></span>&nbsp;&nbsp;&nbsp;
+                                            <img src="/images/LeftSharp.png">
+                                            <a :href="(notice.state === 0 ? '/notice/' + notice.id + '?articleId=' : '/a/') + notice.article.id"
+                                               target="_blank" v-text="notice.article.title">
+                                            </a>
+                                            <img src="/images/RightSharp.png">
+                                        </div>
+                                        <div class="notice-time" v-text="notice.createTime"></div>
+                                    </div>
+                                    <div class="notice-type">
+                                        <span class="label label-warning" v-if="notice.state === 0">未读</span>
+                                    </div>
+                                </div>
+                                <div class="list-content" v-if="notice.type === 3">
+                                    <a :href="'/u/' + notice.notifier.id"><img src="/images/user.png" class="notice-user-icon"></a>
+                                    <div>
+                                        <div class="notice-list-meta">
+                                            <div class="notice-title">
+                                                <a :href="'/u/' + notice.notifier.id" v-text="notice.notifier.name" target="_blank" class="notice-user-url"></a>&nbsp;&nbsp;&nbsp;
+                                                <span v-text="notice.action"></span>&nbsp;&nbsp;&nbsp;
+                                                <img src="/images/LeftQuotation.png" >
+                                                <a :href="(notice.state === 0 ? '/notice/' + notice.id + '?articleId=' : '/a/') + notice.comment.articleId"
+                                                   target="_blank" v-text="notice.comment.content">
+                                                </a>
+                                                <img src="/images/RightQuotation.png" >
+                                            </div>
+                                            <div class="notice-source">
+                                                <img src="/images/LeftSharp.png">
+                                                <a :href="(notice.state === 0 ? '/notice/' + notice.id + '?articleId=' : '/a/') + notice.comment.articleId"
+                                                   target="_blank" v-text="notice.comment.articleTitle">
+                                                </a>
+                                                <img src="/images/RightSharp.png">
+                                            </div>
+                                        </div>
+                                        <div class="notice-time" v-text="notice.createTime"></div>
+                                    </div>
+                                    <div class="notice-type">
+                                        <span class="label label-warning" v-if="notice.state === 0">未读</span>
+                                    </div>
                                 </div>
                             </li>
                         </ul>
                     </div>
-                    <div v-if="!dataList">
+                    <div v-if="!dataList.length">
                         <p class="none-notice">没有内容</p>
                     </div>
                     <div id="paginator" class="home-page">
@@ -122,7 +179,7 @@
         methods: {
             getLoginInfo: function () {
                 let that = this;
-                axios.get("http://localhost:8080/test_login", {}).then(function (response) {
+                axios.get("http://localhost:8080/authorize/test_login", {}).then(function (response) {
                     that.loginCode = response.data.code;
                     that.user = response.data.rsData;
                     that.getNotices();
@@ -133,7 +190,7 @@
             getNotices: function () {
                 let that = this;
                 let url = "http://localhost:8080/notice/" + that.user.id + "/" + that.type;
-                axios.get(url, {}).then(function (response) {
+                axios.get(url, {params:{"page": that.currentPage}}).then(function (response) {
                     if (response.data.code !== 200) {
                         window.location.href = "/error.html?" + response.data.code + "&" + response.data.message;
                     } else {
@@ -150,7 +207,7 @@
 
             getUnreadCount: function () {
                 let that = this;
-                axios.get("http://localhost:8080/unreadCount", {}).then(function (response) {
+                axios.get("http://localhost:8080/notice/unreadCount", {}).then(function (response) {
                     that.unreadCount = response.data;
                 })
             },

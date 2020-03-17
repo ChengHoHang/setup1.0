@@ -1,62 +1,65 @@
 package com.chh.setup.controller;
 
-import com.chh.setup.exception.CustomizeErrorCode;
-import com.chh.setup.exception.CustomizeException;
-import com.chh.setup.repository.UserRepository;
-import com.chh.setup.dto.ResultDto;
-import com.chh.setup.entity.UserEntity;
+import com.chh.setup.dto.req.LoginParam;
+import com.chh.setup.dto.req.RegisterParam;
+import com.chh.setup.dto.res.ResultDto;
+import com.chh.setup.model.UserModel;
+import com.chh.setup.advice.exception.CustomizeErrorCode;
+import com.chh.setup.advice.exception.CustomizeException;
+import com.chh.setup.myutils.NetUtils;
 import com.chh.setup.service.AuthorizeService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
+import javax.validation.Valid;
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 
 @Controller
+@RequestMapping("/authorize")
 public class AuthorizeController {
     
     @Value("${app.cookie.name}")
-    String COOKIE_NAME;
+    private String COOKIE_NAME;
     
     @Autowired
-    AuthorizeService authorizeService;
-
-    @Autowired
-    UserRepository userRepository;
+    private AuthorizeService authorizeService;
 
     @ResponseBody
     @PostMapping("/login")
-    public Object login(@RequestBody Map<String, String> param,
+    public Object login(@RequestBody LoginParam param,
                         HttpServletRequest request,
-                        HttpServletResponse response) {
-        UserEntity user = authorizeService.loginCheck(param);
+                        HttpServletResponse response) throws NoSuchAlgorithmException {
+        if (StringUtils.isBlank(param.getAccount()) || StringUtils.isBlank(param.getPassword())) {
+            throw new CustomizeException(CustomizeErrorCode.LOGIN_FAIL);
+        }
+        UserModel user = authorizeService.login(param);
         if (user != null) {
-            authorizeService.updateUser(user, response);
+            authorizeService.addCookie(user, response);
             request.getSession().setAttribute("user", user);
             return ResultDto.okOf(null);
         } else {
-            throw new CustomizeException(CustomizeErrorCode.REGISTER_ACCOUNT_ABNORMAL);
+            throw new CustomizeException(CustomizeErrorCode.LOGIN_FAIL);
         }
     }
 
     @GetMapping("/test_login")
     @ResponseBody
-    public Object drawUserInfo(HttpServletRequest request) {
+    public Object getUserInfo(HttpServletRequest request) {
         Object user = request.getSession().getAttribute("user");
         if (user != null) {
             return ResultDto.okOf(user);
         }
-        String token = AuthorizeService.getCookieValue(request, COOKIE_NAME);
+        String token = NetUtils.getCookieValue(request, COOKIE_NAME);
         if (token != null) {
-            user = userRepository.findByToken(token);
+            user = authorizeService.getUserByToken(token);
             if (user != null) {
                 request.getSession().setAttribute("user", user);
                 return ResultDto.okOf(user);
@@ -67,35 +70,26 @@ public class AuthorizeController {
 
     @ResponseBody
     @PostMapping("/register")
-    public Object register(@RequestBody Map<String, String> param) {
-        String account = param.get("account");
-        String passWord = param.get("passWord");
-        UserEntity user;
-        if (StringUtils.isBlank(account) && StringUtils.isBlank(passWord)) {
-            throw new CustomizeException(CustomizeErrorCode.REGISTER_PARAM_ERROR);
-        } else {
-            user = userRepository.findByAccount(account);
-            if (user != null) {
-                throw new CustomizeException(CustomizeErrorCode.REGISTER_ACCOUNT_EXIST);
-            } else {
-                user = new UserEntity();
-                user.setGmtModified(System.currentTimeMillis());
-                user.setGmtCreated(System.currentTimeMillis());
-                user.setPassWord(passWord);
-                user.setName(param.get("name"));
-                user.setAccount(account);
-                userRepository.save(user);
-                return ResultDto.okOf(null);
-            }
+    public Object register(@Valid @RequestBody RegisterParam param, BindingResult bindingResult) throws NoSuchAlgorithmException {
+        if (bindingResult.hasErrors()) {
+            throw new CustomizeException(CustomizeErrorCode.REGISTER_PARAM_INVALID, NetUtils.processErrorMsg(bindingResult));
         }
+        UserModel user = new UserModel();
+        user.setCreateTime(new Date());
+        user.setUpdateTime(new Date());
+        user.setAccount(param.getAccount());
+        user.setPassword(param.getPassWord());
+        user.setName(param.getName());
+        authorizeService.register(user);
+        return ResultDto.okOf(null);
     }
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
-        request.getSession().removeAttribute("user");
-        Cookie cookie = new Cookie("token", null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
+            request.getSession().invalidate();
+            Cookie cookie = new Cookie("token", null);
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
         return "redirect:/";
     }
 }

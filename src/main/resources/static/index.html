@@ -45,9 +45,10 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a :href="'/u/' + user.id">个人资料</a></li>
-                            <li><a href="/my-notice/unread">我的通知 <span class="badge" v-text="unreadCount"></span></a></li>
+                            <li><a href="/my-notice/unread">我的通知 <span class="badge" v-text="unreadCount"></span></a>
+                            </li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="/logout">退出登录</a></li>
+                            <li><a href="/authorize/logout">退出登录</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -61,10 +62,9 @@
             <div class="row">
                 <div class="col-md-12 bs-example">
                     <div class="btn-group" role="group" aria-label="...">
-                        <button type="button" v-for="(type, index) in category"
+                        <button type="button" v-for="(item, index) in category"
                                 :class="[{'active' : index == homeType}, 'btn', 'category-item']"
-                                @click="toggle(index)">
-                            {{type}}
+                                @click="toggle(item.id)" v-text="item.type">
                         </button>
                     </div>
                 </div>
@@ -87,8 +87,8 @@
                                     <a class="list-title" target="_blank" :href="'/a/' + article.id" v-text="article.title"></a>
                                     <p class="list-abstract" v-text="article.description"></p>
                                     <div class="list-meta">
-                                        <span class="content-creator">
-                                            <a :href="'/u/' + article.creator.id" v-text="article.creator.name"></a>
+                                        <span class="content-author">
+                                            <a :href="'/u/' + article.author.id" v-text="article.author.name"></a>
                                         </span>
                                         <span class="meta-content index-favor-icon">
                                             <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
@@ -104,7 +104,7 @@
                                             <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
                                             <span v-text="article.viewCount"></span>
                                         </span>
-                                        <span class="meta-content">• {{article.gmtModified}} </span>
+                                        <span class="meta-content">• {{article.updateTime}} </span>
                                         <span class="label label-info index-tag" v-for="(tag, index) in article.tags">
                                             <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
                                             <span v-text="tag"></span>
@@ -138,7 +138,7 @@
         data: {
             loginCode: '',
             user: '',
-            category: ['全部', '国内', '国际', '互联网', '娱乐', '体育'],
+            category: [{id: 0, type: '全部'}],
             homeType: 0,
             articleList: [],
             unreadCount: '',
@@ -147,7 +147,7 @@
         methods: {
             getLoginInfo: function () {
                 let that = this;
-                axios.get("http://localhost:8080/test_login", {}).then(function (response) {
+                axios.get("http://localhost:8080/authorize/test_login", {}).then(function (response) {
                     that.loginCode = response.data.code;
                     that.user = response.data.rsData;
                     if (that.loginCode === 200) {
@@ -156,9 +156,18 @@
                 })
             },
 
+            getCategoryInfo: function () {
+                let that = this;
+                axios.get("http://localhost:8080/index/static").then(function (response) {
+                    for (let item of response.data) {
+                        that.category.push(item);
+                    }
+                })
+            },
+
             getUnreadCount: function () {
                 let that = this;
-                axios.get("http://localhost:8080/unreadCount", {}).then(function (response) {
+                axios.get("http://localhost:8080/notice/unreadCount", {}).then(function (response) {
                     that.unreadCount = response.data;
                 })
             },
@@ -175,7 +184,7 @@
                     bootstrapMajorVersion: 3, //设置版本号
                     currentPage: pageCurrent, // 显示第几页
                     totalPages: pageSum,      // 总页数
-                    alignment : "center",
+                    alignment: "center",
                     onPageClicked: function (event, originalEvent, type, page) {
                         // 把当前点击的页码赋值给currentPage, 再次getArticleList
                         that.currentPage = page;
@@ -183,10 +192,10 @@
                     }
                 })
             },
-            
+
             getArticleList: function () {
                 let that = this;
-                axios.get("http://localhost:8080/articles", {
+                axios.get("http://localhost:8080/index/articles", {
                     params: {
                         "type": that.homeType,
                         "page": that.currentPage
@@ -213,6 +222,7 @@
             }
         },
         created: function () {
+            this.getCategoryInfo();
             this.getLoginInfo();
             this.getArticleList();
         }
