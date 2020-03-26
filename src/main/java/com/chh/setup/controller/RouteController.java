@@ -54,4 +54,9 @@ public class RouteController {
     public String notice() {
         return "/notice.html";
     }
+
+    @GetMapping("/search")
+    public String search() {
+        return "/search.html";
+    }
 }

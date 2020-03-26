@@ -7,7 +7,7 @@ public enum InternetTag {
     JAVA("java"),
     SPRINGBOOT("springboot"),
     MYSQL("mysql"),
-    REDIS("redis"),
+    LINUX("linux"),
     ES("elasticsearch"),
     PYTHON("python");
 

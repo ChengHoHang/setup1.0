@@ -2,83 +2,29 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6db1fd30-2c5f-45e5-a5b3-e7e475910158" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/advice/exception/JumpExcetion.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/IndexController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/RouteController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/req/LoginParam.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/req/RegisterParam.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/model/CategoryModel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/myutils/NetUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/CategoryRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/images/user.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vagrant.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/config/ESConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/SearchController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/res/SearchDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/SearchService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/search.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/HELP.md" beforeDir="false" afterPath="$PROJECT_DIR$/HELP.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/advice/CustomizeExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/advice/CustomizeExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/ArticleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/ArticleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/AuthorizeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/AuthorizeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/CommentController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/CustomizeErrorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/advice/CustomizeErrorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/advice/exception/CustomizeErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/advice/exception/CustomizeErrorCode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/EditController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/EditController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/FavorController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/NotificationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/NoticeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/UserIndexController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/ArticleDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/ArticleParam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/req/ArticleParam.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/CommentDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/CommentParam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/req/CommentParam.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/FavorParam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/req/FavorParam.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/NoticeDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/PagesDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/res/PagesDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/ResultDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/res/ResultDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/TagDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/res/TagDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/UserDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/UserRecordDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/res/UserRecordDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/process/PageSuperDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/res/process/PageSuperDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/process/Record.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/req/Record.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/entity/ArticleEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/model/ArticleModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/entity/ArticleFavorEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/model/ArticleFavorModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/entity/CommentEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/model/CommentModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/entity/CommentFavorEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/model/CommentFavorModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/entity/NoticeEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/model/NoticeModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/entity/UserEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/model/UserModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/entity/key/ArticleFavorKey.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/model/key/ArticleFavorKey.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/entity/key/CommentFavorKey.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/model/key/CommentFavorKey.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/ArticleTypeEnum.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/NoticeTypeEnum.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/NoticeTypeEnum.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/tag/EntertainmentTag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/tag/EntertainmentTag.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/tag/GeneralTag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/tag/GeneralTag.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/RouteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/controller/RouteController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/res/PagesDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/dto/res/PagesDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/tag/InternetTag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/tag/InternetTag.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/tag/SportTag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/enums/tag/SportTag.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/exception/CustomizeErrorCode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/advice/exception/CustomizeErrorCode.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/exception/CustomizeException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/advice/exception/CustomizeException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/exception/IBaseException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/advice/exception/IBaseException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/interceptor/SessionHandlerInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/interceptor/SessionHandlerInterceptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/myutils/DateUtils.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/myutils/MapUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/myutils/SetUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/ArticleFavorRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/ArticleFavorRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/ArticleRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/ArticleRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/CommentFavorRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/CommentFavorRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/CommentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/CommentRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/NoticeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/NoticeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/repository/UserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/ArticleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/ArticleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/AuthorizeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/AuthorizeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/CommentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/CommentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/FavorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/FavorService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/NoticeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/NoticeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/TagService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/TagService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/UserRecordService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/chh/setup/service/UserRecordService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/article.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/article.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/community.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/css/community.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/edit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/communityLogo.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/images/communityLogo.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/notice.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/notice.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/sign_in.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/sign_in.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/sign_up.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/sign_up.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/user.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/user.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/com/chh/setup/SetupApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/chh/setup/SetupApplicationTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,8 +55,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Interface" />
-        <option value="HTML File" />
         <option value="Enum" />
+        <option value="HTML File" />
         <option value="Class" />
       </list>
     </option>
@@ -168,8 +114,11 @@
     <property name="settings.editor.selected.configurable" value="fileTemplates" />
   </component>
   <component name="RecentsManager">
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="com.chh.setup.interceptor" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\java\com\chh\setup\advice" />
+      <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static" />
+      <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static\myuser" />
+      <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static\js" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static\images" />
@@ -182,11 +131,8 @@
       <recent name="com.chh.setup.dto.req" />
       <recent name="com.chh.setup.entity.key" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\java\com\chh\setup\advice" />
-      <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static" />
-      <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static\myuser" />
-      <recent name="C:\Users\Administrator\IdeaProjects\community\setup1.0\src\main\resources\static\js" />
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.chh.setup.interceptor" />
     </key>
   </component>
   <component name="RunManager">
@@ -289,7 +235,18 @@
       <workItem from="1584167908450" duration="30048000" />
       <workItem from="1584243979262" duration="37195000" />
       <workItem from="1584336189885" duration="28867000" />
-      <workItem from="1584414175587" duration="28499000" />
+      <workItem from="1584414175587" duration="28827000" />
+      <workItem from="1584520052790" duration="783000" />
+      <workItem from="1584552239319" duration="285000" />
+      <workItem from="1584614131354" duration="2251000" />
+      <workItem from="1584703922612" duration="5904000" />
+      <workItem from="1584798656680" duration="5643000" />
+      <workItem from="1584862385695" duration="17181000" />
+      <workItem from="1584943360213" duration="2302000" />
+      <workItem from="1584954155035" duration="19795000" />
+      <workItem from="1585033137323" duration="29816000" />
+      <workItem from="1585116312705" duration="32442000" />
+      <workItem from="1585201542354" duration="4668000" />
     </task>
     <servers />
   </component>
@@ -325,10 +282,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="223" y="67" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1584364851238" />
-    <state x="802" y="133" key="#com.intellij.ide.util.MemberChooser" timestamp="1584280566476">
+    <state x="802" y="133" key="#com.intellij.ide.util.MemberChooser" timestamp="1584975406803">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="802" y="133" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1584280566476" />
+    <state x="802" y="133" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1584975406803" />
     <state x="331" y="337" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1584259326922">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -349,10 +306,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="499" y="159" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.0.1536.824@0.0.1536.824" timestamp="1581170379632" />
-    <state x="483" y="129" key="#xdebugger.evaluate" timestamp="1584356524598">
+    <state x="483" y="129" key="#xdebugger.evaluate" timestamp="1585126415723">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="483" y="129" key="#xdebugger.evaluate/0.0.1536.824@0.0.1536.824" timestamp="1584356524598" />
+    <state x="483" y="129" key="#xdebugger.evaluate/0.0.1536.824@0.0.1536.824" timestamp="1585126415723" />
     <state x="481" y="266" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1578569472289">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -361,66 +318,66 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="458" height="466" key="DebuggerActiveHint/0.0.1536.824@0.0.1536.824" timestamp="1584344592282" />
-    <state x="93" y="93" width="1338" height="638" maximized="true" key="DiffContextDialog" timestamp="1584271469739">
+    <state x="93" y="93" width="1338" height="638" maximized="true" key="DiffContextDialog" timestamp="1585136117787">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="93" y="93" width="1338" height="638" maximized="true" key="DiffContextDialog/0.0.1536.824@0.0.1536.824" timestamp="1584271469739" />
-    <state x="548" y="154" key="FileChooserDialogImpl" timestamp="1580996958399">
+    <state x="93" y="93" width="1338" height="638" maximized="true" key="DiffContextDialog/0.0.1536.824@0.0.1536.824" timestamp="1585136117787" />
+    <state x="548" y="154" key="FileChooserDialogImpl" timestamp="1584876758178">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="548" y="154" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1580996958399" />
+    <state x="548" y="154" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1584876758178" />
     <state x="641" y="303" width="272" height="218" key="Github.ShareDialog" timestamp="1578491076862">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="641" y="303" width="272" height="218" key="Github.ShareDialog/0.0.1536.824@0.0.1536.824" timestamp="1578491076862" />
-    <state width="1493" height="242" key="GridCell.Tab.0.bottom" timestamp="1584457424916">
+    <state width="1493" height="197" key="GridCell.Tab.0.bottom" timestamp="1585207044516">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="242" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1584457424916" />
-    <state width="1493" height="242" key="GridCell.Tab.0.center" timestamp="1584457424916">
+    <state width="1493" height="197" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1585207044516" />
+    <state width="1493" height="197" key="GridCell.Tab.0.center" timestamp="1585207044516">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="242" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1584457424916" />
-    <state width="1493" height="242" key="GridCell.Tab.0.left" timestamp="1584457424916">
+    <state width="1493" height="197" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1585207044516" />
+    <state width="1493" height="197" key="GridCell.Tab.0.left" timestamp="1585207044516">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="242" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1584457424916" />
-    <state width="1493" height="242" key="GridCell.Tab.0.right" timestamp="1584457424916">
+    <state width="1493" height="197" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1585207044516" />
+    <state width="1493" height="197" key="GridCell.Tab.0.right" timestamp="1585207044516">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="242" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1584457424916" />
-    <state width="1493" height="242" key="GridCell.Tab.1.bottom" timestamp="1584457424917">
+    <state width="1493" height="197" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1585207044516" />
+    <state width="1493" height="197" key="GridCell.Tab.1.bottom" timestamp="1585207044517">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="242" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1584457424917" />
-    <state width="1493" height="242" key="GridCell.Tab.1.center" timestamp="1584457424917">
+    <state width="1493" height="197" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1585207044517" />
+    <state width="1493" height="197" key="GridCell.Tab.1.center" timestamp="1585207044516">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="242" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1584457424917" />
-    <state width="1493" height="242" key="GridCell.Tab.1.left" timestamp="1584457424916">
+    <state width="1493" height="197" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1585207044516" />
+    <state width="1493" height="197" key="GridCell.Tab.1.left" timestamp="1585207044516">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="242" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1584457424916" />
-    <state width="1493" height="242" key="GridCell.Tab.1.right" timestamp="1584457424917">
+    <state width="1493" height="197" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1585207044516" />
+    <state width="1493" height="197" key="GridCell.Tab.1.right" timestamp="1585207044516">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="242" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1584457424917" />
-    <state width="1493" height="242" key="GridCell.Tab.2.bottom" timestamp="1584457424917">
+    <state width="1493" height="197" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1585207044516" />
+    <state width="1493" height="198" key="GridCell.Tab.2.bottom" timestamp="1585156847972">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="242" key="GridCell.Tab.2.bottom/0.0.1536.824@0.0.1536.824" timestamp="1584457424917" />
-    <state width="1493" height="242" key="GridCell.Tab.2.center" timestamp="1584457424917">
+    <state width="1493" height="198" key="GridCell.Tab.2.bottom/0.0.1536.824@0.0.1536.824" timestamp="1585156847972" />
+    <state width="1493" height="198" key="GridCell.Tab.2.center" timestamp="1585156847972">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="242" key="GridCell.Tab.2.center/0.0.1536.824@0.0.1536.824" timestamp="1584457424917" />
-    <state width="1493" height="242" key="GridCell.Tab.2.left" timestamp="1584457424917">
+    <state width="1493" height="198" key="GridCell.Tab.2.center/0.0.1536.824@0.0.1536.824" timestamp="1585156847972" />
+    <state width="1493" height="198" key="GridCell.Tab.2.left" timestamp="1585156847972">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="242" key="GridCell.Tab.2.left/0.0.1536.824@0.0.1536.824" timestamp="1584457424917" />
-    <state width="1493" height="242" key="GridCell.Tab.2.right" timestamp="1584457424917">
+    <state width="1493" height="198" key="GridCell.Tab.2.left/0.0.1536.824@0.0.1536.824" timestamp="1585156847972" />
+    <state width="1493" height="198" key="GridCell.Tab.2.right" timestamp="1585156847972">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="242" key="GridCell.Tab.2.right/0.0.1536.824@0.0.1536.824" timestamp="1584457424917" />
+    <state width="1493" height="198" key="GridCell.Tab.2.right/0.0.1536.824@0.0.1536.824" timestamp="1585156847972" />
     <state x="583" y="346" key="ReplaceDuplicatesPrompt" timestamp="1581161960604">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -437,22 +394,26 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="490" y="154" width="540" height="524" key="StructurePopup/0.0.1536.824@0.0.1536.824" timestamp="1578151057387" />
-    <state width="498" height="498" key="SwitcherDM" timestamp="1584350415899">
+    <state width="498" height="498" key="SwitcherDM" timestamp="1585204734316">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="498" height="498" key="SwitcherDM/0.0.1536.824@0.0.1536.824" timestamp="1584350415899" />
+    <state width="498" height="498" key="SwitcherDM/0.0.1536.824@0.0.1536.824" timestamp="1585204734316" />
+    <state width="775" height="419" key="XDebugger.FullValuePopup" timestamp="1585126324636">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="775" height="419" key="XDebugger.FullValuePopup/0.0.1536.824@0.0.1536.824" timestamp="1585126324636" />
     <state x="93" y="93" width="1350" height="638" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog" timestamp="1584271469739">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="93" y="93" width="1350" height="638" key="com.intellij.history.integration.ui.views.DirectoryHistoryDialog/0.0.1536.824@0.0.1536.824" timestamp="1584271469739" />
-    <state x="-71" y="86" width="1417" height="668" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1584268170132">
+    <state x="-71" y="86" width="1417" height="668" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1585129397552">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="-71" y="86" width="1417" height="668" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1536.824@0.0.1536.824" timestamp="1584268170132" />
-    <state x="449" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1584414294331">
+    <state x="-71" y="86" width="1417" height="668" maximized="true" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1536.824@0.0.1536.824" timestamp="1585129397552" />
+    <state x="449" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1585201956110">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="449" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1584414294331" />
+    <state x="449" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1585201956110" />
     <state x="315" y="21" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1580637722588">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -477,18 +438,18 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="178" y="45" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1580997009911" />
-    <state x="40" y="19" key="refactoring.ChangeSignatureDialog" timestamp="1584430101190">
+    <state x="40" y="19" key="refactoring.ChangeSignatureDialog" timestamp="1585064379177">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="40" y="19" key="refactoring.ChangeSignatureDialog/0.0.1536.824@0.0.1536.824" timestamp="1584430101190" />
+    <state x="40" y="19" key="refactoring.ChangeSignatureDialog/0.0.1536.824@0.0.1536.824" timestamp="1585064379177" />
     <state x="361" y="71" key="scopes" timestamp="1584424876223">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="361" y="71" key="scopes/0.0.1536.824@0.0.1536.824" timestamp="1584424876223" />
-    <state x="633" y="135" width="672" height="678" key="search.everywhere.popup" timestamp="1584456948419">
+    <state x="633" y="135" width="672" height="678" key="search.everywhere.popup" timestamp="1585139555877">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="633" y="135" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1584456948419" />
+    <state x="633" y="135" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1585139555877" />
     <state x="599" y="203" key="svn.repositoryBrowser" timestamp="1578490018405">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

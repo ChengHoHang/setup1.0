@@ -32,9 +32,9 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <form class="navbar-form navbar-left">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="搜索关键字">
+                        <input type="text" class="form-control" id="keyword" style="width: 536px;" placeholder="搜索关键字">
                     </div>
-                    <button type="submit" class="btn btn-default">搜索</button>
+                    <button type="button" class="btn btn-default" @click="redirectToSearch">搜索</button>
                 </form>
 
                 <ul class="nav navbar-nav navbar-right">
@@ -210,6 +210,15 @@
                     that.unreadCount = response.data;
                 })
             },
+
+            redirectToSearch: function () {
+                let keyword = $("#keyword").val();
+                if (/[^\s]/.test(keyword)) {
+                    window.open("/search?keyword=" + keyword);
+                } else {
+                    window.open("/search");
+                }
+            },
             
             getArticle: function () {
                 let url = 'http://localhost:8080/article/' + window.location.pathname.split('/')[2];
@@ -251,9 +260,8 @@
                 });
             },
 
-            beforeunloadFn:async function () {
+            beforeunloadFn: function () {
                 let records = [];
-                debugger;
                 for (let index in this.commentClickCounter) {
                     if (this.commentClickCounter[index] & 1) {// 过滤非单数的操作
                         records.push({
@@ -272,11 +280,7 @@
                         "favorState": stateChange === 0 ? null : (this.article.favorState + 1) & 1,
                         "currentUserId": this.user.id
                     };
-                    await axios.post("http://localhost:8080/article/favor-confirm", param).then(function (response) {
-                        if (response.data.code !== 200) {
-                            alert(response.data.message);
-                        }
-                    })
+                    axios.post("http://localhost:8080/article/favor-confirm", param);
                 }
             },
 
@@ -315,7 +319,7 @@
                     likeCountTag.innerText = likeCountTag.innerText !== "赞" ? parseInt(likeCountTag.innerText) + 1 : 1;
                 }
             },
-            
+
             /**
              * 点击文章点赞按钮触发事件
              * @param e
@@ -340,6 +344,7 @@
         },
         mounted: function () {
             window.addEventListener('beforeunload', this.beforeunloadFn);    //更新页面
+            window.addEventListener('unload', this.beforeunloadFn);    //更新页面
         }
     })
 

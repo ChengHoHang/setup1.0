@@ -20,6 +20,8 @@ public enum CustomizeErrorCode implements IBaseException {
     USER_NOT_EXIST(3003, "用户不存在"),
     OPERATE_PERMISSION_DENY(3004, "用户无权限操作"),
 
+    MEANINGLESS_KEYWORD(4001, "无意义关键字"),
+    
     SYS_ERROR(5001, "服务器冒烟了~~~请稍后再访问~~~"),
     PARAM_ERROR(5002, "参数错误");
     

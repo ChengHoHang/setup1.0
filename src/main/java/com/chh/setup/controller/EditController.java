@@ -51,7 +51,7 @@ public class EditController {
         if (user == null || !user.getId().equals(articleParam.getAuthorId())) {
             throw new CustomizeException(CustomizeErrorCode.USER_LOG_OUT);
         }
-        String[] tagSplit = StringUtils.split(articleParam.getTag(), "|");
+        String[] tagSplit = StringUtils.split(articleParam.getTag(), " ");
         if (TagService.isInvalid(tagSplit)) {
             throw new CustomizeException(CustomizeErrorCode.TAG_NOT_EXIST);
         }
@@ -62,7 +62,7 @@ public class EditController {
     @GetMapping("/article/{id}")
     public Object getArticleModel(@PathVariable Integer id) {
         ArticleModel article = articleService.getEntityById(id);
-        article.setTags(StringUtils.split(article.getTag(), "|"));
+        article.setTags(StringUtils.split(article.getTag(), " "));
         return ResultDto.okOf(article);
     }
 }

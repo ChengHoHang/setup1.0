@@ -1,6 +1,6 @@
-body {
-    background-color: #efefef;
-}
+/*body {*/
+/*    background-color: #efefef;*/
+/*}*/
 
 
 /*登陆注册页面样式*/
@@ -68,7 +68,7 @@ body {
     color: #8b6363;
 }
 
-.news-list {
+.news-list, #search-container .menu {
     list-style: none;
     padding-left: 0;
 }
@@ -442,4 +442,117 @@ a:hover {
 
 .notice-source a {
     color: #777777;
+}
+
+#search-container .aside {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    margin: 86px 0 0;
+    padding: 0 0 30px;
+    width: 280px;
+    overflow: auto;
+}
+
+#search-container .menu-container {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.search-main {
+    padding-left: 0;
+    margin-left: 27.33333%;
+}
+
+#search-container {
+    margin-right: 5%;
+    margin-left: 5%;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-top: 52px;
+}
+
+.aside .menu a {
+    padding: 10px 15px;
+    font-size: 15px;
+    display: block;
+}
+
+.aside .menu li:hover a {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+#search-index {
+    margin-top: 185px;
+}
+
+.search-box {
+    margin-left: 22%;
+    margin-right: 22%;
+}
+
+.search-nums {
+    float: right;
+    font-size: 13px;
+    color: #b4b4b4;
+    padding-top: 20px;
+}
+
+#content-right {
+    padding-top: 10px;
+    clear: both;
+}
+
+#search-container .title {
+    float: none;
+    font-size: 18px;
+    color: #333;
+}
+
+#search-container .abstract {
+    margin: 0 0 8px;
+    font-size: 13px;
+    line-height: 24px;
+    color: #999;
+}
+
+em {
+    font-style: normal;
+    color: #ea6f5a;
+}
+
+.tip-head {
+    color: #666;
+    font-size: 13px;
+    line-height: 28px;
+}
+
+.search-nors li {
+    color: #333;
+    line-height: 28px;
+    font-size: 13px;
+    font-family: '宋体';
+    padding-left: 30px;
+    list-style-position: inside;
+    list-style-type: disc;
+}
+
+#other-key {
+    margin-bottom: 40px;
+}
+
+#other-key .tt {
+    font-weight: 700;
+    padding-bottom: 20px;
+}
+
+#other-key span {
+    margin-right: 20px;
+} 
+
+.menu-button-group button {
+    margin-top: 10px;
+    margin-right: 15px;
 }

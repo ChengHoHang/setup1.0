@@ -13,6 +13,6 @@ import java.util.List;
 @Data
 public class PagesDto {
     
-    List<? extends PageSuperDto> data;  
-    Long totalPage;  //各类记录总页数
+    private List<? extends PageSuperDto> data;
+    private Long totalPage;  //各类记录总页数
 }

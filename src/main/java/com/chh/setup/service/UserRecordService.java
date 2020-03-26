@@ -53,7 +53,7 @@ public class UserRecordService {
         PageRequest pageRequest = PageUtils.getDefaultPageRequest(page, pageSize, "updateTime", "likeCount");
         List<ArticleModel> articles = articleRepository.findAllByAuthorId(authorId, pageRequest).getContent();
         articles.forEach(article -> {
-            article.setTags(StringUtils.split(article.getTag(), "|", 2));
+            article.setTags(StringUtils.split(article.getTag(), " ", 2));
         });
         return articles;
     }

@@ -24,6 +24,9 @@ For further reference, please consider the following sections:
 * [使用Logstash数据同步](https://www.elastic.co/cn/blog/how-to-keep-elasticsearch-synchronized-with-a-relational-database-using-logstash)
 * [使用docker部署logstash](https://www.cnblogs.com/xyy2019/p/11738884.html)
 * [搜索DSL](https://segmentfault.com/a/1190000018661035)
+* [es启动报错](https://www.cnblogs.com/duanxz/p/3567068.html)
+* [es function_score](https://www.jianshu.com/p/935197fdf053?utm_medium=hao.caibaojian.com&utm_source=hao.caibaojian.com)
+* [es_高亮](https://blog.csdn.net/zhanglh046/article/details/78536118)
 
 ### Guides
 The following guides illustrate how to use some features concretely:

@@ -32,9 +32,9 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <form class="navbar-form navbar-left">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="搜索关键字">
+                        <input type="text" class="form-control" id="keyword" style="width: 536px;" placeholder="搜索关键字">
                     </div>
-                    <button type="submit" class="btn btn-default">搜索</button>
+                    <button type="button" class="btn btn-default" @click="redirectToSearch">搜索</button>
                 </form>
 
                 <ul class="nav navbar-nav navbar-right">
@@ -169,6 +169,15 @@
                     that.unreadCount = response.data;
                 })
             },
+
+            redirectToSearch: function () {
+                let keyword = $("#keyword").val();
+                if (/[^\s]/.test(keyword)) {
+                    window.open("/search?keyword=" + keyword);
+                } else {
+                    window.open("/search");
+                }
+            },
             
             restore: function () {
                 let that = this;
@@ -223,7 +232,7 @@
                     "categoryId": that.categoryId,
                     "title": that.title,
                     "description": that.description,
-                    "tag": that.tag.join("|"),
+                    "tag": that.tag.join(" "),
                     "authorId": that.user.id
                 };
                 axios.post("http://localhost:8080/edit/publish/article", param).then(function (response) {

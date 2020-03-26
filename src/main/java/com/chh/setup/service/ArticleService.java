@@ -80,7 +80,7 @@ public class ArticleService {
         }
         contents.forEach(content -> {
             content.setDescription(StringUtils.truncate(content.getDescription(), 150) + ".....");
-            content.setTags(Arrays.stream(StringUtils.split(content.getTag(), "|")).limit(2).toArray(String[]::new));
+            content.setTags(Arrays.stream(StringUtils.split(content.getTag(), " ")).limit(2).toArray(String[]::new));
             content.setAuthor(userRepository.findById(content.getAuthorId()).get());
         });
         PagesDto pagesDto = new PagesDto();
@@ -113,7 +113,7 @@ public class ArticleService {
             }
         }
         articleModel.setAuthor(userRepository.findById(articleModel.getAuthorId()).get());
-        articleModel.setTags(StringUtils.split(articleModel.getTag(), "|"));
+        articleModel.setTags(StringUtils.split(articleModel.getTag(), " "));
         articleModel.setComments(comments);
         List<Object[]> relatedArticles = getRelatedArticle(articleModel.getId(), articleModel.getTags());
         articleModel.setRelatedArticle(relatedArticles);

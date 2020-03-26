@@ -28,9 +28,9 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <form class="navbar-form navbar-left">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="搜索关键字">
+                        <input type="text" class="form-control" id="keyword" style="width: 536px;" placeholder="搜索关键字">
                     </div>
-                    <button type="submit" class="btn btn-default">搜索</button>
+                    <button type="button" class="btn btn-default" @click="redirectToSearch">搜索</button>
                 </form>
 
                 <ul class="nav navbar-nav navbar-right">
@@ -267,21 +267,29 @@
                     if (response.data.code !== 200) {
                         window.location.href = "/error.html?" + response.data.code + "&" + response.data.message;
                     } else {
-                        if (!response.data.rsData.data.data.length) {
-                            $("#paginator").hide();
-                            return;
-                        } else {
-                            $("#paginator").show();
-                        }
                         that.dataList = response.data.rsData.data.data;
                         that.recordType = response.data.rsData.recordType;
-                        that.setPage(that.currentPage, response.data.rsData.data.totalPage, that.getUserRecord, index);
+                        if (that.dataList.length === 0) {
+                            $("#paginator").hide();
+                        } else {
+                            $("#paginator").show();
+                            that.setPage(that.currentPage, response.data.rsData.data.totalPage, that.getUserRecord, index);
+                        }
                     }
                 }).catch(function (reason) {
                     console.log(reason);
                 })
             },
 
+            redirectToSearch: function () {
+                let keyword = $("#keyword").val();
+                if (/[^\s]/.test(keyword)) {
+                    window.open("/search?keyword=" + keyword);
+                } else {
+                    window.open("/search");
+                }
+            },
+            
             /**
              * 动态设置分页栏
              * @param pageCurrent 当前所在页

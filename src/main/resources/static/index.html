@@ -29,9 +29,9 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <form class="navbar-form navbar-left">
                     <div class="form-group">
-                        <input type="text" class="form-control" placeholder="搜索关键字">
+                        <input type="text" class="form-control" id="keyword" style="width: 536px;" placeholder="搜索关键字">
                     </div>
-                    <button type="submit" class="btn btn-default">搜索</button>
+                    <button type="button" class="btn btn-default" @click="redirectToSearch">搜索</button>
                 </form>
 
                 <ul class="nav navbar-nav navbar-right">
@@ -45,8 +45,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a :href="'/u/' + user.id">个人资料</a></li>
-                            <li><a href="/my-notice/unread">我的通知 <span class="badge" v-text="unreadCount"></span></a>
-                            </li>
+                            <li><a href="/my-notice/unread">我的通知 <span class="badge" v-text="unreadCount"></span></a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="/authorize/logout">退出登录</a></li>
                         </ul>
@@ -171,7 +170,16 @@
                     that.unreadCount = response.data;
                 })
             },
-
+            
+            redirectToSearch: function () {
+                let keyword = $("#keyword").val();
+                if (/[^\s]/.test(keyword)) {
+                    window.open("/search?keyword=" + keyword);
+                } else {
+                    window.open("/search");
+                }
+            },
+            
             /**
              * 动态设置分页栏
              * @param pageCurrent 当前所在页
@@ -201,11 +209,11 @@
                         "page": that.currentPage
                     }
                 }).then(function (response) {
+                    that.articleList = response.data.rsData.data;
                     if (response.data.rsData.data.length === 0) {
                         $("#paginator").hide();
                     } else {
                         $("#paginator").show();
-                        that.articleList = response.data.rsData.data;
                         that.setPage(that.currentPage, response.data.rsData.totalPage, that.getArticleList);
                     }
                 });
