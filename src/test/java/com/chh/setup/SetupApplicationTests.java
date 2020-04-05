@@ -1,7 +1,7 @@
 package com.chh.setup;
 
 import com.chh.setup.dto.req.Record;
-import com.chh.setup.repository.*;
+import com.chh.setup.dao.*;
 import com.chh.setup.service.FavorService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,19 +15,19 @@ import java.util.stream.Collectors;
 class SetupApplicationTests {
 
     @Autowired
-    ArticleRepository articleRepository;
+    ArticleDao articleDao;
 
     @Autowired
-    UserRepository userRepository;
+    UserDao userDao;
 
     @Autowired
-    CommentFavorRepository commentFavorRepository;
+    CommentFavorDao commentFavorDao;
 
     @Autowired
-    CommentRepository commentRepository;
+    CommentDao commentDao;
 
     @Autowired
-    NoticeRepository noticeRepository;
+    NoticeDao noticeDao;
 
     @Autowired
     private FavorService favorService;

@@ -5,7 +5,7 @@ import com.chh.setup.advice.exception.CustomizeException;
 import com.chh.setup.dto.req.LoginParam;
 import com.chh.setup.model.UserModel;
 import com.chh.setup.myutils.NetUtils;
-import com.chh.setup.repository.UserRepository;
+import com.chh.setup.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -25,10 +25,10 @@ import java.util.UUID;
 public class AuthorizeService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserDao userDao;
 
     public UserModel login(LoginParam param) throws NoSuchAlgorithmException {
-        return userRepository.findByAccountAndPassword(param.getAccount(), NetUtils.encodeByMd5(param.getPassword()));
+        return userDao.findByAccountAndPassword(param.getAccount(), NetUtils.encodeByMd5(param.getPassword()));
     }
 
     @Transactional
@@ -36,20 +36,20 @@ public class AuthorizeService {
         String token = UUID.randomUUID().toString();
         user.setToken(token);
         response.addCookie(new Cookie("token", token));
-        userRepository.save(user);
+        userDao.save(user);
     }
     
     @Transactional
     public void register(UserModel user) throws NoSuchAlgorithmException {
         user.setPassword(NetUtils.encodeByMd5(user.getPassword()));
         try {
-            userRepository.save(user);
+            userDao.save(user);
         } catch (DataIntegrityViolationException ex) {
             throw new CustomizeException(CustomizeErrorCode.REGISTER_ACCOUNT_EXIST);
         }
     }
 
     public UserModel getUserByToken(String token) { 
-        return userRepository.findByToken(token);
+        return userDao.findByToken(token);
     }
 }

@@ -28,7 +28,7 @@ public class IndexController {
     @GetMapping("/static")
     @ResponseBody
     public Object getCategory() {
-        return articleService.selectAll();
+        return articleService.getCategoryModels();
     }
 
     /**

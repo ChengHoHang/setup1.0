@@ -4,7 +4,7 @@ import com.chh.setup.dto.res.ResultDto;
 import com.chh.setup.model.UserModel;
 import com.chh.setup.advice.exception.CustomizeErrorCode;
 import com.chh.setup.advice.exception.CustomizeException;
-import com.chh.setup.repository.NoticeRepository;
+import com.chh.setup.dao.NoticeDao;
 import com.chh.setup.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +24,7 @@ public class NoticeController {
     private NoticeService noticeService;
 
     @Autowired
-    private NoticeRepository noticeRepository;
+    private NoticeDao noticeDao;
 
     @GetMapping("/{userId}/{type}")
     @ResponseBody
@@ -63,6 +63,6 @@ public class NoticeController {
         if (user == null) {
             throw new CustomizeException(CustomizeErrorCode.USER_LOG_OUT);
         }
-        return noticeRepository.countByReceiverIdAndState(user.getId(), 0);
+        return noticeDao.countByReceiverIdAndState(user.getId(), 0);
     }
 }

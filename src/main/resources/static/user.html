@@ -307,6 +307,7 @@
                     onPageClicked: function (event, originalEvent, type, page) {
                         that.currentPage = page;
                         callback && callback(param);
+                        window.scrollTo(0, 0);
                     }
                 })
             },

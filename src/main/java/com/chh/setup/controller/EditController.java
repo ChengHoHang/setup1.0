@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -39,21 +40,17 @@ public class EditController {
 
     @GetMapping("/static")
     public Object getStaticRes() {
-        return Arrays.asList(articleService.selectAll(), TagService.showTags());
+        return Arrays.asList(articleService.getCategoryModels(), TagService.showTags());
     }
 
     @PostMapping("/publish/article")
-    public Object publishArticle(@Valid @RequestBody ArticleParam articleParam, BindingResult bindingResult) {
+    public Object publishArticle(@Valid @RequestBody ArticleParam articleParam, BindingResult bindingResult) throws IOException {
         if (bindingResult.hasErrors()) {
             throw new CustomizeException(CustomizeErrorCode.PARAM_ERROR, NetUtils.processErrorMsg(bindingResult));
         }
         UserModel user = (UserModel) request.getSession().getAttribute("user");
         if (user == null || !user.getId().equals(articleParam.getAuthorId())) {
             throw new CustomizeException(CustomizeErrorCode.USER_LOG_OUT);
-        }
-        String[] tagSplit = StringUtils.split(articleParam.getTag(), " ");
-        if (TagService.isInvalid(tagSplit)) {
-            throw new CustomizeException(CustomizeErrorCode.TAG_NOT_EXIST);
         }
         articleService.createOrUpdate(articleParam);
         return ResultDto.okOf(null);

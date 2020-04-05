@@ -172,7 +172,7 @@
             checkedString: "全部",
             staticResource: false, //若为false则需要重新获取静态资源
             flag: false,      // 若为false则访问搜索首页；为true展示搜索内容
-            changeState: 1, // 用户改变条件时置为1；大于0时，用户修改页码时根据该值跳转至第一页
+            changeState: 0, // 用户改变条件时置为1；大于0时，用户修改页码时根据该值跳转至第一页
             currentPage: 1   // 访问首页时默认请求第一页的数据，每页数据量pageSize由application.properties指定
         },
         methods: {
@@ -224,7 +224,7 @@
                 let keyword = this.getKeywordAndSetFlag("keyword");
                 this.keyword = keyword == null ? '' : decodeURIComponent(keyword);
                 if (this.flag) {
-                    this.getSearchRes();
+                    this.getSearchRes(this.currentPage);
                     this.getCategoryInfo();
                 }
             },
@@ -238,7 +238,7 @@
                         this.getCategoryInfo();
                     }
                     this.currentPage = 1;
-                    this.getSearchRes();
+                    this.getSearchRes(this.currentPage);
                     document.title = this.keyword.substr(0, 20) + "_ch搜索";
                     window.history.pushState("", "", "?keyword=" + this.keyword);
                     window.scrollTo(0, 0);
@@ -246,6 +246,7 @@
             },
 
             lockMenu: function (e) {
+                e.currentTarget.disabled = true;
                 $("input:checkbox[name='ids']").each(function(i){
                     $(this).attr("disabled", "false")
                 });
@@ -254,7 +255,8 @@
                     this.checkedCategoryIds.split(",")
                     .map(x => this.category.filter(y => y.id == x).pop().type)
                     .join(",");
-                e.currentTarget.disabled = true;
+                this.changeState = 1;
+                this.getSearchRes(1);
             },
 
             unlockMenu: function () {
@@ -280,13 +282,13 @@
                 return categoryIds.length === 0? null : categoryIds.join(",");
             },
             
-            getSearchRes: function () {
+            getSearchRes: function (page) {
                 let that = this;
                 axios.get("http://localhost:8080/search/article", {
                     params: {
                         "keyword": that.keyword,
                         "categoryIds": that.checkedCategoryIds,
-                        "page": that.currentPage
+                        "page": page
                     }
                 }).then(function (response) {
                     if (response.data.code === 200) {
@@ -297,7 +299,7 @@
                             $('#home-page').hide();
                         } else {
                             $('#home-page').show();
-                            that.setPage(that.currentPage, response.data.rsData.totalPage, that.getSearchRes);
+                            that.setPage(page, response.data.rsData.totalPage, that.getSearchRes);
                         }
                     } else if (response.data.code === 4001) {
                         window.location.href = "/search";
@@ -319,7 +321,8 @@
                         // 把当前点击的页码赋值给currentPage, 再次getArticleList
                         that.currentPage = that.changeState === 1 ? 1 : page;
                         that.changeState--;
-                        callback && callback();
+                        callback && callback(page);
+                        window.scrollTo(0, 0);
                     }
                 })
             }

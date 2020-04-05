@@ -12,7 +12,6 @@ public enum CustomizeErrorCode implements IBaseException {
     
     ARTICLE_NOT_FOUND(2005, "文章不存在，要不换一篇看看？"),
     CATEGORY_NOT_EXISIT(2006, "文章类型不存在"),
-    TAG_NOT_EXIST(2007, "不存在此标签"),
     NOTICE_NOT_FOUND(2008, "消息不翼而飞了..."),
     
     USER_LOG_OUT(3001, "用户未登录，请登陆后重试~"),

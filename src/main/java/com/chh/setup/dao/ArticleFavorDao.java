@@ -1,4 +1,4 @@
-package com.chh.setup.repository;
+package com.chh.setup.dao;
 
 import com.chh.setup.model.ArticleFavorModel;
 import com.chh.setup.model.ArticleModel;
@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface ArticleFavorRepository extends JpaRepository<ArticleFavorModel, Integer> {
+public interface ArticleFavorDao extends JpaRepository<ArticleFavorModel, Integer> {
 
     ArticleFavorModel findByArticleIdAndUserId(Integer articleId, Integer userId);
 

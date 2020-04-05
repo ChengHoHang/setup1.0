@@ -6,10 +6,10 @@ import com.chh.setup.dto.req.Record;
 import com.chh.setup.dto.res.PagesDto;
 import com.chh.setup.enums.NoticeTypeEnum;
 import com.chh.setup.model.NoticeModel;
-import com.chh.setup.repository.ArticleRepository;
-import com.chh.setup.repository.CommentRepository;
-import com.chh.setup.repository.NoticeRepository;
-import com.chh.setup.repository.UserRepository;
+import com.chh.setup.dao.ArticleDao;
+import com.chh.setup.dao.CommentDao;
+import com.chh.setup.dao.NoticeDao;
+import com.chh.setup.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -29,16 +29,16 @@ import java.util.List;
 public class NoticeService {
 
     @Autowired
-    private NoticeRepository noticeRepository;
+    private NoticeDao noticeDao;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserDao userDao;
 
     @Autowired
-    private CommentRepository commentRepository;
+    private CommentDao commentDao;
 
     @Autowired
-    private ArticleRepository articleRepository;
+    private ArticleDao articleDao;
 
     @Value("${noticepage.size}")
     private Integer pageSize;
@@ -60,7 +60,7 @@ public class NoticeService {
         noticeModel.setState(0);
         noticeModel.setParentId(parentId);
         try {
-            noticeRepository.save(noticeModel);
+            noticeDao.save(noticeModel);
         } catch (DataIntegrityViolationException ignored) { }
     }
 
@@ -78,20 +78,20 @@ public class NoticeService {
         List<NoticeModel> noticeModels;
         Long count;
         if ("all".equals(type)) {
-            noticeModels = noticeRepository.findAllByReceiverId(userId, pageRequest).getContent();
+            noticeModels = noticeDao.findAllByReceiverId(userId, pageRequest).getContent();
             count = countAll(userId);
         } else {
-            noticeModels = noticeRepository.findAllByReceiverIdAndState(userId, 0, pageRequest).getContent();
+            noticeModels = noticeDao.findAllByReceiverIdAndState(userId, 0, pageRequest).getContent();
             count = countUnread(userId);
         } 
         noticeModels.forEach(noticeModel -> {
             noticeModel.setAction(NoticeTypeEnum.getAction(noticeModel.getType()));
-            noticeModel.setNotifier(userRepository.findById(noticeModel.getNotifierId()).get());
+            noticeModel.setNotifier(userDao.findById(noticeModel.getNotifierId()).get());
             if (noticeModel.getType() == 1 || noticeModel.getType() == 3) {
-                noticeModel.setComment(commentRepository.findById(noticeModel.getParentId()).get());
-                noticeModel.getComment().setArticleTitle(articleRepository.findById(noticeModel.getComment().getArticleId()).get().getTitle());
+                noticeModel.setComment(commentDao.findById(noticeModel.getParentId()).get());
+                noticeModel.getComment().setArticleTitle(articleDao.findById(noticeModel.getComment().getArticleId()).get().getTitle());
             } else if (noticeModel.getType() == 2) {
-                noticeModel.setArticle(articleRepository.findById(noticeModel.getParentId()).get());
+                noticeModel.setArticle(articleDao.findById(noticeModel.getParentId()).get());
             }
         });
         PagesDto pagesDto = new PagesDto();
@@ -101,18 +101,18 @@ public class NoticeService {
     }
 
     public Long countAll(Integer receiver) {
-        Long count = noticeRepository.countByReceiverId(receiver);
+        Long count = noticeDao.countByReceiverId(receiver);
         return (long) Math.ceil((double) count / pageSize);
     }
 
     public Long countUnread(Integer receiver) {
-        Long count = noticeRepository.countByReceiverIdAndState(receiver, 0);
+        Long count = noticeDao.countByReceiverIdAndState(receiver, 0);
         return (long) Math.ceil((double) count / pageSize);
     }
 
     @Transactional
     public void readNotice(Integer noticeId, Integer userId) {
-        NoticeModel notice = noticeRepository.findById(noticeId).orElse(null);
+        NoticeModel notice = noticeDao.findById(noticeId).orElse(null);
         if (notice == null) {
             throw new CustomizeException(CustomizeErrorCode.NOTICE_NOT_FOUND);
         }
@@ -120,6 +120,6 @@ public class NoticeService {
             throw new CustomizeException(CustomizeErrorCode.OPERATE_PERMISSION_DENY);
         }
         notice.setState(1);
-        noticeRepository.save(notice);
+        noticeDao.save(notice);
     }
 }

@@ -1,4 +1,4 @@
-package com.chh.setup.repository;
+package com.chh.setup.dao;
 
 import com.chh.setup.model.CommentModel;
 import org.springframework.data.domain.Page;
@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface CommentRepository extends JpaRepository<CommentModel, Integer> {
+public interface CommentDao extends JpaRepository<CommentModel, Integer> {
 
     List<CommentModel> findAllByArticleId(Integer articleId, Sort sort);
 

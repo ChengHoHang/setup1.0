@@ -2,6 +2,7 @@ package com.chh.setup.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.chh.setup.dao.ArticleDao;
 import com.chh.setup.dto.res.SearchDto;
 import com.chh.setup.model.ArticleModel;
 import org.apache.commons.lang3.StringUtils;
@@ -30,11 +31,11 @@ public class SearchService {
     private RestHighLevelClient restHighLevelClient;
 
     @Autowired
-    private ArticleService articleService;
+    private ArticleDao articleDao;
 
     public SearchDto searchByKeyword(String keyword, String categoryIds, Integer page) throws IOException {
         Request request = new Request("GET", "/article/_search");
-        String requestJson = getReqJson(keyword, categoryIds, page);
+        String requestJson = getDefaultSearchJson(keyword, categoryIds, page);
         request.setJsonEntity(requestJson);
         Response response = restHighLevelClient.getLowLevelClient().performRequest(request);
         String resStr = EntityUtils.toString(response.getEntity());
@@ -44,8 +45,8 @@ public class SearchService {
         JSONArray jsonArray = jsonObject.getJSONObject("hits").getJSONArray("hits");
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObj = jsonArray.getJSONObject(i);
-            int articleId = Integer.parseInt(jsonObj.get("_id").toString());
-            ArticleModel articleModel = articleService.getEntityById(articleId);
+            int articleId = jsonObj.getIntValue("_id");
+            ArticleModel articleModel = articleDao.findById(articleId).get();
             JSONObject highlightObj = jsonObj.getJSONObject("highlight");
             if (highlightObj != null && highlightObj.containsKey("title")) {
                 String title = highlightObj.getJSONArray("title").get(0).toString();
@@ -63,14 +64,91 @@ public class SearchService {
 
         SearchDto searchDto = new SearchDto();
         searchDto.setData(articleModelList);
-        long totalCount = Long.parseLong(jsonObject.getJSONObject("hits").getJSONObject("total").get("value").toString());
+        long totalCount = jsonObject.getJSONObject("hits").getJSONObject("total").getLongValue("value");
         searchDto.setTotalPage((long) Math.ceil((double) totalCount / 10));
         searchDto.setTotalCount(totalCount);
         searchDto.setOtherKeyword(analyzeKeyword(keyword));
         return searchDto;
     }
 
-    private String getReqJson(String keyword, String categoryIds, Integer page) {
+    private List<String> analyzeKeyword(String keyword) throws IOException {
+        Request request = new Request("GET", "/article/_analyze");
+        String analyzeReq = getAnalyzeJson(keyword);
+        request.setJsonEntity(analyzeReq);
+        Response response = restHighLevelClient.getLowLevelClient().performRequest(request);
+        String resStr = EntityUtils.toString(response.getEntity());
+        JSONObject jsonObject = JSONObject.parseObject(resStr);
+
+        JSONArray jsonTokens = jsonObject.getJSONArray("tokens");
+        List<String> tokens = new ArrayList<>();
+
+        for (int i = 0; i < jsonTokens.size(); i++) {
+            String token = jsonTokens.getJSONObject(i).getString("token");
+            if (!keyword.equals(token)) {
+                tokens.add(token);
+            }
+        }
+        return tokens;
+    }
+
+    public List<Integer> getRelatedArticle(Integer articleId, String title, String tag) throws IOException {
+        Request request = new Request("GET", "/article/_search");
+        String relatedJson = getRelatedJson(articleId, title, tag);
+        request.setJsonEntity(relatedJson);
+        Response response = restHighLevelClient.getLowLevelClient().performRequest(request);
+        String resStr = EntityUtils.toString(response.getEntity());
+        JSONObject jsonObject = JSONObject.parseObject(resStr);
+
+        List<Integer> relatedArticle = new ArrayList<>();
+        JSONArray jsonArray = jsonObject.getJSONObject("hits").getJSONArray("hits");
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONObject jsonObj = jsonArray.getJSONObject(i);
+            int obj_id = jsonObj.getIntValue("_id");
+            relatedArticle.add(obj_id);
+        }
+
+        return relatedArticle;
+    }
+
+    private String getRelatedJson(Integer articleId, String title, String tag) {
+        JSONObject jsonResObj = new JSONObject();
+
+        jsonResObj.put("_source", false);
+        
+        //*->query 构建query
+        jsonResObj.put("query", new JSONObject());
+        //*->query->bool
+        jsonResObj.getJSONObject("query").put("bool", new JSONObject());
+        
+        //*->query->bool->should
+        jsonResObj.getJSONObject("query").getJSONObject("bool").put("should", new JSONArray());
+        JSONObject match_1_obj = new JSONObject();
+        match_1_obj.put("match", new JSONObject());
+        match_1_obj.getJSONObject("match").put("tag", tag);
+        JSONObject match_2_obj = new JSONObject();
+        match_2_obj.put("match", new JSONObject());
+        match_2_obj.getJSONObject("match").put("title", new JSONObject());
+        match_2_obj.getJSONObject("match").getJSONObject("title").put("query", title);
+        match_2_obj.getJSONObject("match").getJSONObject("title").put("boost", 2);
+        jsonResObj.getJSONObject("query").getJSONObject("bool").getJSONArray("should").add(match_1_obj);
+        jsonResObj.getJSONObject("query").getJSONObject("bool").getJSONArray("should").add(match_2_obj);
+        
+        //*->query->bool->must_not
+        jsonResObj.getJSONObject("query").getJSONObject("bool").put("must_not", new JSONArray());
+        JSONObject must_not_1_obj = new JSONObject();
+        must_not_1_obj.put("term", new JSONObject());
+        must_not_1_obj.getJSONObject("term").put("id", new JSONObject());
+        must_not_1_obj.getJSONObject("term").getJSONObject("id").put("value", articleId);
+        must_not_1_obj.getJSONObject("term").getJSONObject("id").put("boost", 0);
+        jsonResObj.getJSONObject("query").getJSONObject("bool").getJSONArray("must_not").add(must_not_1_obj);
+
+        jsonResObj.put("from", 0);
+        jsonResObj.put("size", 15);
+
+        return jsonResObj.toJSONString();
+    }
+
+    private String getDefaultSearchJson(String keyword, String categoryIds, Integer page) {
         JSONObject jsonResObj = new JSONObject();
 
         jsonResObj.put("_source", "false");
@@ -162,26 +240,6 @@ public class SearchService {
         jsonResObj.put("size", 10);
 
         return jsonResObj.toJSONString();
-    }
-
-    private List<String> analyzeKeyword(String keyword) throws IOException {
-        Request request = new Request("GET", "/article/_analyze");
-        String analyzeReq = getAnalyzeJson(keyword);
-        request.setJsonEntity(analyzeReq);
-        Response response = restHighLevelClient.getLowLevelClient().performRequest(request);
-        String resStr = EntityUtils.toString(response.getEntity());
-        JSONObject jsonObject = JSONObject.parseObject(resStr);
-
-        JSONArray jsonTokens = jsonObject.getJSONArray("tokens");
-        List<String> tokens = new ArrayList<>();
-
-        for (int i = 0; i < jsonTokens.size(); i++) {
-            String token = jsonTokens.getJSONObject(i).get("token").toString();
-            if (!keyword.equals(token)) {
-                tokens.add(token);
-            }
-        }
-        return tokens;
     }
 
     private String getAnalyzeJson(String keyword) {

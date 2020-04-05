@@ -4,22 +4,24 @@ import com.chh.setup.advice.exception.CustomizeErrorCode;
 import com.chh.setup.advice.exception.CustomizeException;
 import com.chh.setup.dto.req.ArticleParam;
 import com.chh.setup.dto.res.PagesDto;
-import com.chh.setup.model.ArticleModel;
-import com.chh.setup.model.CategoryModel;
-import com.chh.setup.model.CommentModel;
-import com.chh.setup.model.UserModel;
+import com.chh.setup.model.*;
 import com.chh.setup.myutils.PageUtils;
-import com.chh.setup.repository.ArticleRepository;
-import com.chh.setup.repository.CategoryRepository;
-import com.chh.setup.repository.UserRepository;
+import com.chh.setup.dao.ArticleDao;
+import com.chh.setup.dao.CategoryDao;
+import com.chh.setup.dao.RelatedArticleDao;
+import com.chh.setup.dao.UserDao;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -33,23 +35,38 @@ import java.util.List;
 public class ArticleService {
 
     @Autowired
-    private ArticleRepository articleRepository;
+    private ArticleDao articleDao;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserDao userDao;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private CategoryDao categoryDao;
 
+    @Autowired
+    private RelatedArticleDao relatedArticleDao;
+    
     @Autowired
     private CommentService commentService;
 
     @Autowired
     private FavorService favorService;
+
+    @Autowired
+    private SearchService searchService;
     
+    @Getter
+    private List<CategoryModel> categoryModels;
+
+    @PostConstruct
+    private void init() {
+        categoryModels = categoryDao.findAll();
+    }
+
     @Transactional
-    public void createOrUpdate(ArticleParam articleParam) {
-        if (categoryRepository.findById(articleParam.getCategoryId()).orElse(null) == null) {
+    @Async
+    public void createOrUpdate(ArticleParam articleParam) throws IOException {
+        if (categoryDao.findById(articleParam.getCategoryId()).orElse(null) == null) {
             throw new CustomizeException(CustomizeErrorCode.CATEGORY_NOT_EXISIT);
         }
         ArticleModel article;
@@ -64,46 +81,53 @@ public class ArticleService {
         }
         article.setUpdateTime(new Date());
         BeanUtils.copyProperties(articleParam, article, "gmtModified");
-        articleRepository.save(article);
+        articleDao.save(article);
+
+        List<Integer> relatedIds = searchService.getRelatedArticle(article.getId(), article.getTitle(), article.getTag());
+        String relatedStr = StringUtils.join(relatedIds, ",");
+        RelatedArticleModel relatedArticleModel = new RelatedArticleModel();
+        relatedArticleModel.setArticleId(article.getId());
+        relatedArticleModel.setRelatedIds(relatedStr);
+        relatedArticleDao.save(relatedArticleModel);
     }
-    
+
     public PagesDto listByType(Integer page, Integer size, Integer categoryId) {
         PageRequest pageRequest = PageUtils.getDefaultPageRequest(page, size, "updateTime");
         List<ArticleModel> contents;
         if (categoryId == null) {
-            contents = articleRepository.findAll(pageRequest).getContent();
+            contents = articleDao.findAll(pageRequest).getContent();
         } else {
-            if (categoryRepository.findById(categoryId).orElse(null) == null) {
+            if (categoryDao.findById(categoryId).orElse(null) == null) {
                 throw new CustomizeException(CustomizeErrorCode.CATEGORY_NOT_EXISIT);
             }
-            contents = articleRepository.findAllByCategoryId(categoryId, pageRequest).getContent();
+            contents = articleDao.findAllByCategoryId(categoryId, pageRequest).getContent();
         }
         contents.forEach(content -> {
             content.setDescription(StringUtils.truncate(content.getDescription(), 150) + ".....");
             content.setTags(Arrays.stream(StringUtils.split(content.getTag(), " ")).limit(2).toArray(String[]::new));
-            content.setAuthor(userRepository.findById(content.getAuthorId()).get());
+            content.setAuthor(userDao.findById(content.getAuthorId()).get());
         });
         PagesDto pagesDto = new PagesDto();
         pagesDto.setData(contents);
         pagesDto.setTotalPage(getCountByType(categoryId, size));
         return pagesDto;
     }
-    
+
     public Long getCountByType(Integer type, Integer size) {
-        long count = type == null ? articleRepository.count() : articleRepository.countByCategoryId(type);
+        long count = type == null ? articleDao.count() : articleDao.countByCategoryId(type);
         return (long) Math.ceil((double) count / size);
     }
 
     public ArticleModel getEntityById(Integer id) {
-        return articleRepository.findById(id).orElse(null);
-    }
-    
-    @Transactional
-    public void incViewCount(Integer articleId) {
-        articleRepository.incViewCount(articleId, 1);
+        return articleDao.findById(id).orElse(null);
     }
 
-    public ArticleModel getDtoModel(ArticleModel articleModel, HttpServletRequest request) {
+    @Transactional
+    public void incViewCount(Integer articleId) {
+        articleDao.incViewCount(articleId, 1);
+    }
+
+    public ArticleModel getDtoModel(ArticleModel articleModel, HttpServletRequest request) throws IOException {
         List<CommentModel> comments = articleModel.getCommentCount() != 0 ? commentService.getCommentsByArticleId(articleModel.getId()) : null;
         UserModel user = (UserModel) request.getSession().getAttribute("user");
         if (user != null) {
@@ -112,22 +136,17 @@ public class ArticleService {
                 favorService.setCommentFavorState(comments, user.getId());
             }
         }
-        articleModel.setAuthor(userRepository.findById(articleModel.getAuthorId()).get());
+        articleModel.setAuthor(userDao.findById(articleModel.getAuthorId()).get());
         articleModel.setTags(StringUtils.split(articleModel.getTag(), " "));
         articleModel.setComments(comments);
-        List<Object[]> relatedArticles = getRelatedArticle(articleModel.getId(), articleModel.getTags());
+        String[] relatedIds = relatedArticleDao.findById(articleModel.getId()).get().getRelatedIds().split(",");
+        List<Object[]> relatedArticles = new ArrayList<>();
+        for (String relatedId : relatedIds) {
+            String title = articleDao.getTitle(Integer.parseInt(relatedId));
+            relatedArticles.add(new Object[]{relatedId, title});
+        }
         articleModel.setRelatedArticle(relatedArticles);
         return articleModel;
     }
-
-    public List<Object[]> getRelatedArticle(Integer id, String[] tags) {
-        if (tags == null) {
-            return new ArrayList<>();
-        }
-        return articleRepository.getRelatedArticleById(id, StringUtils.join(tags, '|'), 0, 15);
-    }
-
-    public List<CategoryModel> selectAll() {
-        return categoryRepository.findAll();
-    }
+    
 }

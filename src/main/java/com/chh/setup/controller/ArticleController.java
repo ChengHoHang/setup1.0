@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -39,16 +40,16 @@ public class ArticleController {
     private CommentService commentService;
 
     @Autowired
-    private NoticeService noticeService;
-
-    @Autowired
     private FavorService favorService;
 
+    @Autowired
+    private NoticeService noticeService;
+    
     @Autowired
     private HttpServletRequest request;
 
     @GetMapping("/{id}")
-    public Object getArticleById(@PathVariable("id") Integer articleId) {
+    public Object getArticleById(@PathVariable("id") Integer articleId) throws IOException {
         ArticleModel articleModel = articleService.getEntityById(articleId);
         if (articleModel == null) {
             throw new JumpExcetion(CustomizeErrorCode.ARTICLE_NOT_FOUND);

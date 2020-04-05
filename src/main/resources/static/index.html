@@ -197,6 +197,7 @@
                         // 把当前点击的页码赋值给currentPage, 再次getArticleList
                         that.currentPage = page;
                         callback && callback();
+                        window.scrollTo(0, 0);
                     }
                 })
             },

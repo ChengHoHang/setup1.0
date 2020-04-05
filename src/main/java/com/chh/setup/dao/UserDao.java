@@ -1,10 +1,10 @@
-package com.chh.setup.repository;
+package com.chh.setup.dao;
 
 
 import com.chh.setup.model.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<UserModel, Integer> {
+public interface UserDao extends JpaRepository<UserModel, Integer> {
     
     UserModel findByAccountAndPassword(String account, String password);
 

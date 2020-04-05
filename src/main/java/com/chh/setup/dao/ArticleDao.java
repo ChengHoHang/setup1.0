@@ -1,4 +1,4 @@
-package com.chh.setup.repository;
+package com.chh.setup.dao;
 
 import com.chh.setup.model.ArticleModel;
 import org.springframework.data.domain.Page;
@@ -8,13 +8,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 /**
  * @author chh
  * @date 2020/1/10 20:37
  */
-public interface ArticleRepository extends JpaRepository<ArticleModel, Integer> {
+public interface ArticleDao extends JpaRepository<ArticleModel, Integer> {
 
     Long countByCategoryId(Integer categoryId);
 
@@ -36,9 +34,6 @@ public interface ArticleRepository extends JpaRepository<ArticleModel, Integer> 
     
     Page<ArticleModel> findAllByAuthorId(@Param("authorId") Integer authorId, Pageable pageable);
 
-    @Query(value = "select a.id, a.title from article a where a.tag REGEXP CONCAT('', :regexpTag,'') " +
-            "and a.id != :id ORDER BY (likeCount + commentCount + 0.01 * viewCount) desc " +
-            "limit :start, :size", nativeQuery = true)
-    List<Object[]> getRelatedArticleById(@Param("id") Integer id, @Param("regexpTag") String regexpTag,
-                                         @Param("start") Integer start, @Param("size") Integer size);
+    @Query("select a.title from ArticleModel a where a.id = :id")
+    String getTitle(@Param("id") Integer id);
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOG_PATTERN_CONSOLE" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} --> %msg%n" />
+    <property name="LOG_PATTERN_FILE" value="%msg%n" />
+    <!--- 设置控制台日志 -->
+    <appender name="consoleLogAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN_CONSOLE}</pattern>
+        </encoder>
+    </appender>
+    
+    <!-- 设置日志文件 -->
+    <appender name="fileLogAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN_FILE}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印info日志 -->
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <append>true</append>
+        <file>log/record.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>record-%d{yyyy-MM}.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+
+    <!--使用LoggerFactory.getLogger("recordLogger") 使用这个logger-->
+    <logger name="recordLogger" additivity="false">
+        <!--使用哪一个Appender-->
+        <appender-ref ref="fileLogAppender" />
+    </logger>
+    
+    <!-- 设置日志级别，及需要记录日志的类 -->
+    <root level="INFO">
+        <appender-ref ref="consoleLogAppender" />
+    </root>
+</configuration>
