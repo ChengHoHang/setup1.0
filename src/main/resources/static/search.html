@@ -83,7 +83,8 @@
                 </div>
                 <div id="content-right">
                     <div class="content" v-for="(article, index) in articleList">
-                        <a class="title" :href="'/a/' + article.id" target="_blank" v-html="article.title"></a>
+                        <a class="title" :href="'/a/' + article.id" target="_blank" 
+                           v-html="article.title" @click="clickLog(article.id)"></a>
                         <p v-html="article.description" class="abstract"></p>
                         <div class="list-meta">
                             <span class="meta-content index-favor-icon">
@@ -325,7 +326,18 @@
                         window.scrollTo(0, 0);
                     }
                 })
-            }
+            },
+
+            clickLog: function(articleId){
+                if (this.user == null) {
+                    return;
+                }
+                let img = document.createElement("img");
+                img.src = "/log?userId=" + this.user.id + "&articleId=" + articleId + "&event=click";
+                img.setAttribute("onerror", "this.style.display='none'");
+                document.getElementById("app").appendChild(img);
+            },
+            
         },
         created: function () {
             this.hideOrShow();

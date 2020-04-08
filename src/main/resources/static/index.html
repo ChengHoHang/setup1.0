@@ -57,7 +57,7 @@
 
     <div class="aw-container-wrap">
         <!--分类列表-->
-        <div class="container category">
+        <div class="category">
             <div class="row">
                 <div class="col-md-12 bs-example">
                     <div class="btn-group" role="group" aria-label="...">
@@ -70,7 +70,7 @@
             </div>
         </div>
 
-        <div class="container container-fluid">
+        <div class="container-fluid">
             <div class="row">
                 <!--新闻列表-->
                 <div class="col-md-9">
@@ -83,7 +83,8 @@
                         <ul class="news-list">
                             <li v-for="(article, index) in articleList">
                                 <div class="list-content">
-                                    <a class="list-title" target="_blank" :href="'/a/' + article.id" v-text="article.title"></a>
+                                    <a class="list-title" target="_blank" :href="'/a/' + article.id" 
+                                       v-text="article.title" @click="clickLog(article.id)"></a>
                                     <p class="list-abstract" v-text="article.description"></p>
                                     <div class="list-meta">
                                         <span class="content-author">
@@ -121,7 +122,12 @@
 
                 <!--侧边栏-->
                 <div class="col-md-3">
-                    <h3>热门话题</h3>
+                    <div id="recommend-list">
+                        <h3 class="title">猜你喜欢</h3>
+                        <div class="recommend-item" v-for="(article, index) in recommendList">
+                            <a :href="'/a/' + article[0]" v-text="article[1]" target="_blank"></a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -141,7 +147,8 @@
             homeType: 0,
             articleList: [],
             unreadCount: '',
-            currentPage: 1   // 访问首页时默认请求第一页的数据，每页数据量pageSize由application.properties指定
+            currentPage: 1,   // 访问首页时默认请求第一页的数据，每页数据量pageSize由application.properties指定
+            recommendList: []
         },
         methods: {
             getLoginInfo: function () {
@@ -152,6 +159,7 @@
                     if (that.loginCode === 200) {
                         that.getUnreadCount();
                     }
+                    that.getRecommendList();
                 })
             },
 
@@ -228,6 +236,24 @@
                 this.homeType = index;
                 this.currentPage = 1;
                 this.getArticleList();
+            },
+
+            clickLog: function(articleId){
+                if (this.user == null) {
+                    return;
+                }
+                let img = document.createElement("img");
+                img.src = "/log?userId=" + this.user.id + "&articleId=" + articleId + "&event=click";
+                img.setAttribute("onerror", "this.style.display='none'");
+                document.getElementById("app").appendChild(img);
+            },
+            
+            getRecommendList: function () {
+                let that = this;
+                axios.get("http://localhost:8080/index/recommend?userId=" + (this.user === '' ? '' : this.user.id), {})
+                    .then(function (response) {
+                        that.recommendList = response.data.rsData;
+                    });
             }
         },
         created: function () {

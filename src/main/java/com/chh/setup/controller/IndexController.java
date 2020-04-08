@@ -3,6 +3,7 @@ package com.chh.setup.controller;
 import com.chh.setup.dto.res.PagesDto;
 import com.chh.setup.dto.res.ResultDto;
 import com.chh.setup.service.ArticleService;
+import com.chh.setup.service.RecommendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,9 @@ public class IndexController {
     @Autowired
     private ArticleService articleService;
 
+    @Autowired
+    private RecommendService recommendService;
+    
     @Value("${page.size}")
     private Integer size;
     
@@ -35,6 +39,7 @@ public class IndexController {
      * 将分页数据交给前端在首页渲染，提供如下参数
      * article 新闻内容
      * page 页码
+     *
      * @return
      */
     @GetMapping("/articles")
@@ -43,5 +48,11 @@ public class IndexController {
                               @RequestParam(value = "page", required = false, defaultValue = "1") Integer page) {
         PagesDto pagesDto = articleService.listByType(page, size, type == 0 ? null : type);
         return ResultDto.okOf(pagesDto);
+    }
+
+    @GetMapping("/recommend")
+    @ResponseBody
+    public Object getRecommendList(@RequestParam(value = "userId", required = false) Integer userId) {
+        return ResultDto.okOf(recommendService.recommendByUserId(userId));
     }
 }

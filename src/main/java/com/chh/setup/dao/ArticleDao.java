@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 /**
  * @author chh
  * @date 2020/1/10 20:37
@@ -36,4 +38,7 @@ public interface ArticleDao extends JpaRepository<ArticleModel, Integer> {
 
     @Query("select a.title from ArticleModel a where a.id = :id")
     String getTitle(@Param("id") Integer id);
+
+    @Query(value = "SELECT id, title from article ORDER BY viewCount DESC LIMIT 10", nativeQuery = true)
+    List<Object[]> recommendHot10();
 }

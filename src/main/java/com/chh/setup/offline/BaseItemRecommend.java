@@ -1,4 +1,4 @@
-package com.chh.setup.recommend;
+package com.chh.setup.offline;
 
 import com.chh.setup.model.ArticleModel;
 import com.chh.setup.model.RelatedArticleModel;
@@ -19,7 +19,7 @@ import java.util.List;
  * @date 2020/4/5 16:51
  */
 @Component
-public class OffLineRecommend {
+public class BaseItemRecommend {
 
     @Autowired
     private SearchService searchService;
@@ -31,7 +31,7 @@ public class OffLineRecommend {
     private RelatedArticleDao relatedArticleDao;
     
     @Scheduled(cron = "0 0 0/3 * * ? ")
-    public void baseItemRecommend() {
+    public void BM25Related() {
         System.out.println("task start at" + new Date());
         
         List<ArticleModel> articles = articleDao.findAll();

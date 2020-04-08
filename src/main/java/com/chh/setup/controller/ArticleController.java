@@ -1,12 +1,15 @@
 package com.chh.setup.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.chh.setup.advice.exception.CustomizeErrorCode;
 import com.chh.setup.advice.exception.CustomizeException;
 import com.chh.setup.advice.exception.JumpExcetion;
 import com.chh.setup.dto.req.CommentParam;
 import com.chh.setup.dto.req.FavorParam;
+import com.chh.setup.dto.req.LogRow;
 import com.chh.setup.dto.req.Record;
 import com.chh.setup.dto.res.ResultDto;
+import com.chh.setup.enums.EventTypeEnum;
 import com.chh.setup.enums.FavorStateEnum;
 import com.chh.setup.enums.NoticeTypeEnum;
 import com.chh.setup.model.ArticleModel;
@@ -16,6 +19,8 @@ import com.chh.setup.service.ArticleService;
 import com.chh.setup.service.CommentService;
 import com.chh.setup.service.FavorService;
 import com.chh.setup.service.NoticeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,6 +53,8 @@ public class ArticleController {
     
     @Autowired
     private HttpServletRequest request;
+
+    private static final Logger logger = LoggerFactory.getLogger("recordLogger");
 
     @GetMapping("/{id}")
     public Object getArticleById(@PathVariable("id") Integer articleId) throws IOException {
@@ -85,6 +93,11 @@ public class ArticleController {
             throw new CustomizeException(CustomizeErrorCode.ARTICLE_NOT_FOUND);
         }
         if (favorParam.getFavorState() != null) { // 更新article表点赞数，插入或更新favor表点赞记录
+            if (favorParam.getFavorState() == FavorStateEnum.FAVOR.getState()) {
+                logger.info(JSON.toJSONString(
+                        new LogRow(user.getId(), EventTypeEnum.favor, favorParam.getArticleId(), new Date())
+                        ) + ",");
+            }
             favorService.createOrUpdateStates(favorParam.getFavorState(), favorParam.getArticleId(), user.getId());
             if (favorParam.getFavorState() == FavorStateEnum.FAVOR.getState() && !user.getId().equals(favorParam.getArticleAuthor())) {
                 noticeService.createNotice(user.getId(), favorParam.getArticleAuthor(), NoticeTypeEnum.LIKE_ARTICLE.getType(), favorParam.getArticleId());

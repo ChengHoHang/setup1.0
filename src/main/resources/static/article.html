@@ -165,7 +165,8 @@
                             <div class="aw-body">
                                 <ul class="list-body">
                                     <li v-for="(article, index) in article.relatedArticle">
-                                        <a :href="'/a/' + article[0]" v-text="article[1]" target="_blank"></a>
+                                        <a :href="'/a/' + article[0]" v-text="article[1]" 
+                                           target="_blank" @click="clickLog(article[0])"></a>
                                     </li>
                                 </ul>
                             </div>
@@ -336,11 +337,33 @@
                     e.currentTarget.classList.remove('active');
                     e.currentTarget.nextElementSibling.innerText = parseInt(e.currentTarget.nextElementSibling.innerText) - 1;
                 }
-            }
+            },
+
+            clickLog: function(articleId){
+                if (this.user == null) {
+                    return;
+                }
+                let img = document.createElement("img");
+                img.src = "/log?userId=" + this.user.id + "&articleId=" + articleId + "&event=click";
+                img.setAttribute("onerror", "this.style.display='none'");
+                document.getElementById("app").appendChild(img);
+            },
+            
+            readLog: function () {
+                if (this.user == null) {
+                    return;
+                }
+                let img = document.createElement("img");
+                img.src = "/log?userId=" + this.user.id + "&articleId=" + this.article.id + "&event=read";
+                img.setAttribute("onerror", "this.style.display='none'");
+                document.getElementById("app").appendChild(img);
+            },
+            
         },
         created: function () {
             this.getArticle();
             this.getLoginInfo();
+            setTimeout(this.readLog, 30000);
         },
         mounted: function () {
             window.addEventListener('beforeunload', this.beforeunloadFn);    //更新页面
