@@ -250,7 +250,7 @@
             
             getRecommendList: function () {
                 let that = this;
-                axios.get("http://localhost:8080/index/recommend?userId=" + (this.user === '' ? '' : this.user.id), {})
+                axios.get("http://localhost:8080/index/recommend?userId=" + (this.user === null ? '' : this.user.id), {})
                     .then(function (response) {
                         that.recommendList = response.data.rsData;
                     });

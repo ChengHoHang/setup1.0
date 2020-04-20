@@ -191,7 +191,8 @@
             replyContent: '',
             commentClickCounter: {},
             unreadCount: '',
-            mainClickCount: 0
+            mainClickCount: 0,
+            flag: 0
         },
         methods: {
             getLoginInfo: function () {
@@ -262,6 +263,9 @@
             },
 
             beforeunloadFn: function () {
+                if (this.flag !== 0) {
+                    return;
+                }
                 let records = [];
                 for (let index in this.commentClickCounter) {
                     if (this.commentClickCounter[index] & 1) {// 过滤非单数的操作
@@ -283,6 +287,7 @@
                     };
                     axios.post("http://localhost:8080/article/favor-confirm", param);
                 }
+                this.flag = 1;
             },
 
             loginInterceptor: function () {

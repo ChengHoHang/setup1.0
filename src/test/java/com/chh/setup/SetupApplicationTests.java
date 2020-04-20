@@ -2,11 +2,9 @@ package com.chh.setup;
 
 import com.chh.setup.dto.req.Rating;
 import com.chh.setup.offline.DataLoader;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.api.java.function.ForeachPartitionFunction;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
@@ -16,7 +14,6 @@ import org.apache.spark.ml.recommendation.ALSModel;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.catalyst.expressions.GenericRowWithSchema;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,11 +21,8 @@ import scala.Tuple2;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.List;
 
 @SpringBootTest
 class SetupApplicationTests implements Serializable {
@@ -137,49 +131,50 @@ class SetupApplicationTests implements Serializable {
 //        alsModel.save("file:///C:/Users/Administrator/Desktop/alsmodel");
 
         //随机
-        Dataset<Row> userRecs = alsModel.recommendForAllUsers(10);
-        userRecs.foreachPartition(new ForeachPartitionFunction<Row>() {
-            
-            @Override
-            public void call(Iterator<Row> t) throws Exception {
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3307/surfing?" +
-                                "useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true" +
-                                "&useJDBCCompliantTimezoneShift=true" +
-                                "&useLegacyDatetimeCode=false&serverTimezone=UTC",
-                        "root", "123456");
-                PreparedStatement statement = connection.prepareStatement("insert into recommend(userId, recommendIds) values(?,?)");
-
-                List<Map<String, Object>> sqlValueBatch = new ArrayList<>();
-                
-                t.forEachRemaining(data -> {
-                    int userId = data.getInt(0);
-                    List<GenericRowWithSchema> recommendList = data.getList(1);
-                    List<Integer> articleIdList = new ArrayList<>();
-                    recommendList.forEach(row -> {
-                        int articleId = row.getInt(0);
-                        articleIdList.add(articleId);
-                    });
-                    String recommendIds = StringUtils.join(articleIdList, ",");
-                    Map<String, Object> sqlValue = new HashMap<>();
-                    sqlValue.put("userId", userId);
-                    sqlValue.put("recommendIds", recommendIds);
-                    sqlValueBatch.add(sqlValue);
-                });
-                
-                sqlValueBatch.forEach(stringObjectMap -> {
-                    try {
-                        statement.setInt(1, (Integer) stringObjectMap.get("userId"));
-                        statement.setString(2, (String) stringObjectMap.get("recommendIds"));
-                        statement.addBatch();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                });
-                statement.executeBatch();
-                connection.close();
-                
-            }
-        });
+//        Dataset<Row> userRecs = alsModel.recommendForAllUsers(10);
+//        userRecs.foreachPartition(new ForeachPartitionFunction<Row>() {
+//
+//            @Override
+//            public void call(Iterator<Row> t) throws Exception {
+//                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3307/surfing?" +
+//                                "useUnicode=true&characterEncoding=UTF-8&rewriteBatchedStatements=true" +
+//                                "&useJDBCCompliantTimezoneShift=true" +
+//                                "&useLegacyDatetimeCode=false&serverTimezone=UTC",
+//                        "root", "123456");
+//                PreparedStatement statement = connection
+//                        .prepareStatement("insert into recommend(userId, recommendIds) values(?,?) ON DUPLICATE KEY UPDATE recommendIds = ?");
+//
+//                List<Map<String, Object>> sqlValueBatch = new ArrayList<>();
+//
+//                t.forEachRemaining(data -> {
+//                    int userId = data.getInt(0);
+//                    List<GenericRowWithSchema> recommendList = data.getList(1);
+//                    List<Integer> articleIdList = new ArrayList<>();
+//                    recommendList.forEach(row -> {
+//                        int articleId = row.getInt(0);
+//                        articleIdList.add(articleId);
+//                    });
+//                    String recommendIds = StringUtils.join(articleIdList, ",");
+//                    Map<String, Object> sqlValue = new HashMap<>();
+//                    sqlValue.put("userId", userId);
+//                    sqlValue.put("recommendIds", recommendIds);
+//                    sqlValueBatch.add(sqlValue);
+//                });
+//
+//                sqlValueBatch.forEach(stringObjectMap -> {
+//                    try {
+//                        statement.setInt(1, (Integer) stringObjectMap.get("userId"));
+//                        statement.setString(2, (String) stringObjectMap.get("recommendIds"));
+//                        statement.setString(3, (String) stringObjectMap.get("recommendIds"));
+//                        statement.addBatch();
+//                    } catch (SQLException e) {
+//                        e.printStackTrace();
+//                    }
+//                });
+//                statement.executeBatch();
+//                connection.close();
+//            }
+//        });
 
     }
 
